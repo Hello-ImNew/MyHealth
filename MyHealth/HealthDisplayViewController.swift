@@ -156,9 +156,9 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         isChartShow = !isChartShow
         if isChartShow {
             addChart()
-            btnShowChart.titleLabel?.text = "Show Table"
+            btnShowChart.setTitle("Show Table", for: .normal)
         } else {
-            btnShowChart.titleLabel?.text = "Show Chart"
+            btnShowChart.setTitle("Show Chart", for: .normal)
             addTable()
         }
     }

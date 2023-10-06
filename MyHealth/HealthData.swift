@@ -28,7 +28,9 @@ class HealthData {
             HKQuantityTypeIdentifier.distanceWalkingRunning.rawValue,
             HKQuantityTypeIdentifier.heartRate.rawValue,
             HKQuantityTypeIdentifier.activeEnergyBurned.rawValue,
-            HKQuantityTypeIdentifier.basalEnergyBurned.rawValue
+            HKQuantityTypeIdentifier.basalEnergyBurned.rawValue,
+            HKQuantityTypeIdentifier.distanceSwimming.rawValue,
+            HKQuantityTypeIdentifier.flightsClimbed.rawValue
         ]
         
         return typeIdentifiers.compactMap { getSampleType(for: $0) }

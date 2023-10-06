@@ -8,7 +8,11 @@
 import UIKit
 
 class AvailableDataTypeTableViewCell: UITableViewCell {
-
+    @IBOutlet weak var imgIcon: UIImageView!
+    @IBOutlet weak var txtLabel: UILabel!
+    @IBOutlet weak var txtData: UILabel!
+    @IBOutlet weak var txtDate: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

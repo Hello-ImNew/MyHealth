@@ -28,6 +28,10 @@ func getDataTypeName(for identifier: String) -> String? {
             description = "Active Energy Burned"
         case .basalEnergyBurned:
             description = "Resting Energy Burned"
+        case .distanceSwimming:
+            description = "Swimming Distance"
+        case .flightsClimbed:
+            description = "Flights Climbed"
         default:
             break
         }
@@ -50,6 +54,10 @@ func getDataTypeIcon(for identifier: String) -> String? {
             description = "heart.fill"
         case .activeEnergyBurned, .basalEnergyBurned:
             description = "flame.fill"
+        case .distanceSwimming:
+            description = "figure.pool.swim"
+        case .flightsClimbed:
+            description = "figure.stairs"
         default:
             break
         }
@@ -84,9 +92,9 @@ private func preferredUnit(for identifier: String, sampleType: HKSampleType? = n
         let quantityTypeIdentifier = HKQuantityTypeIdentifier(rawValue: identifier)
         
         switch quantityTypeIdentifier {
-        case .stepCount:
+        case .stepCount, .flightsClimbed:
             unit = .count()
-        case .distanceWalkingRunning:
+        case .distanceWalkingRunning, .distanceSwimming:
             unit = .meter()
         case .heartRate:
             unit = HKUnit(from: "count/min")
@@ -108,12 +116,14 @@ func getUnit(for sampleIdentifier: String) -> String? {
         switch quantityTypeIdentifier {
         case .stepCount:
             return "Steps"
-        case .distanceWalkingRunning:
+        case .distanceWalkingRunning, .distanceSwimming:
             return "Meters"
         case .heartRate:
             return "BPM"
         case .activeEnergyBurned, .basalEnergyBurned:
             return "Cal"
+        case .flightsClimbed:
+            return "Floors"
         default:
             break
         }
@@ -140,7 +150,7 @@ func getStatisticsOptions(for dataTypeIdentifier: String) -> HKStatisticsOptions
         let quantityTypeIdentifier = HKQuantityTypeIdentifier(rawValue: dataTypeIdentifier)
         
         switch quantityTypeIdentifier {
-        case .stepCount, .distanceWalkingRunning, .activeEnergyBurned, .basalEnergyBurned:
+        case .stepCount, .distanceWalkingRunning, .activeEnergyBurned, .basalEnergyBurned, .distanceSwimming, .flightsClimbed:
             options = .cumulativeSum
         case .heartRate:
             options = .discreteAverage

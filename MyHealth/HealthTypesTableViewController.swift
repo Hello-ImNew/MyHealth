@@ -11,6 +11,7 @@ import HealthKit
 struct dataAvailability {
     let displayName: String
     var dataTypes: [HKSampleType] = []
+    var dataValue: [HealthDataValue] = []
 }
 
 class HealthTypesTableViewController: UITableViewController {
@@ -21,7 +22,7 @@ class HealthTypesTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        dataTypeAvailability = [dataAvailability(displayName: "Data Available"), dataAvailability(displayName: "No Data Available")]
+        dataTypeAvailability = [dataAvailability(displayName: "Today"), dataAvailability(displayName: "Last 7 Days"), dataAvailability(displayName: "Last 30 Days"), dataAvailability(displayName: "Older"),dataAvailability(displayName: "No Data Available")]
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -45,19 +46,63 @@ class HealthTypesTableViewController: UITableViewController {
             let datePredicate = HKQuery.predicateForSamples(withStart: Date.distantPast, end: Date(), options: .strictStartDate)
 
             // Create a query to fetch data for the specified data type
-            let query = HKSampleQuery(sampleType: dataType, predicate: datePredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (query, results, error) in
+            let query = HKSampleQuery(sampleType: dataType, predicate: datePredicate, limit: 1, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)]) { (query, results, error) in
                 if let error = error {
                     print("Error fetching data for \(dataType): \(error.localizedDescription)")
                 } else {
-                    if let results = results, !results.isEmpty {
-                        print("\(dataType.identifier) has data.")
-                        self.dataTypeAvailability[0].dataTypes.append(dataType)
+                    if let result = results?.first {
+                        
+                        let latestDate = result.startDate
+                        let calendar = Calendar.current
+                        
+                        let startOfDay = calendar.startOfDay(for: latestDate)
+                        let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
+                        
+                        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+                        let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: dataType.identifier))
+                        let option = getStatisticsOptions(for: dataType.identifier)
+//
+                        let query = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: option) { (query, result, error) in
+                            if let result = result, 
+                                let quantity = getStatisticsQuantity(for: result, with: option),
+                                let unit = preferredUnit(for: dataType.identifier) {
+                                let value = quantity.doubleValue(for: unit)
+                                
+                                var index = 0
+                                if result.startDate.isToday {
+                                    index = 0
+                                } else if result.startDate.isWithinLast7Days! {
+                                    index = 1
+                                } else if result.startDate.isWithinLast30Days! {
+                                    index = 2
+                                } else {
+                                    index = 3
+                                }
+                                self.dataTypeAvailability[index].dataTypes.append(dataType)
+                                self.dataTypeAvailability[index].dataValue.append(HealthDataValue(startDate: result.startDate, endDate: result.endDate, value: value))
+                                
+                                print("\(dataType.identifier) has data.")
+                                print(value)
+                                
+                                DispatchQueue.main.async {
+                                    self.tableView.reloadData()
+                                }
+                            } else if let error = error {
+                                // Handle any errors that occurred during the query.
+                                print("Error fetching heart rate data: \(error.localizedDescription)")
+                            }
+                        }
+                        
+                        self.healthStore.execute(query)
+                        
+                        
                     } else {
                         print("\(dataType.identifier) has no data.")
-                        self.dataTypeAvailability[1].dataTypes.append(dataType)
-                    }
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
+                        self.dataTypeAvailability[4].dataTypes.append(dataType)
+                        
+                        DispatchQueue.main.async {
+                            self.tableView.reloadData()
+                        }
                     }
                 }
             }
@@ -71,7 +116,7 @@ class HealthTypesTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 2
+        return 5
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -80,6 +125,9 @@ class HealthTypesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if dataTypeAvailability[section].dataTypes.isEmpty {
+            return nil
+        }
         let header = dataTypeAvailability[section].displayName
         let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
         
@@ -98,26 +146,43 @@ class HealthTypesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if dataTypeAvailability[section].dataTypes.isEmpty {
+            return 0
+        }
         return 50
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "HealthTypeCell", for: indexPath) as! HealthTypeTableViewCell
-        let datasource = dataTypeAvailability[indexPath.section].dataTypes
-        let dataType = (datasource[indexPath.row] as HKSampleType).identifier
-        // Configure the cell...
-        cell.txtTitle?.text = getDataTypeName(for: dataType)
-        cell.imgIcon.image = UIImage(systemName: getDataTypeIcon(for: dataType)!)
-        if indexPath.section == 1{
-            cell.isUserInteractionEnabled = false
+        if indexPath.section == 4 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "HealthTypeCell", for: indexPath) as! HealthTypeTableViewCell
+            let datasource = dataTypeAvailability[indexPath.section].dataTypes
+            let dataType = (datasource[indexPath.row] as HKSampleType).identifier
+            // Configure the cell...
+            cell.txtTitle?.text = getDataTypeName(for: dataType)
+            cell.imgIcon.image = UIImage(systemName: getDataTypeIcon(for: dataType)!)
             cell.backgroundColor = tableView.backgroundColor
-            cell.accessoryType = .none
+            
+            return cell
         } else {
-            cell.isUserInteractionEnabled = true
-            cell.backgroundColor = .secondarySystemGroupedBackground
-            cell.accessoryType = .disclosureIndicator
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DataAvailableHealthTypeCell", for: indexPath) as! AvailableDataTypeTableViewCell
+            let datasource = dataTypeAvailability[indexPath.section]
+            let dataType = (datasource.dataTypes[indexPath.row] as HKSampleType).identifier
+            let dataValue = (datasource.dataValue[indexPath.row] as HealthDataValue)
+            
+            let dateformatter = DateFormatter()
+            if indexPath.section == 0 {
+                dateformatter.dateFormat = "hh:mm"
+            } else {
+                dateformatter.dateFormat = "dd/MM/yyyy"
+            }
+            // Configure the cell...
+            cell.txtLabel?.text = getDataTypeName(for: dataType)
+            cell.imgIcon.image = UIImage(systemName: getDataTypeIcon(for: dataType)!)
+            cell.txtData?.text = "\(String(format: "%.1f", dataValue.value)) \(getUnit(for: dataType)!)"
+            cell.txtDate?.text = dateformatter.string(from: dataValue.startDate)
+            
+            return cell
         }
-        return cell
     }
 
     /*
