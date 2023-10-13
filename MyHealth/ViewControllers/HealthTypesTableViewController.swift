@@ -42,6 +42,9 @@ class HealthTypesTableViewController: UITableViewController {
     func checkDataAvailability(dataTypesToCheck: [HKSampleType]) {
         clearDataTypes()
         for dataType in dataTypesToCheck {
+            if dataType.identifier == HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue {
+                continue
+            }
             // Create a predicate to specify the time range you want to check
             let datePredicate = HKQuery.predicateForSamples(withStart: Date.distantPast, end: Date(), options: .strictStartDate)
 
@@ -62,31 +65,60 @@ class HealthTypesTableViewController: UITableViewController {
                         let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: dataType.identifier))
                         let option = getStatisticsOptions(for: dataType.identifier)
 //
-                        let query = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: option) { (query, result, error) in
-                            if let result = result, 
-                                let quantity = getStatisticsQuantity(for: result, with: option),
+                        let query = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: option) { (query, statisticResult, error) in
+                            if let statisticResult = statisticResult,
+                                let quantity = getStatisticsQuantity(for: statisticResult, with: option),
                                 let unit = preferredUnit(for: dataType.identifier) {
                                 let value = quantity.doubleValue(for: unit)
                                 
                                 var index = 0
-                                if result.startDate.isToday {
+                                if statisticResult.startDate.isToday {
                                     index = 0
-                                } else if result.startDate.isWithinLast7Days! {
+                                } else if statisticResult.startDate.isWithinLast7Days! {
                                     index = 1
-                                } else if result.startDate.isWithinLast30Days! {
+                                } else if statisticResult.startDate.isWithinLast30Days! {
                                     index = 2
                                 } else {
                                     index = 3
                                 }
-                                self.dataTypeAvailability[index].dataTypes.append(dataType)
-                                self.dataTypeAvailability[index].dataValue.append(HealthDataValue(startDate: result.startDate, endDate: result.endDate, value: value))
+                                var dataValue = HealthDataValue(startDate: statisticResult.startDate, endDate: result.endDate, value: value)
                                 
-                                print("\(dataType.identifier) has data.")
-                                print(value)
-                                
-                                DispatchQueue.main.async {
-                                    self.tableView.reloadData()
+                                // if the datatype is boold pressure, get the diastolic value
+                                if dataType.identifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
+                                    let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue))
+                                    let option = getStatisticsOptions(for: quantityType.identifier)
+                                    let secondQuery = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: option) { (query, statisticResult, error) in
+                                        if let statisticResult = statisticResult,
+                                           let quantity = getStatisticsQuantity(for: statisticResult, with: option),
+                                           let unit = preferredUnit(for: dataType.identifier) {
+                                            let value = quantity.doubleValue(for: unit)
+                                            dataValue.secondaryValue = value
+                                            
+                                            self.dataTypeAvailability[index].dataTypes.append(dataType)
+                                            self.dataTypeAvailability[index].dataValue.append(dataValue)
+                                            
+                                            print("\(dataType.identifier) has data.")
+                                            print(value)
+                                            
+                                            DispatchQueue.main.async {
+                                                self.tableView.reloadData()
+                                            }
+                                        }
+                                    }
+                                    
+                                    self.healthStore.execute(secondQuery)
+                                } else {
+                                    self.dataTypeAvailability[index].dataTypes.append(dataType)
+                                    self.dataTypeAvailability[index].dataValue.append(dataValue)
+                                    
+                                    print("\(dataType.identifier) has data.")
+                                    print(value)
+                                    
+                                    DispatchQueue.main.async {
+                                        self.tableView.reloadData()
+                                    }
                                 }
+                                
                             } else if let error = error {
                                 // Handle any errors that occurred during the query.
                                 print("Error fetching heart rate data: \(error.localizedDescription)")
@@ -135,7 +167,7 @@ class HealthTypesTableViewController: UITableViewController {
         label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height-10)
         label.text = header
         label.font = .systemFont(ofSize: 25)
-        label.textColor = .lightGray
+        label.textColor = .secondaryLabel
         label.center = headerView.center
         
         headerView.addSubview(label)
@@ -178,8 +210,8 @@ class HealthTypesTableViewController: UITableViewController {
             // Configure the cell...
             cell.txtLabel?.text = getDataTypeName(for: dataType)
             cell.imgIcon.image = UIImage(systemName: getDataTypeIcon(for: dataType)!)
-            cell.txtData?.text = "\(String(format: "%.1f", dataValue.value)) \(getUnit(for: dataType)!)"
-            cell.txtDate?.text = dateformatter.string(from: dataValue.startDate)
+            cell.txtData?.text = "\(dataValue.displayString) \(getUnit(for: dataType)!)"
+            cell.txtDate?.text = dateformatter.string(from: dataValue.endDate)
             
             return cell
         }

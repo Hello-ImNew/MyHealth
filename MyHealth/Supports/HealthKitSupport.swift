@@ -32,6 +32,10 @@ func getDataTypeName(for identifier: String) -> String? {
             description = "Swimming Distance"
         case .flightsClimbed:
             description = "Flights Climbed"
+        case .bloodPressureSystolic, .bloodPressureDiastolic:
+            description = "Blood Pressure"
+        case .respiratoryRate:
+            description = "Respiratory Rate"
         default:
             break
         }
@@ -50,7 +54,7 @@ func getDataTypeIcon(for identifier: String) -> String? {
         switch quantityTypeIdentifier {
         case .stepCount, .distanceWalkingRunning:
             description = "figure.run"
-        case .heartRate:
+        case .heartRate, .bloodPressureSystolic:
             description = "heart.fill"
         case .activeEnergyBurned, .basalEnergyBurned:
             description = "flame.fill"
@@ -58,6 +62,8 @@ func getDataTypeIcon(for identifier: String) -> String? {
             description = "figure.pool.swim"
         case .flightsClimbed:
             description = "figure.stairs"
+        case .respiratoryRate:
+            description = "lungs.fill"
         default:
             break
         }
@@ -100,6 +106,10 @@ private func preferredUnit(for identifier: String, sampleType: HKSampleType? = n
             unit = HKUnit(from: "count/min")
         case .activeEnergyBurned, .basalEnergyBurned:
             unit = HKUnit(from: "kcal")
+        case . bloodPressureSystolic, .bloodPressureDiastolic:
+            unit = .millimeterOfMercury()
+        case .respiratoryRate:
+            unit = HKUnit(from: "count/min")
         default:
             break
         }
@@ -124,6 +134,10 @@ func getUnit(for sampleIdentifier: String) -> String? {
             return "Cal"
         case .flightsClimbed:
             return "Floors"
+        case .bloodPressureSystolic:
+            return "mmHg"
+        case .respiratoryRate:
+            return "breaths/min"
         default:
             break
         }
@@ -134,10 +148,7 @@ func getUnit(for sampleIdentifier: String) -> String? {
 // MARK: - Query Support
 func createAnchorDate(for date: Date) -> Date {
     let calendar: Calendar = .current
-    var anchorComponents = calendar.dateComponents([.day, .month, .year, .weekday], from: date)
-    
-    anchorComponents.hour = 2
-    let anchorDate = calendar.date(from: anchorComponents)!
+    let anchorDate = calendar.startOfDay(for: date)
     return anchorDate
 }
 
@@ -150,9 +161,9 @@ func getStatisticsOptions(for dataTypeIdentifier: String) -> HKStatisticsOptions
         let quantityTypeIdentifier = HKQuantityTypeIdentifier(rawValue: dataTypeIdentifier)
         
         switch quantityTypeIdentifier {
-        case .stepCount, .distanceWalkingRunning, .activeEnergyBurned, .basalEnergyBurned, .distanceSwimming, .flightsClimbed:
+        case .stepCount, .distanceWalkingRunning, .activeEnergyBurned, .basalEnergyBurned, .distanceSwimming, .flightsClimbed :
             options = .cumulativeSum
-        case .heartRate:
+        case .heartRate, .bloodPressureSystolic, .bloodPressureDiastolic, .respiratoryRate:
             options = .discreteAverage
         default:
             break
@@ -177,4 +188,3 @@ func getStatisticsQuantity(for statistics: HKStatistics, with statisticsOptions:
     
     return statisticsQuantity
 }
-

@@ -20,14 +20,15 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var settingView: UIStackView!
     @IBOutlet weak var btnShowChart: UIButton!
     @IBOutlet weak var viewTableOrChart: UIView!
+    @IBOutlet weak var lblTableChartTitle: UILabel!
     
     
     let healthStore = HealthData.healthStore
     var dataTypeIdentifier: String = ""
     var dataValues: [HealthDataValue] = []
-    var start : Date = Calendar.current.date(bySettingHour: 2, minute: 0, second: 0, of: Calendar.current.date(byAdding: .day, value: -7, to: Date())!)!
+    var start : Date = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: -6, to: Date())!)
     var end : Date = Date()
-    var isCollapsed: Bool = false
+    var isCollapsed: Bool = true
     var settingViewHeight : Double = 0
     var isChartShow = false
     
@@ -71,10 +72,10 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     
     @IBAction func clickedShow(_ sender: Any) {
         showData()
+        self.animateView()
     }
     
     func showData() {
-        isCollapsed = false
         let sampleType = getSampleType(for: dataTypeIdentifier)
         if sampleType is HKQuantityType {
             let shareType = Set([sampleType!])
@@ -84,7 +85,6 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
                     self.performQuery {
                         DispatchQueue.main.async {
                             self.reloadTable()
-                            self.animateView()
                         }
                     }
                 } else {
@@ -117,7 +117,39 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
                     dataValue.value = quantity.doubleValue(for: unit)
                 }
                 
-                self?.dataValues.append(dataValue)
+                // if the datatype is boold pressure, get the diastolic value
+                if self?.dataTypeIdentifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
+                    let latestDate = statistics.startDate
+                    let calendar = Calendar.current
+                    
+                    let startOfDay = calendar.startOfDay(for: latestDate)
+                    let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
+                    
+                    let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+                    
+                    let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue))
+                    let option = getStatisticsOptions(for: quantityType.identifier)
+                    let secondQuery = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: option) { (query, statisticResult, error) in
+                        let value : Double
+                        if let statisticResult = statisticResult,
+                           let quantity = getStatisticsQuantity(for: statisticResult, with: option),
+                           let unit = preferredUnit(for: quantityType.identifier) {
+                            value = quantity.doubleValue(for: unit)
+                            
+                        } else {
+                            value = 0
+                        }
+                        dataValue.secondaryValue = value
+                        self?.dataValues.append(dataValue)
+                        completion()
+                    }
+                    
+                    self?.healthStore.execute(secondQuery)
+                } else {
+                    self?.dataValues.append(dataValue)
+                }
+                
+                
             }
             
             completion()
@@ -135,6 +167,150 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     
     @objc func animateView() {
         isCollapsed = !isCollapsed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         UIView.animate(withDuration: 1, animations: {
             if self.isCollapsed {
                 self.settingView.alpha = 0
@@ -171,7 +347,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
                 $0.isHidden = true
             }
         })
-        let chartView = HealthChartView(data: dataValues)
+        let chartView = HealthChartView(dataIdentifier: dataTypeIdentifier, data: dataValues )
         let chartUIView = UIHostingController(rootView: chartView)
         chartUIView.view.translatesAutoresizingMaskIntoConstraints = false
         viewTableOrChart.addSubview(chartUIView.view)
@@ -206,37 +382,13 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "dd/MM/yyyy"
         
-        cell.textLabel?.text = String(format: "%.0f \(getUnit(for: dataTypeIdentifier)!)", value.value)
+        cell.textLabel?.text = "\(value.displayString) \(getUnit(for: dataTypeIdentifier) ?? "")"
         cell.detailTextLabel?.text = dateformatter.string(from: value.startDate)
         return cell
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
-        
-        let label = UILabel()
-        label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height-10)
-        label.text = getDataTypeName(for: dataTypeIdentifier) ?? ""
-        label.font = .systemFont(ofSize: 25)
-        label.textColor = .lightGray
-        label.center = headerView.center
-        
-        headerView.addSubview(label)
-        headerView.backgroundColor = healthTableView.backgroundColor
-        
-        
-        return headerView
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if dataValues.isEmpty {
-            return 0
-        } else {
-            return 50
-        }
-    }
-    
     func reloadTable(_ message: String = "No Data"){
+        lblTableChartTitle.text = getDataTypeName(for: dataTypeIdentifier) ?? ""
         if dataValues.count == 0 {
             setEmptyDataView(message)
         } else {
@@ -266,5 +418,6 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     */
 
 }
+
 
 
