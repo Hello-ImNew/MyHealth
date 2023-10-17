@@ -9,7 +9,9 @@ import Foundation
 import SwiftUI
 import Charts
 
+@available(iOS 17.0, *)
 struct HealthChartView: View {
+    let dayInSec = 24*3600
     let dataIdentifier: String
     let data:[HealthDataValue]
     let pastDataColor : LinearGradient = .linearGradient(colors: [.blue, .purple], startPoint: .top, endPoint: .bottom)
@@ -31,6 +33,9 @@ struct HealthChartView: View {
             }
             .frame(width: 350, height: 300, alignment: .center)
             .chartYAxisLabel("\(getDataTypeName(for: dataIdentifier) ?? "") (\(getUnit(for: dataIdentifier) ?? ""))")
+            .chartScrollableAxes(.horizontal)
+            .chartXVisibleDomain(length: data.count <= 7 ? dayInSec*data.count : dayInSec*7)
+            .chartScrollPosition(initialX: data.count > 7 ? data[data.count - 7].startDate : data[0].startDate)
         }
         .padding()
         .onAppear()

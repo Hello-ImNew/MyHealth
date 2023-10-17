@@ -30,7 +30,10 @@ class HealthData {
             HKQuantityTypeIdentifier.activeEnergyBurned.rawValue,
             HKQuantityTypeIdentifier.basalEnergyBurned.rawValue,
             HKQuantityTypeIdentifier.distanceSwimming.rawValue,
-            HKQuantityTypeIdentifier.flightsClimbed.rawValue
+            HKQuantityTypeIdentifier.flightsClimbed.rawValue,
+            HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue,
+            HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue,
+            HKQuantityTypeIdentifier.respiratoryRate.rawValue
         ]
         
         return typeIdentifiers.compactMap { getSampleType(for: $0) }

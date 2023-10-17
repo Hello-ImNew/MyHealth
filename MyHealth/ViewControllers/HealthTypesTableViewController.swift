@@ -7,6 +7,7 @@
 
 import UIKit
 import HealthKit
+import SwiftUI
 
 struct dataAvailability {
     let displayName: String
@@ -212,6 +213,96 @@ class HealthTypesTableViewController: UITableViewController {
             cell.imgIcon.image = UIImage(systemName: getDataTypeIcon(for: dataType)!)
             cell.txtData?.text = "\(dataValue.displayString) \(getUnit(for: dataType)!)"
             cell.txtDate?.text = dateformatter.string(from: dataValue.endDate)
+            
+            if indexPath.section == 0 || indexPath.section == 1 {
+                var summaryData : [HealthDataValue] = []
+                let start : Date = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: -6, to: Date())!)
+                let end : Date = Date()
+                
+                let performQuery: (@escaping ()-> Void) -> Void = { completion in
+                    let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: dataType))
+                    let predicate = HKQuery.predicateForSamples(withStart: start, end: end)
+                    let options = getStatisticsOptions(for: dataType)
+                    let anchorDate = createAnchorDate(for: start)
+                    let dailyInterval = DateComponents(day: 1)
+                    
+                    let query = HKStatisticsCollectionQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: options, anchorDate: anchorDate, intervalComponents: dailyInterval)
+                    
+                    let updateInterfaceWithStaticstics: (HKStatisticsCollection) -> Void = {statisticsCollection in
+                        let startDate = start
+                        let endDate = end
+                        var enumerateCount = 0
+                        
+                        statisticsCollection.enumerateStatistics(from: startDate, to: endDate) {[weak self] (statistics, stop) in
+                            var dataValue = HealthDataValue(startDate: statistics.startDate, endDate: statistics.endDate, value: 0)
+                            if let quantity = getStatisticsQuantity(for: statistics, with: options),
+                               let unit = preferredUnit(for: dataType) {
+                                dataValue.value = quantity.doubleValue(for: unit)
+                            }
+                            
+                            // if the datatype is boold pressure, get the diastolic value
+                            if dataType == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
+                                let latestDate = statistics.startDate
+                                let calendar = Calendar.current
+                                
+                                let startOfDay = calendar.startOfDay(for: latestDate)
+                                let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
+                                
+                                let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+                                
+                                let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue))
+                                let option = getStatisticsOptions(for: quantityType.identifier)
+                                let secondQuery = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: option) { (query, statisticResult, error) in
+                                    let value : Double
+                                    if let statisticResult = statisticResult,
+                                       let quantity = getStatisticsQuantity(for: statisticResult, with: option),
+                                       let unit = preferredUnit(for: quantityType.identifier) {
+                                        value = quantity.doubleValue(for: unit)
+                                        
+                                    } else {
+                                        value = 0
+                                    }
+                                    dataValue.secondaryValue = value
+                                    summaryData.append(dataValue)
+                                    enumerateCount += 1
+                                    completion()
+                                }
+                                
+                                self?.healthStore.execute(secondQuery)
+                            } else {
+                                summaryData.append(dataValue)
+                            }
+                        }
+                        if dataType != HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
+                            completion()
+                        }
+                    }
+                    
+                    
+                    query.initialResultsHandler = { query, statisticsCollection, error in
+                        if let statisticsCollection = statisticsCollection {
+                            updateInterfaceWithStaticstics(statisticsCollection)
+                        }
+                    }
+                    
+                    self.healthStore.execute(query)
+                }
+                
+                performQuery() {
+                    DispatchQueue.main.async {
+                        cell.chartView.subviews.forEach({$0.removeFromSuperview()})
+                        let summaryChartView = SummaryChartView(dataIdentifier: dataType, data: summaryData)
+                        let summaryChartUIView = UIHostingController(rootView: summaryChartView)
+                        summaryChartUIView.view.translatesAutoresizingMaskIntoConstraints = false
+                        cell.chartView.addSubview(summaryChartUIView.view)
+                        
+                        NSLayoutConstraint.activate([
+                            summaryChartUIView.view.centerXAnchor.constraint(equalTo: cell.chartView.centerXAnchor),
+                            summaryChartUIView.view.centerYAnchor.constraint(equalTo: cell.chartView.centerYAnchor)
+                        ])
+                    }
+                }
+            }
             
             return cell
         }

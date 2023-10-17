@@ -20,6 +20,7 @@
 		E863CAC32ABE00210000E489 /* EmptyDataBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CAC22ABE00210000E489 /* EmptyDataBackgroundView.swift */; };
 		E866BF2D2AC1C7F4001F93DC /* HealthDataValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E866BF2C2AC1C7F4001F93DC /* HealthDataValue.swift */; };
 		E866BF2F2AC1C8BE001F93DC /* HealthKitSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = E866BF2E2AC1C8BE001F93DC /* HealthKitSupport.swift */; };
+		E86AAD532AD85DBC00BE6075 /* SummaryChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86AAD522AD85DBC00BE6075 /* SummaryChartView.swift */; };
 		E86BDAC02AD04927000F3EB8 /* DateSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86BDABF2AD04927000F3EB8 /* DateSupport.swift */; };
 		E86BDAC22AD04C5B000F3EB8 /* AvailableDataTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86BDAC12AD04C5B000F3EB8 /* AvailableDataTypeTableViewCell.swift */; };
 		E86C86882ACC78BF0059B538 /* HealthTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86C86872ACC78BF0059B538 /* HealthTypeTableViewCell.swift */; };
@@ -44,6 +45,7 @@
 		E866BF2B2AC1C657001F93DC /* MyHealth.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MyHealth.entitlements; sourceTree = "<group>"; };
 		E866BF2C2AC1C7F4001F93DC /* HealthDataValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataValue.swift; sourceTree = "<group>"; };
 		E866BF2E2AC1C8BE001F93DC /* HealthKitSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitSupport.swift; sourceTree = "<group>"; };
+		E86AAD522AD85DBC00BE6075 /* SummaryChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryChartView.swift; sourceTree = "<group>"; };
 		E86BDABF2AD04927000F3EB8 /* DateSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSupport.swift; sourceTree = "<group>"; };
 		E86BDAC12AD04C5B000F3EB8 /* AvailableDataTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableDataTypeTableViewCell.swift; sourceTree = "<group>"; };
 		E86C86872ACC78BF0059B538 /* HealthTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthTypeTableViewCell.swift; sourceTree = "<group>"; };
@@ -87,17 +89,13 @@
 				E863CAA42ABDE2030000E489 /* AppDelegate.swift */,
 				E863CAA62ABDE2030000E489 /* SceneDelegate.swift */,
 				E863CAA82ABDE2030000E489 /* ViewController.swift */,
-				E863CABE2ABDF49C0000E489 /* HealthDisplayViewController.swift */,
-				E87553DF2AC751B2000996D9 /* HealthTypesTableViewController.swift */,
-				E863CAC22ABE00210000E489 /* EmptyDataBackgroundView.swift */,
-				E86C86872ACC78BF0059B538 /* HealthTypeTableViewCell.swift */,
-				E86BDAC12AD04C5B000F3EB8 /* AvailableDataTypeTableViewCell.swift */,
-				E86C868B2ACCB5DD0059B538 /* HealthChartView.swift */,
+				E86AAD512AD85D8B00BE6075 /* Charts */,
+				E86AAD502AD85D7F00BE6075 /* Cells */,
+				E86AAD4F2AD85D3500BE6075 /* ViewControllers */,
+				E86AAD4E2AD85D1D00BE6075 /* Supports */,
+				E86AAD4C2AD85CFF00BE6075 /* Models */,
 				E863CAAA2ABDE2030000E489 /* Main.storyboard */,
 				E863CAC02ABDF9730000E489 /* HealthData.swift */,
-				E866BF2C2AC1C7F4001F93DC /* HealthDataValue.swift */,
-				E866BF2E2AC1C8BE001F93DC /* HealthKitSupport.swift */,
-				E86BDABF2AD04927000F3EB8 /* DateSupport.swift */,
 				E863CAB02ABDE2040000E489 /* Assets.xcassets */,
 				E863CAB22ABDE2040000E489 /* LaunchScreen.storyboard */,
 				E863CAB52ABDE2040000E489 /* Info.plist */,
@@ -112,6 +110,51 @@
 				E863CABC2ABDE20E0000E489 /* HealthKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E86AAD4C2AD85CFF00BE6075 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E866BF2C2AC1C7F4001F93DC /* HealthDataValue.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E86AAD4E2AD85D1D00BE6075 /* Supports */ = {
+			isa = PBXGroup;
+			children = (
+				E866BF2E2AC1C8BE001F93DC /* HealthKitSupport.swift */,
+				E86BDABF2AD04927000F3EB8 /* DateSupport.swift */,
+			);
+			path = Supports;
+			sourceTree = "<group>";
+		};
+		E86AAD4F2AD85D3500BE6075 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				E87553DF2AC751B2000996D9 /* HealthTypesTableViewController.swift */,
+				E863CABE2ABDF49C0000E489 /* HealthDisplayViewController.swift */,
+				E863CAC22ABE00210000E489 /* EmptyDataBackgroundView.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		E86AAD502AD85D7F00BE6075 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				E86BDAC12AD04C5B000F3EB8 /* AvailableDataTypeTableViewCell.swift */,
+				E86C86872ACC78BF0059B538 /* HealthTypeTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		E86AAD512AD85D8B00BE6075 /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				E86C868B2ACCB5DD0059B538 /* HealthChartView.swift */,
+				E86AAD522AD85DBC00BE6075 /* SummaryChartView.swift */,
+			);
+			path = Charts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,6 +229,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E863CAA92ABDE2030000E489 /* ViewController.swift in Sources */,
+				E86AAD532AD85DBC00BE6075 /* SummaryChartView.swift in Sources */,
 				E86BDAC02AD04927000F3EB8 /* DateSupport.swift in Sources */,
 				E863CABF2ABDF49C0000E489 /* HealthDisplayViewController.swift in Sources */,
 				E863CAAF2ABDE2030000E489 /* MyHealth.xcdatamodeld in Sources */,
@@ -359,7 +403,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -389,7 +433,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

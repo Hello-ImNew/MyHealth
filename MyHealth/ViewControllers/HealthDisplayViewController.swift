@@ -28,7 +28,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     var dataValues: [HealthDataValue] = []
     var start : Date = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: -6, to: Date())!)
     var end : Date = Date()
-    var isCollapsed: Bool = true
+    var isCollapsed: Bool = false
     var settingViewHeight : Double = 0
     var isChartShow = false
     
@@ -72,7 +72,6 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     
     @IBAction func clickedShow(_ sender: Any) {
         showData()
-        self.animateView()
     }
     
     func showData() {
@@ -85,6 +84,8 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
                     self.performQuery {
                         DispatchQueue.main.async {
                             self.reloadTable()
+                            
+                            self.animateView()
                         }
                     }
                 } else {
@@ -167,150 +168,6 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     
     @objc func animateView() {
         isCollapsed = !isCollapsed
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         UIView.animate(withDuration: 1, animations: {
             if self.isCollapsed {
                 self.settingView.alpha = 0

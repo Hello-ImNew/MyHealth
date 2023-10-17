@@ -12,6 +12,7 @@ class AvailableDataTypeTableViewCell: UITableViewCell {
     @IBOutlet weak var txtLabel: UILabel!
     @IBOutlet weak var txtData: UILabel!
     @IBOutlet weak var txtDate: UILabel!
+    @IBOutlet weak var chartView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
