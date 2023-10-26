@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E85FEE412AE1621A00E59384 /* ViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85FEE402AE1621A00E59384 /* ViewModels.swift */; };
+		E85FEE432AE1904100E59384 /* HealthCategoriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85FEE422AE1904100E59384 /* HealthCategoriesTableViewController.swift */; };
 		E863CAA52ABDE2030000E489 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CAA42ABDE2030000E489 /* AppDelegate.swift */; };
 		E863CAA72ABDE2030000E489 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CAA62ABDE2030000E489 /* SceneDelegate.swift */; };
 		E863CAA92ABDE2030000E489 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CAA82ABDE2030000E489 /* ViewController.swift */; };
@@ -18,9 +20,12 @@
 		E863CABF2ABDF49C0000E489 /* HealthDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CABE2ABDF49C0000E489 /* HealthDisplayViewController.swift */; };
 		E863CAC12ABDF9730000E489 /* HealthData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CAC02ABDF9730000E489 /* HealthData.swift */; };
 		E863CAC32ABE00210000E489 /* EmptyDataBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CAC22ABE00210000E489 /* EmptyDataBackgroundView.swift */; };
+		E866B0DC2AE082840005F747 /* HealthCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E866B0DB2AE082840005F747 /* HealthCategory.swift */; };
 		E866BF2D2AC1C7F4001F93DC /* HealthDataValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E866BF2C2AC1C7F4001F93DC /* HealthDataValue.swift */; };
 		E866BF2F2AC1C8BE001F93DC /* HealthKitSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = E866BF2E2AC1C8BE001F93DC /* HealthKitSupport.swift */; };
 		E86AAD532AD85DBC00BE6075 /* SummaryChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86AAD522AD85DBC00BE6075 /* SummaryChartView.swift */; };
+		E86BC6DD2AE6B97B00782083 /* AddHealthDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86BC6DC2AE6B97B00782083 /* AddHealthDataViewController.swift */; };
+		E86BC6DF2AE6B99700782083 /* AddBloodPressureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86BC6DE2AE6B99700782083 /* AddBloodPressureViewController.swift */; };
 		E86BDAC02AD04927000F3EB8 /* DateSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86BDABF2AD04927000F3EB8 /* DateSupport.swift */; };
 		E86BDAC22AD04C5B000F3EB8 /* AvailableDataTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86BDAC12AD04C5B000F3EB8 /* AvailableDataTypeTableViewCell.swift */; };
 		E86C86882ACC78BF0059B538 /* HealthTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86C86872ACC78BF0059B538 /* HealthTypeTableViewCell.swift */; };
@@ -29,6 +34,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E85FEE402AE1621A00E59384 /* ViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels.swift; sourceTree = "<group>"; };
+		E85FEE422AE1904100E59384 /* HealthCategoriesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthCategoriesTableViewController.swift; sourceTree = "<group>"; };
 		E863CAA12ABDE2030000E489 /* MyHealth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyHealth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E863CAA42ABDE2030000E489 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E863CAA62ABDE2030000E489 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -42,10 +49,13 @@
 		E863CABE2ABDF49C0000E489 /* HealthDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDisplayViewController.swift; sourceTree = "<group>"; };
 		E863CAC02ABDF9730000E489 /* HealthData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthData.swift; sourceTree = "<group>"; };
 		E863CAC22ABE00210000E489 /* EmptyDataBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDataBackgroundView.swift; sourceTree = "<group>"; };
+		E866B0DB2AE082840005F747 /* HealthCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthCategory.swift; sourceTree = "<group>"; };
 		E866BF2B2AC1C657001F93DC /* MyHealth.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MyHealth.entitlements; sourceTree = "<group>"; };
 		E866BF2C2AC1C7F4001F93DC /* HealthDataValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataValue.swift; sourceTree = "<group>"; };
 		E866BF2E2AC1C8BE001F93DC /* HealthKitSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitSupport.swift; sourceTree = "<group>"; };
 		E86AAD522AD85DBC00BE6075 /* SummaryChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryChartView.swift; sourceTree = "<group>"; };
+		E86BC6DC2AE6B97B00782083 /* AddHealthDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHealthDataViewController.swift; sourceTree = "<group>"; };
+		E86BC6DE2AE6B99700782083 /* AddBloodPressureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBloodPressureViewController.swift; sourceTree = "<group>"; };
 		E86BDABF2AD04927000F3EB8 /* DateSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSupport.swift; sourceTree = "<group>"; };
 		E86BDAC12AD04C5B000F3EB8 /* AvailableDataTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableDataTypeTableViewCell.swift; sourceTree = "<group>"; };
 		E86C86872ACC78BF0059B538 /* HealthTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthTypeTableViewCell.swift; sourceTree = "<group>"; };
@@ -65,6 +75,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E85FEE3F2AE161F800E59384 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				E85FEE402AE1621A00E59384 /* ViewModels.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		E863CA982ABDE2030000E489 = {
 			isa = PBXGroup;
 			children = (
@@ -89,13 +107,14 @@
 				E863CAA42ABDE2030000E489 /* AppDelegate.swift */,
 				E863CAA62ABDE2030000E489 /* SceneDelegate.swift */,
 				E863CAA82ABDE2030000E489 /* ViewController.swift */,
+				E86AAD4F2AD85D3500BE6075 /* ViewControllers */,
 				E86AAD512AD85D8B00BE6075 /* Charts */,
 				E86AAD502AD85D7F00BE6075 /* Cells */,
-				E86AAD4F2AD85D3500BE6075 /* ViewControllers */,
 				E86AAD4E2AD85D1D00BE6075 /* Supports */,
 				E86AAD4C2AD85CFF00BE6075 /* Models */,
-				E863CAAA2ABDE2030000E489 /* Main.storyboard */,
+				E85FEE3F2AE161F800E59384 /* ViewModels */,
 				E863CAC02ABDF9730000E489 /* HealthData.swift */,
+				E863CAAA2ABDE2030000E489 /* Main.storyboard */,
 				E863CAB02ABDE2040000E489 /* Assets.xcassets */,
 				E863CAB22ABDE2040000E489 /* LaunchScreen.storyboard */,
 				E863CAB52ABDE2040000E489 /* Info.plist */,
@@ -116,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				E866BF2C2AC1C7F4001F93DC /* HealthDataValue.swift */,
+				E866B0DB2AE082840005F747 /* HealthCategory.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -135,6 +155,9 @@
 				E87553DF2AC751B2000996D9 /* HealthTypesTableViewController.swift */,
 				E863CABE2ABDF49C0000E489 /* HealthDisplayViewController.swift */,
 				E863CAC22ABE00210000E489 /* EmptyDataBackgroundView.swift */,
+				E85FEE422AE1904100E59384 /* HealthCategoriesTableViewController.swift */,
+				E86BC6DC2AE6B97B00782083 /* AddHealthDataViewController.swift */,
+				E86BC6DE2AE6B99700782083 /* AddBloodPressureViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -229,16 +252,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				E863CAA92ABDE2030000E489 /* ViewController.swift in Sources */,
+				E85FEE432AE1904100E59384 /* HealthCategoriesTableViewController.swift in Sources */,
 				E86AAD532AD85DBC00BE6075 /* SummaryChartView.swift in Sources */,
 				E86BDAC02AD04927000F3EB8 /* DateSupport.swift in Sources */,
+				E866B0DC2AE082840005F747 /* HealthCategory.swift in Sources */,
 				E863CABF2ABDF49C0000E489 /* HealthDisplayViewController.swift in Sources */,
 				E863CAAF2ABDE2030000E489 /* MyHealth.xcdatamodeld in Sources */,
 				E866BF2F2AC1C8BE001F93DC /* HealthKitSupport.swift in Sources */,
 				E86C868C2ACCB5DD0059B538 /* HealthChartView.swift in Sources */,
 				E863CAC12ABDF9730000E489 /* HealthData.swift in Sources */,
 				E87553E02AC751B3000996D9 /* HealthTypesTableViewController.swift in Sources */,
+				E85FEE412AE1621A00E59384 /* ViewModels.swift in Sources */,
+				E86BC6DF2AE6B99700782083 /* AddBloodPressureViewController.swift in Sources */,
 				E863CAA52ABDE2030000E489 /* AppDelegate.swift in Sources */,
 				E86C86882ACC78BF0059B538 /* HealthTypeTableViewCell.swift in Sources */,
+				E86BC6DD2AE6B97B00782083 /* AddHealthDataViewController.swift in Sources */,
 				E866BF2D2AC1C7F4001F93DC /* HealthDataValue.swift in Sources */,
 				E86BDAC22AD04C5B000F3EB8 /* AvailableDataTypeTableViewCell.swift in Sources */,
 				E863CAA72ABDE2030000E489 /* SceneDelegate.swift in Sources */,
@@ -398,11 +426,13 @@
 				DEVELOPMENT_TEAM = VKLXJ93678;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MyHealth/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Allow this app to share your Health data to doctors and clinicians.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Allow this app to write health data provided from your doctor or clinician.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -428,11 +458,13 @@
 				DEVELOPMENT_TEAM = VKLXJ93678;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MyHealth/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Allow this app to share your Health data to doctors and clinicians.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Allow this app to write health data provided from your doctor or clinician.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -342,16 +342,144 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "48E1D97A-7C77-4D71-9148-024BF73976AE"
+            uuid = "B3545E59-3F21-454A-87ED-9397ADA21772"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MyHealth/ViewControllers/HealthTypesTableViewController.swift"
+            filePath = "MyHealth/ViewControllers/HealthCategoriesTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "268"
-            endingLineNumber = "268"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6C140EF6-57E8-4E90-BBB3-C3E4BC0DDD83"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/HealthCategoriesTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
             landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "18386C06-97B4-4151-B4E9-6558CE3B5A30"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/HealthCategoriesTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14"
+            endingLineNumber = "14"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E32F28F2-5485-47B1-AFFA-07EA444D9F93"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/HealthData.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "requestHealthDataAccessIfNeeded(toShare:read:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E32F28F2-5485-47B1-AFFA-07EA444D9F93 - 2e668c0f1a6e73da"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Bool, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static MyHealth.HealthData.requestHealthDataAccessIfNeeded(toShare: Swift.Optional&lt;Swift.Set&lt;__C.HKSampleType&gt;&gt;, read: Swift.Optional&lt;Swift.Set&lt;__C.HKObjectType&gt;&gt;, completion: (Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "MyHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/HealthData.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "57"
+                  endingLineNumber = "57"
+                  offsetFromSymbolStart = "112">
+               </Location>
+               <Location
+                  uuid = "E32F28F2-5485-47B1-AFFA-07EA444D9F93 - c834e88c0152fd87"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Bool, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static MyHealth.HealthData.requestHealthDataAccessIfNeeded(toShare: Swift.Optional&lt;Swift.Set&lt;__C.HKSampleType&gt;&gt;, read: Swift.Optional&lt;Swift.Set&lt;__C.HKObjectType&gt;&gt;, completion: (Swift.Bool) -&gt; ()) throws -&gt; ()"
+                  moduleName = "MyHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/HealthData.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "57"
+                  endingLineNumber = "57"
+                  offsetFromSymbolStart = "208">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1305D786-ADD2-47B5-8D0B-48C762558750"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/HealthData.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "requestHealthDataAccessIfNeeded(toShare:read:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C4CCE94D-8409-489F-8BF0-D20CE053AFEB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/HealthData.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "requestHealthDataAccessIfNeeded(toShare:read:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8B1C98D8-033A-4C04-9421-DF8947480CD5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/HealthDisplayViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
+            landmarkName = "showData()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

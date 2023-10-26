@@ -10,7 +10,7 @@ import SwiftUI
 import Foundation
 import HealthKit
 
-class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AddDataDelegate {
     
     
     
@@ -20,7 +20,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var settingView: UIStackView!
     @IBOutlet weak var btnShowChart: UIButton!
     @IBOutlet weak var viewTableOrChart: UIView!
-    @IBOutlet weak var lblTableChartTitle: UILabel!
+    @IBOutlet weak var btnAddData: UIButton!
     
     
     let healthStore = HealthData.healthStore
@@ -31,6 +31,13 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     var isCollapsed: Bool = false
     var settingViewHeight : Double = 0
     var isChartShow = false
+    var currentTitle: String {
+        if let title = getDataTypeName(for: dataTypeIdentifier) {
+            return title
+        } else {
+            return "Health Data"
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +45,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         // Do any additional setup after loading the view.
         healthTableView.delegate = self
         healthTableView.dataSource = self
+        self.title = currentTitle
         reloadTable("Adjust setting to show your health data.")
         startDate.date = start
         startDate.maximumDate = endDate.date
@@ -49,11 +57,20 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         
         self.navigationItem.rightBarButtonItem = settingButton
         self.view.backgroundColor = healthTableView.backgroundColor
+        checkAdding()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         showData()
+    }
+    
+    func checkAdding() {
+        if isAllowedShared(for: dataTypeIdentifier) {
+            self.btnAddData.isHidden = false
+        } else {
+            self.btnAddData.isHidden = true
+        }
     }
     
     @IBAction func startDate(_ sender: Any) {
@@ -62,7 +79,6 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         endDate.minimumDate = startDate.date
         presentedViewController?.dismiss(animated: true)
     }
-    
     
     @IBAction func endDate(_ sender: Any) {
         end = endDate.date
@@ -73,19 +89,49 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     @IBAction func clickedShow(_ sender: Any) {
         showData()
     }
+
+    @IBAction func clinkedAddData(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if dataTypeIdentifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
+            let controller = storyboard.instantiateViewController(withIdentifier: "AddBloodPressureController") as? AddBloodPressureViewController
+            let navVC = UINavigationController(rootViewController: controller!)
+            controller?.title = getDataTypeName(for: dataTypeIdentifier)
+            controller?.delegate = self
+            self.showDetailViewController(navVC, sender: self)
+            
+        } else {
+            let controller = storyboard.instantiateViewController(withIdentifier: "AddDataController") as? AddHealthDataViewController
+            let navVC = UINavigationController(rootViewController: controller!)
+            controller?.title = getDataTypeName(for: dataTypeIdentifier)
+            controller?.dataTypeIDentifier = dataTypeIdentifier
+            controller?.delegate = self
+            self.showDetailViewController(navVC, sender: self)
+        }
+        
+    }
     
     func showData() {
         let sampleType = getSampleType(for: dataTypeIdentifier)
         if sampleType is HKQuantityType {
-            let shareType = Set([sampleType!])
-            let readType = Set([sampleType!])
+            var readType = Set([sampleType!])
+            var shareType: Set<HKSampleType>? = Set([sampleType!])
+            if dataTypeIdentifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
+                let secondSampleType = getSampleType(for: HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue)
+                readType.insert(secondSampleType!)
+                shareType?.insert(secondSampleType!)
+            }
+            if !isAllowedShared(for: dataTypeIdentifier) {
+                shareType = nil
+            }
             HealthData.requestHealthDataAccessIfNeeded(toShare: shareType, read: readType) { success in
                 if success {
-                    self.performQuery {
+                    performQuery(for: self.dataTypeIdentifier, from: self.start, to: self.end) { result in
                         DispatchQueue.main.async {
+                            self.dataValues = result
                             self.reloadTable()
-                            
-                            self.animateView()
+                            if self.isCollapsed == false {
+                                self.animateView()
+                            }
                         }
                     }
                 } else {
@@ -93,77 +139,6 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
                 }
             }
         }
-    }
-    
-    func performQuery(_ completion: @escaping () -> Void) {
-        let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: dataTypeIdentifier))
-        let predicate = HKQuery.predicateForSamples(withStart: start, end: end)
-        let options = getStatisticsOptions(for: dataTypeIdentifier)
-        let anchorDate = createAnchorDate(for: start)
-        let dailyInterval = DateComponents(day: 1)
-        
-        let query = HKStatisticsCollectionQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: options, anchorDate: anchorDate, intervalComponents: dailyInterval)
-        
-        let updateInterfaceWithStaticstics: (HKStatisticsCollection) -> Void = {statisticsCollection in
-            self.dataValues = []
-            
-            let startDate = self.start
-            let endDate = self.end
-            
-            statisticsCollection.enumerateStatistics(from: startDate, to: endDate) { [weak self] (statistics, stop) in
-                var dataValue = HealthDataValue(startDate: statistics.startDate, endDate: statistics.endDate, value: 0)
-                if let quantity = getStatisticsQuantity(for: statistics, with: options),
-                   let identifier = self?.dataTypeIdentifier,
-                   let unit = preferredUnit(for: identifier) {
-                    dataValue.value = quantity.doubleValue(for: unit)
-                }
-                
-                // if the datatype is boold pressure, get the diastolic value
-                if self?.dataTypeIdentifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
-                    let latestDate = statistics.startDate
-                    let calendar = Calendar.current
-                    
-                    let startOfDay = calendar.startOfDay(for: latestDate)
-                    let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
-                    
-                    let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
-                    
-                    let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue))
-                    let option = getStatisticsOptions(for: quantityType.identifier)
-                    let secondQuery = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: option) { (query, statisticResult, error) in
-                        let value : Double
-                        if let statisticResult = statisticResult,
-                           let quantity = getStatisticsQuantity(for: statisticResult, with: option),
-                           let unit = preferredUnit(for: quantityType.identifier) {
-                            value = quantity.doubleValue(for: unit)
-                            
-                        } else {
-                            value = 0
-                        }
-                        dataValue.secondaryValue = value
-                        self?.dataValues.append(dataValue)
-                        completion()
-                    }
-                    
-                    self?.healthStore.execute(secondQuery)
-                } else {
-                    self?.dataValues.append(dataValue)
-                }
-                
-                
-            }
-            
-            completion()
-        }
-        
-        
-        query.initialResultsHandler = { query, statisticsCollection, error in
-            if let statisticsCollection = statisticsCollection {
-                updateInterfaceWithStaticstics(statisticsCollection)
-            }
-        }
-        
-        self.healthStore.execute(query)
     }
     
     @objc func animateView() {
@@ -193,6 +168,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         } else {
             btnShowChart.setTitle("Show Chart", for: .normal)
             addTable()
+            self.reloadTable()
         }
     }
     
@@ -207,12 +183,12 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         let chartView = HealthChartView(dataIdentifier: dataTypeIdentifier, data: dataValues )
         let chartUIView = UIHostingController(rootView: chartView)
         chartUIView.view.translatesAutoresizingMaskIntoConstraints = false
+        chartUIView.view.isUserInteractionEnabled = true
+        addChild(chartUIView)
         viewTableOrChart.addSubview(chartUIView.view)
+        view.addConstraint(chartUIView.view.centerXAnchor.constraint(equalTo: self.viewTableOrChart.centerXAnchor))
+        view.addConstraint(chartUIView.view.centerYAnchor.constraint(equalTo: self.viewTableOrChart.centerYAnchor))
         
-        NSLayoutConstraint.activate([
-            chartUIView.view.centerXAnchor.constraint(equalTo: self.viewTableOrChart.centerXAnchor),
-            chartUIView.view.centerYAnchor.constraint(equalTo: self.viewTableOrChart.centerYAnchor)
-        ])
         chartUIView.didMove(toParent: self)
     }
     
@@ -224,6 +200,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         })
         healthTableView.isHidden = false
     }
+    
     // MARK: - TableView Data Source
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -245,7 +222,6 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     func reloadTable(_ message: String = "No Data"){
-        lblTableChartTitle.text = getDataTypeName(for: dataTypeIdentifier) ?? ""
         if dataValues.count == 0 {
             setEmptyDataView(message)
         } else {
@@ -275,6 +251,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     */
 
 }
+
 
 
 

@@ -18,8 +18,9 @@ struct dataAvailability {
 class HealthTypesTableViewController: UITableViewController {
     
     let healthStore = HealthData.healthStore
-    let healthDataTypes: [HKSampleType] = HealthData.readDataTypes
+    var healthDataTypes: [HKSampleType] = HealthData.readDataTypes
     var dataTypeAvailability: [dataAvailability] = []
+    var currentTitle: String = "Health Types"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +31,8 @@ class HealthTypesTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         let read = Set(healthDataTypes)
-        let share = Set(healthDataTypes)
-        HealthData.requestHealthDataAccessIfNeeded(toShare: share, read: read) { success in
+        self.title = currentTitle
+        HealthData.requestHealthDataAccessIfNeeded(toShare: nil, read: read) { success in
             if success {
                 self.checkDataAvailability(dataTypesToCheck: self.healthDataTypes)
             }
@@ -70,7 +71,10 @@ class HealthTypesTableViewController: UITableViewController {
                             if let statisticResult = statisticResult,
                                 let quantity = getStatisticsQuantity(for: statisticResult, with: option),
                                 let unit = preferredUnit(for: dataType.identifier) {
-                                let value = quantity.doubleValue(for: unit)
+                                var value = quantity.doubleValue(for: unit)
+                                if unit == .percent() {
+                                    value *= 100
+                                }
                                 
                                 var index = 0
                                 if statisticResult.startDate.isToday {
@@ -92,7 +96,10 @@ class HealthTypesTableViewController: UITableViewController {
                                         if let statisticResult = statisticResult,
                                            let quantity = getStatisticsQuantity(for: statisticResult, with: option),
                                            let unit = preferredUnit(for: dataType.identifier) {
-                                            let value = quantity.doubleValue(for: unit)
+                                            var value = quantity.doubleValue(for: unit)
+                                            if unit == .percent() {
+                                                value *= 100
+                                            }
                                             dataValue.secondaryValue = value
                                             
                                             self.dataTypeAvailability[index].dataTypes.append(dataType)
@@ -144,6 +151,7 @@ class HealthTypesTableViewController: UITableViewController {
             healthStore.execute(query)
         }
     }
+    
 
     // MARK: - Table view data source
 
@@ -155,37 +163,48 @@ class HealthTypesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return dataTypeAvailability[section].dataTypes.count
+        
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if dataTypeAvailability[section].dataTypes.isEmpty {
+            print("Section \(section)")
             return nil
+        } else {
+            let header = dataTypeAvailability[section].displayName
+            let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
+            
+            let label = UILabel()
+            label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height-10)
+            label.text = header
+            label.font = .systemFont(ofSize: 25)
+            label.textColor = .secondaryLabel
+            label.center = headerView.center
+            
+            headerView.addSubview(label)
+            headerView.backgroundColor = tableView.backgroundColor
+            
+            
+            return headerView
         }
-        let header = dataTypeAvailability[section].displayName
-        let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
-        
-        let label = UILabel()
-        label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height-10)
-        label.text = header
-        label.font = .systemFont(ofSize: 25)
-        label.textColor = .secondaryLabel
-        label.center = headerView.center
-        
-        headerView.addSubview(label)
-        headerView.backgroundColor = tableView.backgroundColor
-        
-        
-        return headerView
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if dataTypeAvailability[section].dataTypes.isEmpty {
             return 0
+        } else {
+            return 50
         }
-        return 50
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if dataTypeAvailability[indexPath.section].dataTypes.isEmpty {
+            print("Section \(indexPath.section), row \(indexPath.row)")
+        }
         if indexPath.section == 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "HealthTypeCell", for: indexPath) as! HealthTypeTableViewCell
             let datasource = dataTypeAvailability[indexPath.section].dataTypes
@@ -219,77 +238,9 @@ class HealthTypesTableViewController: UITableViewController {
                 let start : Date = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: -6, to: Date())!)
                 let end : Date = Date()
                 
-                let performQuery: (@escaping ()-> Void) -> Void = { completion in
-                    let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: dataType))
-                    let predicate = HKQuery.predicateForSamples(withStart: start, end: end)
-                    let options = getStatisticsOptions(for: dataType)
-                    let anchorDate = createAnchorDate(for: start)
-                    let dailyInterval = DateComponents(day: 1)
-                    
-                    let query = HKStatisticsCollectionQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: options, anchorDate: anchorDate, intervalComponents: dailyInterval)
-                    
-                    let updateInterfaceWithStaticstics: (HKStatisticsCollection) -> Void = {statisticsCollection in
-                        let startDate = start
-                        let endDate = end
-                        var enumerateCount = 0
-                        
-                        statisticsCollection.enumerateStatistics(from: startDate, to: endDate) {[weak self] (statistics, stop) in
-                            var dataValue = HealthDataValue(startDate: statistics.startDate, endDate: statistics.endDate, value: 0)
-                            if let quantity = getStatisticsQuantity(for: statistics, with: options),
-                               let unit = preferredUnit(for: dataType) {
-                                dataValue.value = quantity.doubleValue(for: unit)
-                            }
-                            
-                            // if the datatype is boold pressure, get the diastolic value
-                            if dataType == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
-                                let latestDate = statistics.startDate
-                                let calendar = Calendar.current
-                                
-                                let startOfDay = calendar.startOfDay(for: latestDate)
-                                let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
-                                
-                                let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
-                                
-                                let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue))
-                                let option = getStatisticsOptions(for: quantityType.identifier)
-                                let secondQuery = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: option) { (query, statisticResult, error) in
-                                    let value : Double
-                                    if let statisticResult = statisticResult,
-                                       let quantity = getStatisticsQuantity(for: statisticResult, with: option),
-                                       let unit = preferredUnit(for: quantityType.identifier) {
-                                        value = quantity.doubleValue(for: unit)
-                                        
-                                    } else {
-                                        value = 0
-                                    }
-                                    dataValue.secondaryValue = value
-                                    summaryData.append(dataValue)
-                                    enumerateCount += 1
-                                    completion()
-                                }
-                                
-                                self?.healthStore.execute(secondQuery)
-                            } else {
-                                summaryData.append(dataValue)
-                            }
-                        }
-                        if dataType != HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
-                            completion()
-                        }
-                    }
-                    
-                    
-                    query.initialResultsHandler = { query, statisticsCollection, error in
-                        if let statisticsCollection = statisticsCollection {
-                            updateInterfaceWithStaticstics(statisticsCollection)
-                        }
-                    }
-                    
-                    self.healthStore.execute(query)
-                }
-                
-                performQuery() {
+                performQuery(for: dataType, from: start, to: end) { result in
                     DispatchQueue.main.async {
+                        summaryData = result
                         cell.chartView.subviews.forEach({$0.removeFromSuperview()})
                         let summaryChartView = SummaryChartView(dataIdentifier: dataType, data: summaryData)
                         let summaryChartUIView = UIHostingController(rootView: summaryChartView)
@@ -356,7 +307,7 @@ class HealthTypesTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-        if (segue.identifier == "ShowHealthDataSegue") {
+        if (segue.identifier == "ShowHealthDataSegue" || segue.identifier == "ShowEmptyhealthDataSegue") {
             let healthDisplayController = segue.destination as? HealthDisplayViewController
             let selectedCell = self.tableView.indexPath(for: sender as! UITableViewCell)
             let datasource: [HKSampleType] = self.dataTypeAvailability[selectedCell!.section].dataTypes
