@@ -48,6 +48,10 @@ class AddBloodPressureViewController: UIViewController {
         HealthData.saveHealthData([sample1, sample2]) { (success, error) in
             if let error = error {
                 print("Error in Saving Data:", error.localizedDescription)
+                let alertController = UIAlertController(title: "Saving Data Error", message: error.localizedDescription, preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "OK", style: .cancel)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true)
             }
             if success {
                 print("Successfully saved a new sample!", sample1, sample2)

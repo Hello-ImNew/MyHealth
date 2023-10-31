@@ -89,6 +89,7 @@ class HealthCategoriesTableViewController: UITableViewController {
             let selectedCategory = healthCategories[selectedRow!] as HealthCategory
             healthDataController?.healthDataTypes = selectedCategory.dataTypes
             healthDataController?.currentTitle = selectedCategory.categoryName
+            healthDataController?.isFavView = false
         }
     }
 

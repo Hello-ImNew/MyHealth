@@ -38,6 +38,9 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
             return "Health Data"
         }
     }
+    var isFav : Bool {
+        return ViewModels.favHealthTypes.contains(dataTypeIdentifier)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +54,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         startDate.maximumDate = endDate.date
         endDate.minimumDate = startDate.date
         settingViewHeight = settingView.bounds.size.height
+        
         print("current Identifier \(dataTypeIdentifier)")
         
         let settingButton: UIBarButtonItem = UIBarButtonItem(title: "Setting", style: .plain, target: self, action: #selector(animateView))
@@ -58,6 +62,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         self.navigationItem.rightBarButtonItem = settingButton
         self.view.backgroundColor = healthTableView.backgroundColor
         checkAdding()
+        createFavButton()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -199,6 +204,58 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
             }
         })
         healthTableView.isHidden = false
+    }
+    
+    func createFavButton() {
+        var imageName : String
+        if isFav {
+            imageName = "star.fill"
+        } else {
+            imageName = "star"
+        }
+        let image = UIImage(systemName: imageName)
+        let button = UIButton(type: .custom) as UIButton
+        button.setImage(image, for: .normal)
+        button.tintColor = UIColor.systemYellow
+        button.imageView?.contentMode = .scaleToFill
+        
+        viewTableOrChart.addSubview(button)
+        let buttonSize = CGSize(width: 40, height: 40)
+        let parentFrame = viewTableOrChart.frame
+        let buttonX = parentFrame.width - buttonSize.width
+        let buttonY = parentFrame.height - buttonSize.height
+        
+        button.frame = CGRect(x: buttonX, y: buttonY, width: buttonSize.width, height: buttonSize.height)
+        button.removeFromSuperview()
+        
+        button.addTarget(self, action: #selector(clickedFavButton(_:)), for: .touchUpInside)
+        view.addSubview(button)
+        
+        //constraints
+        button.bottomAnchor.constraint(equalTo: viewTableOrChart.bottomAnchor, constant: 0).isActive = true
+        button.trailingAnchor.constraint(equalTo: viewTableOrChart.trailingAnchor, constant: 0).isActive = true
+        button.widthAnchor.constraint(equalToConstant: buttonSize.width).isActive = true
+        button.heightAnchor.constraint(equalToConstant: buttonSize.height).isActive = true
+        button.imageView?.widthAnchor.constraint(equalToConstant: buttonSize.width).isActive = true
+        button.imageView?.heightAnchor.constraint(equalToConstant: buttonSize.height).isActive = true
+        button.imageView?.translatesAutoresizingMaskIntoConstraints = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+    }
+    
+    @objc func clickedFavButton(_ sender: UIButton) {
+        let userDefaults = UserDefaults.standard
+        var imageName : String
+        if isFav {
+            imageName = "star"
+            ViewModels.removeFavHealthType(for: dataTypeIdentifier)
+        } else {
+            imageName = "star.fill"
+            ViewModels.addFavHealthType(for: dataTypeIdentifier)
+        }
+        let image = UIImage(systemName: imageName)
+        sender.setImage(image, for: .normal)
+        print(ViewModels.favHealthTypes)
     }
     
     // MARK: - TableView Data Source

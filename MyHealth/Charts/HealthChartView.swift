@@ -64,7 +64,7 @@ struct HealthChartView: View {
                     + Text(" \(getUnit(for: dataIdentifier)!)")
                     Text(date.formatted(date: .abbreviated, time: .omitted))
                 } else {
-                    Text("AVERAGE")
+                    Text("DAILY AVERAGE")
                     Text(String(format: "%.1f", averageValue)).bold()
                     + Text(averageSecondValue != nil ? "/\(String(format: "%.1f", averageSecondValue!))" : "").bold()
                     + Text(" \(getUnit(for: dataIdentifier)!)")
@@ -84,6 +84,7 @@ struct HealthChartView: View {
                     BarMark(x: .value(d.startDate.formatted(), d.startDate, unit: .day), y: .value("Value", d.value - (d.secondaryValue ?? 0)))
                         .foregroundStyle(Calendar.current.isDateInToday(d.startDate) ? todayDataColor : pastDataColor)
                         .alignsMarkStylesWithPlotArea()
+                        .opacity(selectedDate != nil ? (Calendar.current.isDate(selectedDate!, equalTo: d.startDate, toGranularity: .day) ? 1 : 0.5) : 1)
                 }
             }
             .chartXScale(domain: data.first!.startDate...data.last!.endDate)
@@ -104,7 +105,10 @@ struct HealthChartView: View {
                 }
             }
         }
-        .padding()
+        .padding(.all, 10 )
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .clipped()
     }
     
     func updateSelectedDate(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) {

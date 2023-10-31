@@ -18,9 +18,10 @@ struct dataAvailability {
 class HealthTypesTableViewController: UITableViewController {
     
     let healthStore = HealthData.healthStore
-    var healthDataTypes: [HKSampleType] = HealthData.readDataTypes
+    var healthDataTypes: [HKSampleType] = ViewModels.favDataType
     var dataTypeAvailability: [dataAvailability] = []
-    var currentTitle: String = "Health Types"
+    var currentTitle: String = "Favorites Health Types"
+    var isFavView = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,14 +31,23 @@ class HealthTypesTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
-        let read = Set(healthDataTypes)
         self.title = currentTitle
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if isFavView {
+            healthDataTypes = ViewModels.favDataType
+        }
+        
+        let read = Set(healthDataTypes)
         HealthData.requestHealthDataAccessIfNeeded(toShare: nil, read: read) { success in
             if success {
                 self.checkDataAvailability(dataTypesToCheck: self.healthDataTypes)
             }
         }
-        
     }
     
     

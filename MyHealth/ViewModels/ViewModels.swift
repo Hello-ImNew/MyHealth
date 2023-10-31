@@ -8,8 +8,37 @@
 import Foundation
 import HealthKit
 import UIKit
+import CoreData
 
 class ViewModels {
+    private static let userDefaults = UserDefaults.standard
+    
+    private static let healthTypesKey = "healthTypes"
+    
+    static var favHealthTypes: [String] {
+        let healthTypes: [String] = userDefaults.object(forKey: healthTypesKey) as? [String] ?? []
+        
+        return healthTypes
+    }
+    
+    static var favDataType: [HKSampleType] {
+        return favHealthTypes.compactMap({ getSampleType(for: $0)})
+    }
+    
+    static func removeFavHealthType(for healthType: String) {
+        var healthTypes = favHealthTypes
+        healthTypes.removeAll(where: {
+            $0 == healthType
+        })
+        userDefaults.set(healthTypes, forKey: healthTypesKey)
+    }
+    
+    static func addFavHealthType(for healthType: String) {
+        var healthTypes = favHealthTypes
+        healthTypes.append(healthType)
+        userDefaults.set(healthTypes, forKey: healthTypesKey)
+    }
+    
     static var healthCategories: [HealthCategory] {
         var activity: HealthCategory {
             var activityTypes: [HKSampleType] {
