@@ -10,17 +10,18 @@ import Foundation
 struct HealthDataValue: Identifiable {
     var id = UUID().uuidString
     
+    var identifier: String
     let startDate: Date
     let endDate: Date
     var value: Double
     var secondaryValue: Double? = nil
     
     var displayString: String {
-        var result = String(format: "%.0f", value)
-        if let secondaryValue = secondaryValue {
-            result += "/\(String(format: "%.0f", secondaryValue))"
-        }
-        
-        return result
+            var result = String(format: "%.0f", value)
+            if let secondaryValue = secondaryValue {
+                result += "/\(String(format: "%.0f", secondaryValue))"
+            }
+            
+            return result
     }
 }

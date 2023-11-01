@@ -105,12 +105,12 @@ func performQuery(for dataTypeIdentifier: String, from start: Date, to end: Date
         let endDate = endQueryDate
         
         statisticsCollection.enumerateStatistics(from: startDate, to: endDate) { (statistics, stop) in
-            var dataValue = HealthDataValue(startDate: statistics.startDate, endDate: statistics.endDate, value: 0)
+            var dataValue = HealthDataValue(identifier: dataTypeIdentifier,startDate: statistics.startDate, endDate: statistics.endDate, value: 0)
             if let quantity = getStatisticsQuantity(for: statistics, with: options),
                let unit: HKUnit = preferredUnit(for: dataTypeIdentifier) {
                 dataValue.value = quantity.doubleValue(for: unit)
                 if unit == .percent() {
-                    dataValue.value *= 100
+                     dataValue.value *= 100
                 }
             }
             dataValues.append(dataValue)

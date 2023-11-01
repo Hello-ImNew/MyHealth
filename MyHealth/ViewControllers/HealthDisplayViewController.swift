@@ -244,7 +244,6 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     @objc func clickedFavButton(_ sender: UIButton) {
-        let userDefaults = UserDefaults.standard
         var imageName : String
         if isFav {
             imageName = "star"

@@ -47,6 +47,12 @@ struct HealthChartView: View {
         }
     }
     
+    var formatter : NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 1
+        return formatter
+    }
     
     @State var selectedDate: Date?
     @State var selectedValue: Double?
@@ -59,14 +65,14 @@ struct HealthChartView: View {
                    let value = selectedValue
                 {
                     Text("\(getStatisticsOptions(for: dataIdentifier) == HKStatisticsOptions.cumulativeSum ? "TOTAL" : "AVERAGE")")
-                    Text("\(String(format: "%.1f", value))").bold()
-                    + Text(selectedSecondValue != nil ? "/\(String(format: "%.1f", selectedSecondValue!))" : "").bold()
+                    Text("\(formatter.string(from: value as NSNumber) ?? "0.0")").bold()
+                    + Text(selectedSecondValue != nil ? "/\(formatter.string(from: selectedSecondValue! as NSNumber) ?? "")" : "").bold()
                     + Text(" \(getUnit(for: dataIdentifier)!)")
                     Text(date.formatted(date: .abbreviated, time: .omitted))
                 } else {
                     Text("DAILY AVERAGE")
-                    Text(String(format: "%.1f", averageValue)).bold()
-                    + Text(averageSecondValue != nil ? "/\(String(format: "%.1f", averageSecondValue!))" : "").bold()
+                    Text(formatter.string(from: averageValue as NSNumber) ?? "0.0").bold()
+                    + Text(averageSecondValue != nil ? "/\(formatter.string(from: averageSecondValue! as NSNumber) ?? "")" : "").bold()
                     + Text(" \(getUnit(for: dataIdentifier)!)")
                     
                     
