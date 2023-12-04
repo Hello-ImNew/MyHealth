@@ -84,7 +84,7 @@ func getSampleType(for identifier: String) -> HKSampleType? {
     return nil
 }
 
-func performQuery(for dataTypeIdentifier: String, from start: Date, to end: Date,_ completion: @escaping ([HealthDataValue]) -> Void) {
+func performQuery(for dataTypeIdentifier: String, from start: Date, to end: Date,_ completion: @escaping ([quantityDataValue]) -> Void) {
     let healthStore = HealthData.healthStore
     let current = Calendar.current
     let startQueryDate = current.startOfDay(for: start)
@@ -99,13 +99,13 @@ func performQuery(for dataTypeIdentifier: String, from start: Date, to end: Date
     let query = HKStatisticsCollectionQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: options, anchorDate: anchorDate, intervalComponents: dailyInterval)
     
     let updateInterfaceWithStaticstics: (HKStatisticsCollection) -> Void = {statisticsCollection in
-        var dataValues: [HealthDataValue] = []
+        var dataValues: [quantityDataValue] = []
         
         let startDate = startQueryDate
         let endDate = endQueryDate
         
         statisticsCollection.enumerateStatistics(from: startDate, to: endDate) { (statistics, stop) in
-            var dataValue = HealthDataValue(identifier: dataTypeIdentifier,startDate: statistics.startDate, endDate: statistics.endDate, value: 0)
+            var dataValue = quantityDataValue(identifier: dataTypeIdentifier,startDate: statistics.startDate, endDate: statistics.endDate, value: 0)
             if let quantity = getStatisticsQuantity(for: statistics, with: options),
                let unit: HKUnit = preferredUnit(for: dataTypeIdentifier) {
                 dataValue.value = quantity.doubleValue(for: unit)

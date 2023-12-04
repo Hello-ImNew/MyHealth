@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct HealthDataValue: Identifiable {
+struct quantityDataValue: Identifiable {
     var id = UUID().uuidString
     
     var identifier: String

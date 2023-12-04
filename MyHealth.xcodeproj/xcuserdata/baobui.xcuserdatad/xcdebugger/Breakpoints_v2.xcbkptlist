@@ -349,8 +349,8 @@
             filePath = "MyHealth/ViewControllers/HealthCategoriesTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -365,8 +365,8 @@
             filePath = "MyHealth/ViewControllers/HealthCategoriesTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -381,8 +381,8 @@
             filePath = "MyHealth/ViewControllers/HealthCategoriesTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14"
-            endingLineNumber = "14"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -486,33 +486,257 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D93126B5-4DF7-4C27-89BA-9C2D0086A8BB"
+            uuid = "CA7EB422-E4AC-47D9-A5DF-8378A9796333"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MyHealth/ViewControllers/HealthTypesTableViewController.swift"
+            filePath = "MyHealth/ViewControllers/HealthCategoriesTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "338"
-            endingLineNumber = "338"
-            landmarkName = "sortDataAvailability(for:completion:)"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "searchBar(_:textDidChange:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "AF23C3CC-59A8-439A-9E62-1E9B328B8501"
+            uuid = "D0E43DC7-7C36-49AC-ADA4-59A4938830B9"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MyHealth/ViewControllers/HealthTypesTableViewController.swift"
+            filePath = "MyHealth/ViewControllers/CategoriesViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "347"
-            endingLineNumber = "347"
-            landmarkName = "sortDataAvailability(for:completion:)"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
+            landmarkName = "prepare(for:sender:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4E215BFD-C580-40F8-83D8-187197130F0E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "clickedShow(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CE4285AD-6F3C-4F20-A24D-67DB54C9EE16"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "showData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "CE4285AD-6F3C-4F20-A24D-67DB54C9EE16 - 5230cc655147201a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.UIView) -&gt; () in closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Array&lt;MyHealth.categoryDataValue&gt;) -&gt; () in closure #1 (Swift.Bool) -&gt; () in MyHealth.CategoryDisplayViewController.showData() -&gt; ()"
+                  moduleName = "MyHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "CE4285AD-6F3C-4F20-A24D-67DB54C9EE16 - bac337573bce0698"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Array&lt;MyHealth.categoryDataValue&gt;) -&gt; () in closure #1 (Swift.Bool) -&gt; () in MyHealth.CategoryDisplayViewController.showData() -&gt; ()"
+                  moduleName = "MyHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44"
+                  offsetFromSymbolStart = "708">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1990D9E3-802A-4A31-9095-0F77AA638281"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "showData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B1D1EAA9-4620-45F6-8CD5-DF5C1333A659"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
+            landmarkName = "showData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B1D1EAA9-4620-45F6-8CD5-DF5C1333A659 - 72403ca037c4fa48"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Array&lt;MyHealth.categoryDataValue&gt;) -&gt; () in closure #1 (Swift.Bool) -&gt; () in MyHealth.CategoryDisplayViewController.showData() -&gt; ()"
+                  moduleName = "MyHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "39"
+                  endingLineNumber = "39"
+                  offsetFromSymbolStart = "208">
+               </Location>
+               <Location
+                  uuid = "B1D1EAA9-4620-45F6-8CD5-DF5C1333A659 - bac337573bce061c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Array&lt;MyHealth.categoryDataValue&gt;) -&gt; () in closure #1 (Swift.Bool) -&gt; () in MyHealth.CategoryDisplayViewController.showData() -&gt; ()"
+                  moduleName = "MyHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "40"
+                  endingLineNumber = "40"
+                  offsetFromSymbolStart = "364">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8B1BA55D-DCED-43B9-802C-7011D6E0D1F2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "showData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "8B1BA55D-DCED-43B9-802C-7011D6E0D1F2 - f168435840b9d325"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Bool) -&gt; () in MyHealth.CategoryDisplayViewController.showData() -&gt; ()"
+                  moduleName = "MyHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "38"
+                  endingLineNumber = "38"
+                  offsetFromSymbolStart = "104">
+               </Location>
+               <Location
+                  uuid = "8B1BA55D-DCED-43B9-802C-7011D6E0D1F2 - 72403ca037c4fa48"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Array&lt;MyHealth.categoryDataValue&gt;) -&gt; () in closure #1 (Swift.Bool) -&gt; () in MyHealth.CategoryDisplayViewController.showData() -&gt; ()"
+                  moduleName = "MyHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "39"
+                  endingLineNumber = "39"
+                  offsetFromSymbolStart = "208">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "26481238-DAC1-43FD-8BDC-457DCACD50BF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
+            landmarkName = "categoryQuery(for:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "26481238-DAC1-43FD-8BDC-457DCACD50BF - 1c0ca8ea010bfaa1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.HKSampleQuery, Swift.Optional&lt;Swift.Array&lt;__C.HKSample&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in MyHealth.CategoryDisplayViewController.categoryQuery(for: __C.HKSampleType, completion: (Swift.Array&lt;MyHealth.categoryDataValue&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "MyHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "67"
+                  endingLineNumber = "67"
+                  offsetFromSymbolStart = "1516">
+               </Location>
+               <Location
+                  uuid = "26481238-DAC1-43FD-8BDC-457DCACD50BF - abb30d8576fdfcb1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.HKCategorySample) -&gt; Swift.Optional&lt;MyHealth.categoryDataValue&gt; in closure #1 (__C.HKSampleQuery, Swift.Optional&lt;Swift.Array&lt;__C.HKSample&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in MyHealth.CategoryDisplayViewController.categoryQuery(for: __C.HKSampleType, completion: (Swift.Array&lt;MyHealth.categoryDataValue&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "MyHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/CategoryDisplayViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "67"
+                  endingLineNumber = "67"
+                  offsetFromSymbolStart = "184">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

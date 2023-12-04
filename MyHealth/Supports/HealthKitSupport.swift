@@ -242,6 +242,92 @@ func getDataTypeName(for identifier: String) -> String? {
         default:
             break
         }
+    } else if sampleType is HKCategoryType {
+        let categoryTypeIdentifier = HKCategoryTypeIdentifier(rawValue: identifier)
+        
+        switch categoryTypeIdentifier {
+        case .abdominalCramps:
+            description = "Abdominal Cramps"
+        case .acne:
+            description = "Acne"
+        case .appetiteChanges:
+            description = "Appetite Changes"
+        case . bladderIncontinence:
+            description = "Bladder Incontigence"
+        case .bloating:
+            description = "Bloating"
+        case .breastPain:
+            description = "Breast Pain"
+        case .chestTightnessOrPain:
+            description = "Chest Tightness or Pain"
+        case .chills:
+            description = "Chills"
+        case .constipation:
+            description = "Constipation"
+        case .coughing:
+            description = "Coughing"
+        case .diarrhea:
+            description = "Diarrhea"
+        case .dizziness:
+            description = "Dizziness"
+        case . drySkin:
+            description = "Dry Skin"
+        case .fainting:
+            description = "Fainting"
+        case .fatigue:
+            description = "Fatigue"
+        case .fever:
+            description = "Fever"
+        case .generalizedBodyAche:
+            description = "Body and Muscle Ache"
+        case .hairLoss:
+            description = "Hair Loss"
+        case .headache:
+            description = "Headache"
+        case .heartburn:
+            description = "Heartburn"
+        case .hotFlashes:
+            description = "Hot Flashes"
+        case .lossOfSmell:
+            description = "Loss of Smell"
+        case .lossOfTaste:
+            description = "Loss of Taste"
+        case .lowerBackPain:
+            description = "Lower Back Pain"
+        case .memoryLapse:
+            description = "Memory Lapse"
+        case .moodChanges:
+            description = "Mood Changes"
+        case .nausea:
+            description = "Nausea"
+        case .nightSweats:
+            description = "Night Sweats"
+        case .pelvicPain:
+            description = "Pelvic Pain"
+        case .rapidPoundingOrFlutteringHeartbeat:
+            description = "Raping, Pounding, or Fluttering Heartbeat"
+        case .runnyNose:
+            description = "Runny Nose"
+        case .shortnessOfBreath:
+            description = "Shortness of Breath"
+        case .sinusCongestion:
+            description = "Congestion"
+        case .skippedHeartbeat:
+            description = "Skipped Heartbeat"
+        case .sleepChanges:
+            description = "Sleep Changes"
+        case .soreThroat:
+            description = "Sore Throat"
+        case .vaginalDryness:
+            description = "Vaginal Dryness"
+        case .vomiting:
+            description = "Vomiting"
+        case .wheezing:
+            description = "Wheezing"
+            
+        default:
+            break
+        }
     }
     
     return description
@@ -276,6 +362,14 @@ func getDataTypeIcon(for identifier: String) -> String? {
         default:
             break
         }
+        } else if sampleType is HKCategoryType {
+            let categoryTypeIdentifier = HKCategoryTypeIdentifier(rawValue: identifier)
+            switch categoryTypeIdentifier {
+            case .abdominalCramps, .acne, .bladderIncontinence, .bloating, .breastPain, .chestTightnessOrPain, .chills, .constipation, .coughing, .diarrhea, .dizziness, .drySkin, .fainting, .fatigue, .fever, .generalizedBodyAche, .hairLoss, .headache, .heartburn, .hotFlashes, .lossOfSmell, .lossOfTaste, .lowerBackPain, .memoryLapse, .nausea, .nightSweats, .pelvicPain, .rapidPoundingOrFlutteringHeartbeat, .runnyNose, .shortnessOfBreath, .sinusCongestion, .skippedHeartbeat, .soreThroat, .vaginalDryness, .vomiting, .wheezing, .appetiteChanges, .sleepChanges, .moodChanges:
+                description = "list.bullet.clipboard"
+            default:
+                break
+            }
     }
     
     return description
@@ -310,9 +404,37 @@ func getDataTypeColor(for identifier: String) -> UIColor? {
         default:
             break
         }
+    } else if sampleType is HKCategoryType {
+        let categoryTypeIdentifier = HKCategoryTypeIdentifier(rawValue: identifier)
+        switch categoryTypeIdentifier {
+        case .abdominalCramps, .acne, .bladderIncontinence, .bloating, .breastPain, .chestTightnessOrPain, .chills, .constipation, .coughing, .diarrhea, .dizziness, .drySkin, .fainting, .fatigue, .fever, .generalizedBodyAche, .hairLoss, .headache, .heartburn, .hotFlashes, .lossOfSmell, .lossOfTaste, .lowerBackPain, .memoryLapse, .nausea, .nightSweats, .pelvicPain, .rapidPoundingOrFlutteringHeartbeat, .runnyNose, .shortnessOfBreath, .sinusCongestion, .skippedHeartbeat, .soreThroat, .vaginalDryness, .vomiting, .wheezing, .appetiteChanges, .sleepChanges, .moodChanges:
+            color = .purple
+        default:
+            break
+        }
     }
     
     return color
+}
+
+func getCategoryValues(for identifier: String) -> [String] {
+    var result: [String] = []
+    let sampleType = getSampleType(for: identifier)
+    if sampleType is HKCategoryType {
+        let categoryTypeIdentifier = HKCategoryTypeIdentifier(rawValue: identifier)
+        switch categoryTypeIdentifier {
+        case .abdominalCramps, .acne, .bladderIncontinence, .bloating, .breastPain, .chestTightnessOrPain, .chills, .constipation, .coughing, .diarrhea, .dizziness, .drySkin, .fainting, .fatigue, .fever, .generalizedBodyAche, .hairLoss, .headache, .heartburn, .hotFlashes, .lossOfSmell, .lossOfTaste, .lowerBackPain, .memoryLapse, .nausea, .nightSweats, .pelvicPain, .rapidPoundingOrFlutteringHeartbeat, .runnyNose, .shortnessOfBreath, .sinusCongestion, .skippedHeartbeat, .soreThroat, .vaginalDryness, .vomiting, .wheezing:
+            result = ["Present", "Not Present", "Mild", "Moderate", "Severe"]
+        case .appetiteChanges:
+            result = ["No Change", "Present", "Decreased", "Increased"]
+        case .sleepChanges, .moodChanges:
+            result = ["Not Present", "Present"]
+        default:
+            break
+        }
+        
+    }
+    return result
 }
 
 // MARK: - Unit Support

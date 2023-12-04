@@ -25,9 +25,9 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     
     let healthStore = HealthData.healthStore
     var dataTypeIdentifier: String = ""
-    var dataValues: [HealthDataValue] = []
+    var dataValues: [quantityDataValue] = []
     var start : Date = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: -6, to: Date())!)
-    var end : Date = Date()
+    var end : Date = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: Date())!
     var isCollapsed: Bool = false
     var settingViewHeight : Double = 0
     var isChartShow = false

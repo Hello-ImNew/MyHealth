@@ -11,7 +11,7 @@ import SwiftUI
 
 struct dataAvailability {
     let displayName: String
-    var dataValue: [HealthDataValue] = []
+    var dataValue: [quantityDataValue] = []
 }
 
 class HealthTypesTableViewController: UITableViewController {
@@ -30,6 +30,9 @@ class HealthTypesTableViewController: UITableViewController {
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        if isFavView {
+            self.navigationItem.rightBarButtonItem = self.editButtonItem
+        }
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         self.navigationItem.title = currentTitle
         
@@ -101,7 +104,7 @@ class HealthTypesTableViewController: UITableViewController {
                                 } else {
                                     index = 3
                                 }
-                                var dataValue = HealthDataValue(identifier: dataType.identifier, startDate: statisticResult.startDate, endDate: result.endDate, value: value)
+                                var dataValue = quantityDataValue(identifier: dataType.identifier, startDate: statisticResult.startDate, endDate: result.endDate, value: value)
                                 
                                 // if the datatype is boold pressure, get the diastolic value
                                 if dataType.identifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
@@ -117,9 +120,10 @@ class HealthTypesTableViewController: UITableViewController {
                                             }
                                             dataValue.secondaryValue = value
                                             
-                                            self.dataTypeAvailability[index].dataValue.append(dataValue)
+                                            
                                             
                                             DispatchQueue.main.async {
+                                                self.insertToDataTypes(dataValue: dataValue, at: index)
                                                 self.reloadTable(self.noFavMessage)
                                             }
                                         }
@@ -127,9 +131,10 @@ class HealthTypesTableViewController: UITableViewController {
                                     
                                     self.healthStore.execute(secondQuery)
                                 } else {
-                                    self.dataTypeAvailability[index].dataValue.append(dataValue)
+                                    
                                     
                                     DispatchQueue.main.async {
+                                        self.insertToDataTypes(dataValue: dataValue, at: index)
                                         self.reloadTable(self.noFavMessage)
                                     }
                                 }
@@ -144,10 +149,9 @@ class HealthTypesTableViewController: UITableViewController {
                         
                         
                     } else {
-                        let emptyDatavalue = HealthDataValue(identifier: dataType.identifier, startDate: Date(), endDate: Date(), value: 0)
-                        self.dataTypeAvailability[4].dataValue.append(emptyDatavalue)
-                        
                         DispatchQueue.main.async {
+                            let emptyDatavalue = quantityDataValue(identifier: dataType.identifier, startDate: Date(), endDate: Date(), value: 0)
+                            self.insertToDataTypes(dataValue: emptyDatavalue, at: 4)
                             self.reloadTable(self.noFavMessage)
                         }
                     }
@@ -241,7 +245,7 @@ class HealthTypesTableViewController: UITableViewController {
             cell.txtDate?.text = dateformatter.string(from: dataValue.endDate)
             
             if indexPath.section == 0 || indexPath.section == 1 {
-                var summaryData : [HealthDataValue] = []
+                var summaryData : [quantityDataValue] = []
                 let start : Date = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: -6, to: Date())!)
                 let end : Date = Date()
                 
@@ -260,6 +264,8 @@ class HealthTypesTableViewController: UITableViewController {
                         ])
                     }
                 }
+            } else {
+                cell.chartView.subviews.forEach({$0.removeFromSuperview()})
             }
             
             return cell
@@ -274,17 +280,21 @@ class HealthTypesTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
+            let datasource = dataTypeAvailability[indexPath.section]
+            let dataType = (datasource.dataValue[indexPath.row]).identifier
+            ViewModels.removeFavHealthType(for: dataType)
+            dataTypeAvailability[indexPath.section].dataValue.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
     }
-    */
+    
 
     /*
     // Override to support rearranging the table view.
@@ -300,6 +310,10 @@ class HealthTypesTableViewController: UITableViewController {
         return true
     }
     */
+    func insertToDataTypes(dataValue: quantityDataValue, at index: Int){
+        let i = self.dataTypeAvailability[index].dataValue.lastIndex(where: {getDataTypeName(for: $0.identifier) ?? "" < getDataTypeName(for: dataValue.identifier) ?? ""}) ?? -1
+        self.dataTypeAvailability[index].dataValue.insert(dataValue, at: i+1)
+    }
     
     func clearDataTypes() {
         for i in 0..<dataTypeAvailability.count{
@@ -313,37 +327,13 @@ class HealthTypesTableViewController: UITableViewController {
             tableView.reloadData()
         } else {
             tableView.backgroundView = nil
-            sortDataAvailability(for: &dataTypeAvailability) {
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }
+            tableView.reloadData()
         }
     }
     
     func setEmptyDataView(_ message: String) {
         let emptyDataView = EmptyDataBackgroundView(message: message)
         tableView.backgroundView = emptyDataView
-    }
-    
-    func sortDataAvailability(for dataInput: inout [dataAvailability], completion: @escaping ()->Void) {
-        var count = 0
-        for data in dataInput {
-            count += data.dataValue.count
-        }
-        
-        if count != healthDataTypes.count {
-            return
-        }
-        for i in 0..<dataInput.count {
-            dataInput[i].dataValue.sort {
-                (first, second) in
-                print(first.identifier)
-                print(second.identifier)
-                print()
-                return getDataTypeName(for: first.identifier) ?? "" < getDataTypeName(for: second.identifier) ?? ""}
-        }
-        completion()
     }
 
     

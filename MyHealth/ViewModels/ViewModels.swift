@@ -39,7 +39,7 @@ class ViewModels {
         userDefaults.set(healthTypes, forKey: healthTypesKey)
     }
     
-    static var healthCategories: [HealthCategory] {
+    static var quantitiesHealth: [HealthCategory] {
         var activity: HealthCategory {
             var activityTypes: [HKSampleType] {
                 let identifiers: [String] = [
@@ -257,7 +257,62 @@ class ViewModels {
             return HealthCategory(categoryName: "Vitals", dataTypes: vitalSignTypes, icon: "waveform.path.ecg.rectangle", color: .red)
         }
         
+        
+        
         return [activity, bodyMeasurement, hearingHealth, heart, nutrition, mobility, respiratory, vitalSign, other]
+    }
+    
+    static var categoriesHealth: [HealthCategory] {
+        var symtoms: HealthCategory {
+            var symntomsType: [HKSampleType] {
+                let identifier: [String] = [
+                    HKCategoryTypeIdentifier.abdominalCramps.rawValue,
+                    HKCategoryTypeIdentifier.acne.rawValue,
+                    HKCategoryTypeIdentifier.appetiteChanges.rawValue,
+                    HKCategoryTypeIdentifier.bladderIncontinence.rawValue,
+                    HKCategoryTypeIdentifier.bloating.rawValue,
+                    HKCategoryTypeIdentifier.breastPain.rawValue,
+                    HKCategoryTypeIdentifier.chestTightnessOrPain.rawValue,
+                    HKCategoryTypeIdentifier.chills.rawValue,
+                    HKCategoryTypeIdentifier.constipation.rawValue,
+                    HKCategoryTypeIdentifier.coughing.rawValue,
+                    HKCategoryTypeIdentifier.diarrhea.rawValue,
+                    HKCategoryTypeIdentifier.dizziness.rawValue,
+                    HKCategoryTypeIdentifier.drySkin.rawValue,
+                    HKCategoryTypeIdentifier.fainting.rawValue,
+                    HKCategoryTypeIdentifier.fatigue.rawValue,
+                    HKCategoryTypeIdentifier.fever.rawValue,
+                    HKCategoryTypeIdentifier.generalizedBodyAche.rawValue,
+                    HKCategoryTypeIdentifier.hairLoss.rawValue,
+                    HKCategoryTypeIdentifier.headache.rawValue,
+                    HKCategoryTypeIdentifier.heartburn.rawValue,
+                    HKCategoryTypeIdentifier.hotFlashes.rawValue,
+                    HKCategoryTypeIdentifier.lossOfSmell.rawValue,
+                    HKCategoryTypeIdentifier.lossOfTaste.rawValue,
+                    HKCategoryTypeIdentifier.lowerBackPain.rawValue,
+                    HKCategoryTypeIdentifier.memoryLapse.rawValue,
+                    HKCategoryTypeIdentifier.moodChanges.rawValue,
+                    HKCategoryTypeIdentifier.nausea.rawValue,
+                    HKCategoryTypeIdentifier.nightSweats.rawValue,
+                    HKCategoryTypeIdentifier.pelvicPain.rawValue,
+                    HKCategoryTypeIdentifier.rapidPoundingOrFlutteringHeartbeat.rawValue,
+                    HKCategoryTypeIdentifier.runnyNose.rawValue,
+                    HKCategoryTypeIdentifier.shortnessOfBreath.rawValue,
+                    HKCategoryTypeIdentifier.sinusCongestion.rawValue,
+                    HKCategoryTypeIdentifier.skippedHeartbeat.rawValue,
+                    HKCategoryTypeIdentifier.sleepChanges.rawValue,
+                    HKCategoryTypeIdentifier.soreThroat.rawValue,
+                    HKCategoryTypeIdentifier.vaginalDryness.rawValue,
+                    HKCategoryTypeIdentifier.vomiting.rawValue,
+                    HKCategoryTypeIdentifier.wheezing.rawValue
+                ]
+                
+                return identifier.compactMap {getSampleType(for: $0)}
+            }
+            return HealthCategory(categoryName: "Symtoms", dataTypes: symntomsType, icon: "list.bullet.clipboard", color: .purple)
+        }
+        
+        return [symtoms]
     }
     
     static var shareNotAllowedType: [String] {

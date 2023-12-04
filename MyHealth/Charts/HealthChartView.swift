@@ -14,7 +14,7 @@ import Charts
 struct HealthChartView: View {
     let dayInSec = 24*3600
     let dataIdentifier: String
-    let data:[HealthDataValue]
+    let data:[quantityDataValue]
     let pastDataColor : LinearGradient = .linearGradient(colors: [.blue, .purple], startPoint: .top, endPoint: .bottom)
     let todayDataColor : LinearGradient = .linearGradient(colors: [.orange, .red], startPoint: .top, endPoint: .bottom)
     var averageValue: Double {
@@ -100,13 +100,17 @@ struct HealthChartView: View {
             .chartScrollPosition(initialX: data.count > 7 ? data[data.count - 7].startDate : data[0].startDate)
             .chartYAxisLabel("\(getDataTypeName(for: dataIdentifier) ?? "") (\(getUnit(for: dataIdentifier) ?? ""))", position: .top, alignment: .center)
             .chartOverlay { proxy in
+                
                 GeometryReader { geometry in
                     ZStack(alignment: .top) {
                         Rectangle().fill(.clear).contentShape(Rectangle())
                             .onTapGesture {location in
                                 updateSelectedDate(at: location, proxy: proxy, geometry: geometry)
-                                print("tapped")
                             }
+//                            .gesture(DragGesture()
+//                                .onChanged{value in
+//                                updateSelectedDate(at: value.location, proxy: proxy, geometry: geometry)
+//                            })
                     }
                 }
             }

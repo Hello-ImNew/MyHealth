@@ -11,7 +11,7 @@ import Charts
 
 struct SummaryChartView: View {
     let dataIdentifier: String
-    let data:[HealthDataValue]
+    let data:[quantityDataValue]
     let pastDataColor : Color = .gray
     let todayDataColor : Color = .orange
     
