@@ -20,7 +20,7 @@ class AuthorizeViewController: UIViewController {
     @IBAction func clickedAuthorize(_ sender: Any) {
         var share: [HKSampleType] = []
         var read: [HKSampleType] = []
-        for category in ViewModels.quantitiesHealth {
+        for category in ViewModels.HealthCategories {
             for type in category.dataTypes {
                 read.append(type)
                 if isAllowedShared(for: type.identifier) {

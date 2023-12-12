@@ -7,10 +7,11 @@
 
 import Foundation
 
-struct categoryDataValue: Identifiable {
-    let id: String = UUID().uuidString
-    let identifier: String
-    let startDate: Date
-    let endDate: Date
+class categoryDataValue: HealthDataValue {
     var value: Int
+    
+    init(identifier: String, startDate: Date, endDate: Date, value: Int) {
+        self.value = value
+        super.init(identifier: identifier, startDate: startDate, endDate: endDate)
+    }
 }

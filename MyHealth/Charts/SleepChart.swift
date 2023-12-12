@@ -58,9 +58,7 @@ struct SleepChart: View {
                     }
                 }
             }
-            .frame(width: 350, height: 300)
         }
-        .padding()
     }
     
     func intToSleepStage(value: Int) -> String {

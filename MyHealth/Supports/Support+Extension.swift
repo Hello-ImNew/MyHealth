@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension Date {
     var isWithinLast7Days: Bool? {
@@ -46,4 +47,43 @@ extension Date {
         let calendar = Calendar.current
         return calendar.isDateInToday(self)
     }
+    
+    var toString: String {
+        let dateFormatter = DateFormatter()
+        
+        let current = Calendar.current
+        let currentYear = current.component(.year, from: Date())
+        let targetYear = current.component(.year, from: self)
+        
+        if currentYear != targetYear {
+            dateFormatter.dateFormat = "MMM d, yyyy"
+        } else {
+            if current.isDate(self, inSameDayAs: Date()) {
+                dateFormatter.dateFormat = "hh:mm"
+            } else {
+                dateFormatter.dateFormat = "MMM d"
+            }
+        }
+        
+        return dateFormatter.string(from: self)
+    }
+    
+    var standardString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, yyyy"
+        
+        return dateFormatter.string(from: self)
+    }
+    
+    var age: Int {
+        let ageComponent = Calendar.current.dateComponents([.year], from: self, to: Date())
+        return ageComponent.year!
+    }
+}
+
+func showAlert(title: String, message: String) -> UIAlertController {
+    let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let cancelAction = UIAlertAction(title: "OK", style: .cancel)
+    alertController.addAction(cancelAction)
+    return alertController
 }

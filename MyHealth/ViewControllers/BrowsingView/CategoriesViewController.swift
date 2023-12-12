@@ -13,8 +13,7 @@ class CategoriesViewController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    let quantityHealth = ViewModels.quantitiesHealth
-    let categoryHealth = ViewModels.categoriesHealth
+    let HealthCategories = ViewModels.HealthCategories
     let group = DispatchGroup()
     var backgroundTask: DispatchWorkItem?
     var healthDataType: [HKSampleType] = []
@@ -45,21 +44,13 @@ class CategoriesViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        if isSearched {
-            return 1
-        } else {
-            return 2
-        }
+        return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if !isSearched {
-            if section == 0 {
-                return quantityHealth.count
-            } else {
-                return categoryHealth.count
-            }
+            return HealthCategories.count
             
         } else {
             return healthDataType.count
@@ -69,11 +60,7 @@ class CategoriesViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         var header : String
         if !isSearched {
-            if section == 0 {
-                header = "Quantity Health"
-            } else {
-                header = "Category Health"
-            }
+            header = "Health Categories"
         } else {
             header = searchHeader
         }
@@ -99,30 +86,32 @@ class CategoriesViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if !isSearched {
-            if indexPath.section == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "QuantityHealthCell", for: indexPath)
-                cell.textLabel?.text = quantityHealth[indexPath.row].categoryName
-                cell.imageView?.image = UIImage(systemName: quantityHealth[indexPath.row].icon)
-                cell.tintColor = quantityHealth[indexPath.row].color
-                // Configure the cell...
-                
-                return cell
-            } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryHealthCell", for: indexPath)
-                cell.textLabel?.text = categoryHealth[indexPath.row].categoryName
-                cell.imageView?.image = UIImage(systemName: categoryHealth[indexPath.row].icon)
-                cell.tintColor = quantityHealth[indexPath.row].color
-                
-                return cell
-            }
+            let cell = tableView.dequeueReusableCell(withIdentifier: "QuantityHealthCell", for: indexPath)
+            cell.textLabel?.text = HealthCategories[indexPath.row].categoryName
+            cell.imageView?.image = UIImage(systemName: HealthCategories[indexPath.row].icon)
+            cell.tintColor = HealthCategories[indexPath.row].color
+            // Configure the cell...
+            
+            return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "DataTypeCell", for: indexPath)
-            let identifier = healthDataType[indexPath.row].identifier
+            let dataType = healthDataType[indexPath.row]
+            let identifier = dataType.identifier
+            let cell: UITableViewCell
+            if dataType is HKQuantityType {
+                cell = tableView.dequeueReusableCell(withIdentifier: "DataTypeCell", for: indexPath)
+            } else {
+                cell = tableView.dequeueReusableCell(withIdentifier: "CategoryTypeCell", for: indexPath)
+            }
             cell.textLabel?.text = getDataTypeName(for: identifier)
             cell.imageView?.image = UIImage(systemName: getDataTypeIcon(for: identifier)!)
             cell.tintColor = getDataTypeColor(for: identifier)
             return cell
+                
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     // MARK: - Search Bar Config
@@ -160,7 +149,7 @@ class CategoriesViewController: UIViewController, UITableViewDelegate, UITableVi
                 self.isSearched = false
             } else {
                 self.healthDataType.removeAll()
-                for category in ViewModels.quantitiesHealth {
+                for category in ViewModels.HealthCategories {
                     for type in category.dataTypes {
                         if ((getDataTypeName(for: type.identifier)?.lowercased().contains(searchText.lowercased())) ?? false){
                             self.healthDataType.append(type)
@@ -209,7 +198,7 @@ class CategoriesViewController: UIViewController, UITableViewDelegate, UITableVi
         if segue.identifier == "ShowHealthTypesSegue" {
             let healthDataController = segue.destination as? HealthTypesTableViewController
             let selectedRow = self.tableView.indexPath(for: sender as! UITableViewCell)?.row
-            let selectedCategory = quantityHealth[selectedRow!] as HealthCategory
+            let selectedCategory = HealthCategories[selectedRow!] as HealthCategory
             healthDataController?.healthDataTypes = selectedCategory.dataTypes
             healthDataController?.currentTitle = selectedCategory.categoryName
             healthDataController?.isFavView = false
@@ -219,15 +208,12 @@ class CategoriesViewController: UIViewController, UITableViewDelegate, UITableVi
             let healthDisplayController = segue.destination as? HealthDisplayViewController
             let selectedRow = self.tableView.indexPath(for: sender as! UITableViewCell)?.row
             healthDisplayController?.dataTypeIdentifier = healthDataType[selectedRow!].identifier
-            
         }
         
-        if segue.identifier == "ShowCategoryTypeSegue" {
-            let categoryTableController = segue.destination as? CategoryTableViewController
+        if segue.identifier == "ShowCategoryDataSegue" {
+            let healthDisplayController = segue.destination as? CategoryDisplayViewController
             let selectedRow = self.tableView.indexPath(for: sender as! UITableViewCell)?.row
-            let selectedCategory = categoryHealth[selectedRow!] as HealthCategory
-            categoryTableController?.healthDataTypes = selectedCategory.dataTypes
-            categoryTableController?.currentTitle = selectedCategory.categoryName
+            healthDisplayController?.dataTypeIdentifier = healthDataType[selectedRow!].identifier
         }
     }
     

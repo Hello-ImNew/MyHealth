@@ -21,14 +21,13 @@ class SleepChartViewController: UIViewController {
         // Do any additional setup after loading the view.
         let current = Calendar.current
         
-        guard let lastWeek = current.date(byAdding: .day, value: -1, to: Date())
+        guard let lastWeek = current.date(byAdding: .day, value: -7, to: Date()),
+              let start = current.date(bySettingHour: 18, minute: 00, second: 0, of: lastWeek),
+              let end = current.date(bySettingHour: 18, minute: 00, second: 0, of: Date())
         else {
             fatalError("Cannot Get Last Week Date")
         }
-        guard let start = current.date(bySettingHour: 18, minute: 00, second: 0, of: lastWeek) else {
-            fatalError("Cannot Get Last Week Date")
-        }
-        showData(from: start, to: Date())
+        showData(from: start, to: end)
     }
     
     func showData(from start: Date, to end: Date) {
@@ -59,8 +58,14 @@ class SleepChartViewController: UIViewController {
                             chartController.view.translatesAutoresizingMaskIntoConstraints = false
                             self.addChild(chartController)
                             self.chartView.addSubview(chartController.view)
-                            self.view.addConstraint(chartController.view.centerXAnchor.constraint(equalTo: self.chartView.centerXAnchor))
-                            self.view.addConstraint(chartController.view.centerYAnchor.constraint(equalTo: self.chartView.centerYAnchor))
+//                            self.view.addConstraint(chartController.view.centerXAnchor.constraint(equalTo: self.chartView.centerXAnchor))
+//                            self.view.addConstraint(chartController.view.centerYAnchor.constraint(equalTo: self.chartView.centerYAnchor))
+                            NSLayoutConstraint.activate([
+                                chartController.view.topAnchor.constraint(equalTo: self.chartView.topAnchor),
+                                chartController.view.leadingAnchor.constraint(equalTo: self.chartView.leadingAnchor),
+                                chartController.view.trailingAnchor.constraint(equalTo: self.chartView.trailingAnchor),
+                                chartController.view.bottomAnchor.constraint(equalTo: self.chartView.bottomAnchor),
+                            ])
                             chartController.didMove(toParent: self)
                         }
                     }

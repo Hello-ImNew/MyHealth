@@ -7,14 +7,9 @@
 
 import Foundation
 
-struct quantityDataValue: Identifiable {
-    var id = UUID().uuidString
-    
-    var identifier: String
-    let startDate: Date
-    let endDate: Date
+class quantityDataValue: HealthDataValue {
     var value: Double
-    var secondaryValue: Double? = nil
+    var secondaryValue: Double?
     
     var displayString: String {
             var result = String(format: "%.0f", value)
@@ -23,5 +18,10 @@ struct quantityDataValue: Identifiable {
             }
             
             return result
+    }
+    
+    init(identifier: String, startDate: Date, endDate: Date, value: Double, seconddaryValue: Double? = nil) {
+        self.value = value
+        super.init(identifier: identifier, startDate: startDate, endDate: endDate)
     }
 }

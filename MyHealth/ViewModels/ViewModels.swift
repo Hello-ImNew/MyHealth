@@ -11,6 +11,8 @@ import UIKit
 import CoreData
 
 class ViewModels {
+    
+    // MARK: Favorite data types
     private static let userDefaults = UserDefaults.standard
     
     private static let healthTypesKey = "healthTypes"
@@ -31,15 +33,35 @@ class ViewModels {
             $0 == healthType
         })
         userDefaults.set(healthTypes, forKey: healthTypesKey)
+        userDefaults.synchronize()
     }
     
     static func addFavHealthType(for healthType: String) {
         var healthTypes = favHealthTypes
         healthTypes.append(healthType)
         userDefaults.set(healthTypes, forKey: healthTypesKey)
+        userDefaults.synchronize()
     }
     
-    static var quantitiesHealth: [HealthCategory] {
+    // MARK: USER DATA
+    static var userData: UserData {
+        if let storedData = userDefaults.object(forKey: "UserData") as? Data,
+           let decodedObject = try? NSKeyedUnarchiver.unarchivedObject(ofClass: UserData.self, from: storedData) {
+            return decodedObject
+        } else {
+            return UserData()
+        }
+    }
+    
+    static func saveUserData(_ userData: UserData) {
+        
+        if let encodedData = try? NSKeyedArchiver.archivedData(withRootObject: userData, requiringSecureCoding: true) {
+            userDefaults.set(encodedData, forKey: "UserData")
+        }
+    }
+    
+    // MARK: All data category definition
+    static var HealthCategories: [HealthCategory] {
         var activity: HealthCategory {
             var activityTypes: [HKSampleType] {
                 let identifiers: [String] = [
@@ -257,12 +279,6 @@ class ViewModels {
             return HealthCategory(categoryName: "Vitals", dataTypes: vitalSignTypes, icon: "waveform.path.ecg.rectangle", color: .red)
         }
         
-        
-        
-        return [activity, bodyMeasurement, hearingHealth, heart, nutrition, mobility, respiratory, vitalSign, other]
-    }
-    
-    static var categoriesHealth: [HealthCategory] {
         var symtoms: HealthCategory {
             var symntomsType: [HKSampleType] {
                 let identifier: [String] = [
@@ -312,8 +328,21 @@ class ViewModels {
             return HealthCategory(categoryName: "Symtoms", dataTypes: symntomsType, icon: "list.bullet.clipboard", color: .purple)
         }
         
-        return [symtoms]
+        var sleep: HealthCategory {
+            var sleepType: [HKSampleType] {
+                let identifier: [String] = [
+                    HKCategoryTypeIdentifier.sleepAnalysis.rawValue
+                ]
+                
+                return identifier.compactMap({getSampleType(for: $0)})
+            }
+            return HealthCategory(categoryName: "Sleep", dataTypes: sleepType, icon: "bed.double.fill", color: .cyan)
+        }
+        
+        return [activity, bodyMeasurement, hearingHealth, heart, nutrition, mobility, respiratory, vitalSign, sleep, symtoms, other]
     }
+    
+    
     
     static var shareNotAllowedType: [String] {
         return [

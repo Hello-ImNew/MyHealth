@@ -324,6 +324,8 @@ func getDataTypeName(for identifier: String) -> String? {
             description = "Vomiting"
         case .wheezing:
             description = "Wheezing"
+        case .sleepAnalysis:
+            description = "Sleep Analysis"
             
         default:
             break
@@ -367,6 +369,8 @@ func getDataTypeIcon(for identifier: String) -> String? {
             switch categoryTypeIdentifier {
             case .abdominalCramps, .acne, .bladderIncontinence, .bloating, .breastPain, .chestTightnessOrPain, .chills, .constipation, .coughing, .diarrhea, .dizziness, .drySkin, .fainting, .fatigue, .fever, .generalizedBodyAche, .hairLoss, .headache, .heartburn, .hotFlashes, .lossOfSmell, .lossOfTaste, .lowerBackPain, .memoryLapse, .nausea, .nightSweats, .pelvicPain, .rapidPoundingOrFlutteringHeartbeat, .runnyNose, .shortnessOfBreath, .sinusCongestion, .skippedHeartbeat, .soreThroat, .vaginalDryness, .vomiting, .wheezing, .appetiteChanges, .sleepChanges, .moodChanges:
                 description = "list.bullet.clipboard"
+            case .sleepAnalysis:
+                description = "bed.double.fill"
             default:
                 break
             }
@@ -409,6 +413,8 @@ func getDataTypeColor(for identifier: String) -> UIColor? {
         switch categoryTypeIdentifier {
         case .abdominalCramps, .acne, .bladderIncontinence, .bloating, .breastPain, .chestTightnessOrPain, .chills, .constipation, .coughing, .diarrhea, .dizziness, .drySkin, .fainting, .fatigue, .fever, .generalizedBodyAche, .hairLoss, .headache, .heartburn, .hotFlashes, .lossOfSmell, .lossOfTaste, .lowerBackPain, .memoryLapse, .nausea, .nightSweats, .pelvicPain, .rapidPoundingOrFlutteringHeartbeat, .runnyNose, .shortnessOfBreath, .sinusCongestion, .skippedHeartbeat, .soreThroat, .vaginalDryness, .vomiting, .wheezing, .appetiteChanges, .sleepChanges, .moodChanges:
             color = .purple
+        case .sleepAnalysis:
+            color = .cyan
         default:
             break
         }
@@ -426,9 +432,11 @@ func getCategoryValues(for identifier: String) -> [String] {
         case .abdominalCramps, .acne, .bladderIncontinence, .bloating, .breastPain, .chestTightnessOrPain, .chills, .constipation, .coughing, .diarrhea, .dizziness, .drySkin, .fainting, .fatigue, .fever, .generalizedBodyAche, .hairLoss, .headache, .heartburn, .hotFlashes, .lossOfSmell, .lossOfTaste, .lowerBackPain, .memoryLapse, .nausea, .nightSweats, .pelvicPain, .rapidPoundingOrFlutteringHeartbeat, .runnyNose, .shortnessOfBreath, .sinusCongestion, .skippedHeartbeat, .soreThroat, .vaginalDryness, .vomiting, .wheezing:
             result = ["Present", "Not Present", "Mild", "Moderate", "Severe"]
         case .appetiteChanges:
-            result = ["No Change", "Present", "Decreased", "Increased"]
+            result = ["Present", "No Change", "Decreased", "Increased"]
         case .sleepChanges, .moodChanges:
-            result = ["Not Present", "Present"]
+            result = ["Present", "Not Present"]
+        case .sleepAnalysis:
+            result = ["In Bed", "Asleep", "Awake", "Core", "Deep", "REM"]
         default:
             break
         }
