@@ -26,7 +26,6 @@ class AuthorizeViewController: UIViewController {
                 if isAllowedShared(for: type.identifier) {
                     share.append(type)
                 }
-                
             }
         }
         

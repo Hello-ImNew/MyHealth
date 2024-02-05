@@ -326,7 +326,50 @@ func getDataTypeName(for identifier: String) -> String? {
             description = "Wheezing"
         case .sleepAnalysis:
             description = "Sleep Analysis"
-            
+        case .highHeartRateEvent:
+            description = "High Heart Rate Event"
+        case .irregularHeartRhythmEvent:
+            description = "Irregular Rhythm Event"
+        case .lowCardioFitnessEvent:
+            description = "Low Cardio Fitness Event"
+        case .lowHeartRateEvent:
+            description = "Low Heart Rate Event"
+        case .mindfulSession:
+            description = "Mindful Session"
+        case .appleWalkingSteadinessEvent:
+            description = "Walking Steadiness Event"
+        case .handwashingEvent:
+            description = "Handwashing"
+        case .toothbrushingEvent:
+            description = "Toothbrushing"
+        case .cervicalMucusQuality:
+            description = "Cervical Mucus Quality"
+        case .contraceptive:
+            description = "Contraceptives"
+        case .infrequentMenstrualCycles:
+            description = "Infrequent Periods"
+        case .intermenstrualBleeding:
+            description = "Spotting"
+        case .irregularMenstrualCycles:
+            description = "Irregular Cycles"
+        case .lactation:
+            description = "Lactation"
+        case .menstrualFlow:
+            description = "Menstruation"
+        case .ovulationTestResult:
+            description = "Ovulation Test Result"
+        case .persistentIntermenstrualBleeding:
+            description = "Persistent Spotting"
+        case .pregnancy:
+            description = "Pregnancy"
+        case .pregnancyTestResult:
+            description = "Pregnancy Test Result"
+        case .progesteroneTestResult:
+            description = "Progresterone Test Result"
+        case .prolongedMenstrualPeriods:
+            description = "Prolonged Periods"
+        case .sexualActivity:
+            description = "Sexual Activity"
         default:
             break
         }
@@ -371,6 +414,18 @@ func getDataTypeIcon(for identifier: String) -> String? {
                 description = "list.bullet.clipboard"
             case .sleepAnalysis:
                 description = "bed.double.fill"
+            case .toothbrushingEvent, .handwashingEvent:
+                description = "cross.fill"
+            case .highHeartRateEvent, .irregularHeartRhythmEvent, .lowHeartRateEvent:
+                description = "heart.fill"
+            case .mindfulSession:
+                description = "brain.filled.head.profile"
+            case .infrequentMenstrualCycles, .intermenstrualBleeding, .irregularMenstrualCycles, .lactation, .persistentIntermenstrualBleeding, .pregnancy, .sexualActivity:
+                description = "arrow.circlepath"
+            case .headphoneAudioExposureEvent, .environmentalAudioExposureEvent:
+                description = "ear"
+            case .appleWalkingSteadinessEvent:
+                description = "figure.walk.motion"
             default:
                 break
             }
@@ -402,7 +457,7 @@ func getDataTypeColor(for identifier: String) -> UIColor? {
         case .dietaryBiotin, .dietaryCaffeine, .dietaryCalcium, .dietaryCarbohydrates, .dietaryChloride, .dietaryCholesterol, .dietaryChromium, .dietaryCopper, .dietaryEnergyConsumed, .dietaryFatMonounsaturated, .dietaryFatPolyunsaturated, .dietaryFatSaturated, .dietaryFatTotal, .dietaryFiber, .dietaryFolate, .dietaryIodine, .dietaryIron, .dietaryMagnesium, .dietaryManganese, .dietaryMolybdenum, .dietaryNiacin, .dietaryPantothenicAcid, .dietaryPhosphorus, .dietaryPotassium, .dietaryProtein, .dietaryRiboflavin, .dietarySelenium, .dietarySodium, .dietarySugar, .dietaryThiamin, .dietaryVitaminA, .dietaryVitaminB12, .dietaryVitaminB6, .dietaryVitaminC, .dietaryVitaminD, .dietaryVitaminE, .dietaryVitaminK, .dietaryWater, .dietaryZinc:
             color = .systemMint
         case .insulinDelivery, .numberOfAlcoholicBeverages, .numberOfTimesFallen, .timeInDaylight, .uvExposure:
-            color = .blue
+            color = .systemBlue
         case .respiratoryRate, .forcedExpiratoryVolume1, .forcedVitalCapacity, .inhalerUsage, .peakExpiratoryFlowRate:
             color = .cyan
         default:
@@ -413,8 +468,18 @@ func getDataTypeColor(for identifier: String) -> UIColor? {
         switch categoryTypeIdentifier {
         case .abdominalCramps, .acne, .bladderIncontinence, .bloating, .breastPain, .chestTightnessOrPain, .chills, .constipation, .coughing, .diarrhea, .dizziness, .drySkin, .fainting, .fatigue, .fever, .generalizedBodyAche, .hairLoss, .headache, .heartburn, .hotFlashes, .lossOfSmell, .lossOfTaste, .lowerBackPain, .memoryLapse, .nausea, .nightSweats, .pelvicPain, .rapidPoundingOrFlutteringHeartbeat, .runnyNose, .shortnessOfBreath, .sinusCongestion, .skippedHeartbeat, .soreThroat, .vaginalDryness, .vomiting, .wheezing, .appetiteChanges, .sleepChanges, .moodChanges:
             color = .purple
-        case .sleepAnalysis:
+        case .sleepAnalysis, .mindfulSession:
             color = .cyan
+        case .toothbrushingEvent, .handwashingEvent:
+            color = .systemBlue
+        case .highHeartRateEvent, .irregularHeartRhythmEvent, .lowHeartRateEvent:
+            color = .systemRed
+        case.infrequentMenstrualCycles, .intermenstrualBleeding, .irregularMenstrualCycles, .lactation, .persistentIntermenstrualBleeding, .pregnancy, .sexualActivity:
+            color = .systemPink
+        case .environmentalAudioExposureEvent, .headphoneAudioExposureEvent:
+            color = .blue
+        case .appleWalkingSteadinessEvent:
+            color = .orange
         default:
             break
         }
@@ -437,6 +502,10 @@ func getCategoryValues(for identifier: String) -> [String] {
             result = ["Present", "Not Present"]
         case .sleepAnalysis:
             result = ["In Bed", "Asleep", "Awake", "Core", "Deep", "REM"]
+        case .highHeartRateEvent, .irregularHeartRhythmEvent, .lowHeartRateEvent, .mindfulSession, .toothbrushingEvent, .handwashingEvent, .toothbrushingEvent, .infrequentMenstrualCycles, .intermenstrualBleeding, .irregularMenstrualCycles, .lactation, .persistentIntermenstrualBleeding, .pregnancy, .sexualActivity:
+            result = ["Present"]
+        case .lowCardioFitnessEvent:
+            result = ["Not Present", "Present"]
         default:
             break
         }

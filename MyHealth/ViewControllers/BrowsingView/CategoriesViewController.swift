@@ -39,6 +39,11 @@ class CategoriesViewController: UIViewController, UITableViewDelegate, UITableVi
         searchBar.delegate = self
         tableView.reloadData()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        addProfilePicture()
+    }
 
     // MARK: - Table view data source
 
@@ -51,7 +56,6 @@ class CategoriesViewController: UIViewController, UITableViewDelegate, UITableVi
         // #warning Incomplete implementation, return the number of rows
         if !isSearched {
             return HealthCategories.count
-            
         } else {
             return healthDataType.count
         }

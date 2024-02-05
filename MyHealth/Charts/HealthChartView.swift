@@ -43,6 +43,9 @@ struct HealthChartView: View {
                     count += 1
                 }
             }
+            if count == 0 {
+                return 0
+            }
             return sum/count
         }
     }
@@ -75,8 +78,6 @@ struct HealthChartView: View {
                     + Text(averageSecondValue != nil ? "/\(formatter.string(from: averageSecondValue! as NSNumber) ?? "")" : "").bold()
                     + Text(" \(getUnit(for: dataIdentifier)!)")
                     
-                    
-                    
                     Text(dateIntervalToString(from: data.first?.startDate, to: data.last?.endDate))
                 }
             }
@@ -92,6 +93,9 @@ struct HealthChartView: View {
                         .alignsMarkStylesWithPlotArea()
                         .opacity(selectedDate != nil ? (Calendar.current.isDate(selectedDate!, equalTo: d.startDate, toGranularity: .day) ? 1 : 0.5) : 1)
                 }
+            }
+            .if(data.isEmpty) {view in
+                view.chartYScale(domain: 0...10)
             }
             .chartXScale(domain: data.first!.startDate...data.last!.endDate)
             .frame(width: 350, height: 300)

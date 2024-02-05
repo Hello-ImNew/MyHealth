@@ -16,6 +16,7 @@ class ViewModels {
     private static let userDefaults = UserDefaults.standard
     
     private static let healthTypesKey = "healthTypes"
+    private static let userDataKey = "userData"
     
     static var favHealthTypes: [String] {
         let healthTypes: [String] = userDefaults.object(forKey: healthTypesKey) as? [String] ?? []
@@ -45,7 +46,7 @@ class ViewModels {
     
     // MARK: USER DATA
     static var userData: UserData {
-        if let storedData = userDefaults.object(forKey: "UserData") as? Data,
+        if let storedData = userDefaults.object(forKey: userDataKey) as? Data,
            let decodedObject = try? NSKeyedUnarchiver.unarchivedObject(ofClass: UserData.self, from: storedData) {
             return decodedObject
         } else {
@@ -56,7 +57,23 @@ class ViewModels {
     static func saveUserData(_ userData: UserData) {
         
         if let encodedData = try? NSKeyedArchiver.archivedData(withRootObject: userData, requiringSecureCoding: true) {
-            userDefaults.set(encodedData, forKey: "UserData")
+            userDefaults.set(encodedData, forKey: userDataKey)
+        }
+    }
+    
+    // MARK: Profile picture
+    static var profileImage: UIImage? {
+        if let savedImageData = UserDefaults.standard.data(forKey: "savedImageKey") {
+            return UIImage(data: savedImageData)
+        } else {
+            return UIImage(systemName: "person.circle.fill")
+        }
+    }
+    
+    static func saveProfileImage(_ image: UIImage) {
+        if let imageData = image.pngData() {
+            UserDefaults.standard.set(imageData, forKey: "savedImageKey")
+            UserDefaults.standard.synchronize()
         }
     }
     
@@ -123,7 +140,10 @@ class ViewModels {
                     HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue,
                     HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue,
                     HKQuantityTypeIdentifier.vo2Max.rawValue,
-                    HKQuantityTypeIdentifier.walkingHeartRateAverage.rawValue
+                    HKQuantityTypeIdentifier.walkingHeartRateAverage.rawValue,
+                    HKCategoryTypeIdentifier.highHeartRateEvent.rawValue,
+                    HKCategoryTypeIdentifier.irregularHeartRhythmEvent.rawValue,
+                    HKCategoryTypeIdentifier.lowHeartRateEvent.rawValue
                 ]
                 
                 return identifiers.compactMap {getSampleType(for: $0)}
@@ -227,6 +247,8 @@ class ViewModels {
         var other: HealthCategory {
             var otherTypes: [HKSampleType] {
                 let identifiers: [String] = [
+                    HKCategoryTypeIdentifier.toothbrushingEvent.rawValue,
+                    HKCategoryTypeIdentifier.handwashingEvent.rawValue,
                     HKQuantityTypeIdentifier.bloodAlcoholContent.rawValue,
                     HKQuantityTypeIdentifier.numberOfAlcoholicBeverages.rawValue,
                     HKQuantityTypeIdentifier.insulinDelivery.rawValue,
@@ -339,10 +361,47 @@ class ViewModels {
             return HealthCategory(categoryName: "Sleep", dataTypes: sleepType, icon: "bed.double.fill", color: .cyan)
         }
         
-        return [activity, bodyMeasurement, hearingHealth, heart, nutrition, mobility, respiratory, vitalSign, sleep, symtoms, other]
+        var menstruationCycle: HealthCategory {
+            var cycleType:[HKSampleType] {
+                let identifier: [String] = [
+                    HKCategoryTypeIdentifier.infrequentMenstrualCycles.rawValue,
+                    HKCategoryTypeIdentifier.intermenstrualBleeding.rawValue,
+                    HKCategoryTypeIdentifier.irregularMenstrualCycles.rawValue,
+                    HKCategoryTypeIdentifier.lactation.rawValue,
+                    HKCategoryTypeIdentifier.persistentIntermenstrualBleeding.rawValue,
+                    HKCategoryTypeIdentifier.pregnancy.rawValue,
+                    HKCategoryTypeIdentifier.sexualActivity.rawValue,
+                    HKCategoryTypeIdentifier.abdominalCramps.rawValue,
+                    HKCategoryTypeIdentifier.acne.rawValue,
+                    HKCategoryTypeIdentifier.bladderIncontinence.rawValue,
+                    HKCategoryTypeIdentifier.bloating.rawValue,
+                    HKCategoryTypeIdentifier.breastPain.rawValue,
+                    HKCategoryTypeIdentifier.chills.rawValue,
+                    HKCategoryTypeIdentifier.constipation.rawValue,
+                    HKCategoryTypeIdentifier.diarrhea.rawValue,
+                    HKCategoryTypeIdentifier.drySkin.rawValue,
+                    HKCategoryTypeIdentifier.fatigue.rawValue,
+                    HKCategoryTypeIdentifier.hairLoss.rawValue,
+                    HKCategoryTypeIdentifier.headache.rawValue,
+                    HKCategoryTypeIdentifier.hotFlashes.rawValue,
+                    HKCategoryTypeIdentifier.lowerBackPain.rawValue,
+                    HKCategoryTypeIdentifier.memoryLapse.rawValue,
+                    HKCategoryTypeIdentifier.moodChanges.rawValue,
+                    HKCategoryTypeIdentifier.nausea.rawValue,
+                    HKCategoryTypeIdentifier.nightSweats.rawValue,
+                    HKCategoryTypeIdentifier.pelvicPain.rawValue,
+                    HKCategoryTypeIdentifier.sleepChanges.rawValue,
+                    HKCategoryTypeIdentifier.vaginalDryness.rawValue,
+                    HKQuantityTypeIdentifier.appleSleepingWristTemperature.rawValue
+                ]
+                
+                return identifier.compactMap({getSampleType(for: $0)})
+            }
+            return HealthCategory(categoryName: "Cycle Tracking", dataTypes: cycleType, icon: "arrow.triangle.2.circlepath", color: .systemPink)
+        }
+        
+        return [activity, bodyMeasurement, hearingHealth, heart, nutrition, mobility, respiratory, vitalSign, sleep, symtoms, menstruationCycle, other]
     }
-    
-    
     
     static var shareNotAllowedType: [String] {
         return [
@@ -354,7 +413,51 @@ class ViewModels {
             HKQuantityTypeIdentifier.appleWalkingSteadiness.rawValue,
             HKQuantityTypeIdentifier.walkingHeartRateAverage.rawValue,
             HKQuantityTypeIdentifier.atrialFibrillationBurden.rawValue,
-            HKQuantityTypeIdentifier.walkingAsymmetryPercentage.rawValue
+            HKQuantityTypeIdentifier.walkingAsymmetryPercentage.rawValue,
+            HKCategoryTypeIdentifier.irregularHeartRhythmEvent.rawValue,
+            HKCategoryTypeIdentifier.lowHeartRateEvent.rawValue,
+            HKCategoryTypeIdentifier.highHeartRateEvent.rawValue,
+            HKCategoryTypeIdentifier.irregularMenstrualCycles.rawValue,
+            HKCategoryTypeIdentifier.infrequentMenstrualCycles.rawValue,
+            HKCategoryTypeIdentifier.persistentIntermenstrualBleeding.rawValue,
+            HKCategoryTypeIdentifier.environmentalAudioExposureEvent.rawValue,
+            HKCategoryTypeIdentifier.headphoneAudioExposureEvent.rawValue,
+            HKCategoryTypeIdentifier.appleWalkingSteadinessEvent.rawValue,
+            HKCategoryTypeIdentifier.lowCardioFitnessEvent.rawValue,
+        ]
+    }
+    
+    static var categoryValueType: [String] {
+        return [
+            HKCategoryTypeIdentifier.mindfulSession.rawValue,
+            HKCategoryTypeIdentifier.handwashingEvent.rawValue,
+            HKCategoryTypeIdentifier.toothbrushingEvent.rawValue,
+            HKCategoryTypeIdentifier.infrequentMenstrualCycles.rawValue,
+            HKCategoryTypeIdentifier.intermenstrualBleeding.rawValue,
+            HKCategoryTypeIdentifier.irregularMenstrualCycles.rawValue,
+            HKCategoryTypeIdentifier.lactation.rawValue,
+            HKCategoryTypeIdentifier.persistentIntermenstrualBleeding.rawValue,
+            HKCategoryTypeIdentifier.pregnancy.rawValue,
+            HKCategoryTypeIdentifier.sexualActivity.rawValue
+        ]
+    }
+    
+    static var notificationType: [String] {
+        return [
+            HKCategoryTypeIdentifier.highHeartRateEvent.rawValue,
+            HKCategoryTypeIdentifier.irregularHeartRhythmEvent.rawValue,
+            HKCategoryTypeIdentifier.lowHeartRateEvent.rawValue,
+            HKCategoryTypeIdentifier.lowCardioFitnessEvent.rawValue,
+            HKCategoryTypeIdentifier.environmentalAudioExposureEvent.rawValue,
+            HKCategoryTypeIdentifier.headphoneAudioExposureEvent.rawValue,
+            HKCategoryTypeIdentifier.appleWalkingSteadinessEvent.rawValue
         ]
     }
 }
+
+
+/*
+ HKCategoryTypeIdentifierIrregularMenstrualCycles,
+ HKCategoryTypeIdentifierInfrequentMenstrualCycles,
+ HKCategoryTypeIdentifierPersistentIntermenstrualBleeding"
+ */

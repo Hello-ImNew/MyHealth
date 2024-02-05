@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HealthKit
 
 class categoryDataValue: HealthDataValue {
     var value: Int
@@ -13,5 +14,10 @@ class categoryDataValue: HealthDataValue {
     init(identifier: String, startDate: Date, endDate: Date, value: Int) {
         self.value = value
         super.init(identifier: identifier, startDate: startDate, endDate: endDate)
+    }
+    
+    init(identifier: String, from value: HKCategorySample) {
+        self.value = value.value
+        super.init(identifier: identifier, startDate: value.startDate, endDate: value.endDate)
     }
 }

@@ -31,7 +31,7 @@ class HealthTypesTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         if isFavView {
-            self.navigationItem.rightBarButtonItem = self.editButtonItem
+            self.navigationItem.leftBarButtonItem = self.editButtonItem
         }
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         self.navigationItem.title = currentTitle
@@ -49,6 +49,8 @@ class HealthTypesTableViewController: UITableViewController {
             reloadTable(noFavMessage)
             return
         }
+        
+        addProfilePicture()
         
         let read = Set(healthDataTypes)
         HealthData.requestHealthDataAccessIfNeeded(toShare: nil, read: read) { success in
@@ -184,6 +186,8 @@ class HealthTypesTableViewController: UITableViewController {
         }
     }
     
+    
+    
 
     // MARK: - Table view data source
 
@@ -241,6 +245,7 @@ class HealthTypesTableViewController: UITableViewController {
         let dataValue = datasource.dataValue[indexPath.row]
         let identifier = dataValue.identifier
             
+        // Quantity Type Data
         if let dataValue = dataValue as? quantityDataValue {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DataAvailableHealthTypeCell", for: indexPath) as! AvailableDataTypeTableViewCell
             
@@ -277,8 +282,25 @@ class HealthTypesTableViewController: UITableViewController {
             }
             
             return cell
-        } else  if let dataValue = dataValue as? categoryDataValue {
+        } else  
+        // Category Type Data
+        if let dataValue = dataValue as? categoryDataValue {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryDataCell", for: indexPath) as! CategoryDataTableViewCell
+            
+            //if data is a notification type data
+            if ViewModels.notificationType.contains(where: {$0 == identifier}) {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "MMM dd, yyyy hh:mm"
+                
+                cell.imgIcon.image = UIImage(systemName: getDataTypeIcon(for: identifier)!)
+                cell.imgIcon.tintColor = getDataTypeColor(for: identifier)
+                cell.txtTime.text = ""
+                cell.txtData.text = formatter.string(from: dataValue.startDate)
+                cell.txtName.text = getDataTypeName(for: identifier)
+                cell.txtName.textColor = getDataTypeColor(for: identifier)
+                
+                return cell
+            }
             
             cell.imgIcon.image = UIImage(systemName: getDataTypeIcon(for: identifier)!)
             cell.imgIcon.tintColor = getDataTypeColor(for: identifier)
@@ -286,6 +308,110 @@ class HealthTypesTableViewController: UITableViewController {
             cell.txtName.textColor = getDataTypeColor(for: identifier)
             cell.txtData.text = getCategoryValues(for: identifier)[dataValue.value]
             cell.txtTime.text = dataValue.endDate.toString
+            
+            // if data is a single value data type
+            if ViewModels.categoryValueType.contains(where: {$0 == identifier}) {
+                let current = Calendar.current
+                let start = current.startOfDay(for: dataValue.startDate)
+                let end = current.date(bySettingHour: 23, minute: 59, second: 59, of: dataValue.startDate)
+                let datatype = getSampleType(for: identifier)!
+                let datePredicate = HKQuery.predicateForSamples(withStart: start, end: end, options: .strictStartDate)
+                let query = HKSampleQuery(sampleType: datatype, predicate: datePredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil, resultsHandler: { (query, results, error) in
+                    if let error = error {
+                        print("Error fetching data for \(identifier): \(error.localizedDescription)")
+                    } else {
+                        if let results = results as? [HKCategorySample] {
+                            let time = self.totalTime(results.compactMap({categoryDataValue(identifier: identifier, startDate: $0.startDate, endDate: $0.endDate, value: $0.value)}))
+                            let hr = Int(time / 3600)
+                            let min = Int((time % 3600) / 60)
+                            let sec = Int(time % 60)
+                            
+                            let attr1 = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 17)]
+                            let attr2 = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17)]
+                            
+                            let attributedString = NSMutableAttributedString(string: "")
+                            
+                            if hr > 0 {
+                                attributedString.append(NSAttributedString(string: "\(hr)", attributes: attr1))
+                                attributedString.append(NSAttributedString(string: " hr ", attributes: attr2))
+                            }
+                            
+                            if min > 0 {
+                                attributedString.append(NSAttributedString(string: "\(min)", attributes: attr1))
+                                attributedString.append(NSAttributedString(string: " min ", attributes: attr2))
+                            }
+                            
+                            if sec > 0 {
+                                attributedString.append(NSAttributedString(string: "\(sec)", attributes: attr1))
+                                attributedString.append(NSAttributedString(string: " sec ", attributes: attr2))
+                            }
+                            
+                            DispatchQueue.main.async {
+                                cell.txtData.attributedText = attributedString
+                            }
+                        }
+                    }
+                    
+                })
+                
+                healthStore.execute(query)
+            }
+            
+            // If data is sleep analysis
+            if identifier == HKCategoryTypeIdentifier.sleepAnalysis.rawValue {
+                let current = Calendar.current
+                let start = current.date(bySettingHour: 18, minute: 0, second: 0, of: dataValue.startDate)
+                let end = current.date(byAdding: .day, value: 1, to: start!)
+                let dataType = getSampleType(for: identifier)!
+                let datePredicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [.strictEndDate, .strictStartDate])
+                let query = HKSampleQuery(sampleType: dataType, predicate: datePredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil, resultsHandler: { (query, results, error) in
+                    if let error = error {
+                        print("Error fetching data for \(identifier): \(error.localizedDescription)")
+                    } else {
+                        if let results = results as? [HKCategorySample] {
+                            let data = results.compactMap({categoryDataValue(identifier: identifier, from: $0)})
+                            let intervals = mergeTimeIntervals(data: data)
+                            var time: Int {
+                                var result = 0.0
+                                for (start, end) in intervals {
+                                    result += end.timeIntervalSince(start)
+                                }
+                                
+                                return Int(result)
+                            }
+                            let hr = Int(time / 3600)
+                            let min = Int((time % 3600) / 60)
+                            let sec = Int(time % 60)
+                            
+                            let attr1 = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 17)]
+                            let attr2 = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17)]
+                            
+                            let attributedString = NSMutableAttributedString(string: "")
+                            
+                            if hr > 0 {
+                                attributedString.append(NSAttributedString(string: "\(hr)", attributes: attr1))
+                                attributedString.append(NSAttributedString(string: " hr ", attributes: attr2))
+                            }
+                            
+                            if min > 0 {
+                                attributedString.append(NSAttributedString(string: "\(min)", attributes: attr1))
+                                attributedString.append(NSAttributedString(string: " min ", attributes: attr2))
+                            }
+                            
+                            if sec > 0 {
+                                attributedString.append(NSAttributedString(string: "\(sec)", attributes: attr1))
+                                attributedString.append(NSAttributedString(string: " sec ", attributes: attr2))
+                            }
+                            
+                            DispatchQueue.main.async {
+                                cell.txtData.attributedText = attributedString
+                            }
+                        }
+                    }
+                })
+                
+                healthStore.execute(query)
+            }
             
             return cell
         } else {
@@ -369,7 +495,13 @@ class HealthTypesTableViewController: UITableViewController {
         tableView.backgroundView = emptyDataView
     }
 
-    
+    func totalTime(_ data: [categoryDataValue]) -> Int {
+        var sum = 0
+        data.forEach({
+            sum += Int($0.endDate.timeIntervalSince($0.startDate))
+        })
+        return sum
+    }
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation

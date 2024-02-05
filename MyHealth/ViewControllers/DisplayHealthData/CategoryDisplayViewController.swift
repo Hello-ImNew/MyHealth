@@ -10,13 +10,23 @@ import HealthKit
 import SwiftUI
 
 class CategoryDisplayViewController: UIViewController, AddDataDelegate {
+    enum displayMode: Int {
+        case chart = 0
+        case condenseChart
+        case table
+    }
     
     @IBOutlet weak var dpkStart: UIDatePicker!
     @IBOutlet weak var dpkEnd: UIDatePicker!
     @IBOutlet weak var chartView: UIView!
     @IBOutlet weak var settingView: UIStackView!
+    @IBOutlet weak var addDataBtn: UIButton!
+    @IBOutlet weak var condenseChartBtn: UIButton!
+    
+    let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
     let healthStore = HealthData.healthStore
+    var mode: displayMode!
     var isCollapse: Bool = false
     var dataValues: [categoryDataValue] = []
     var dataTypeIdentifier: String = ""
@@ -33,8 +43,26 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         return ViewModels.favHealthTypes.contains(dataTypeIdentifier)
     }
     
+    var canAdd: Bool {
+        get {
+            return !addDataBtn.isHidden
+        }
+        set(value) {
+            addDataBtn.isHidden = !value
+        }
+    }
+    
+    var chartHeight: Int {
+        if settingView.isHidden {
+            return Int(chartView.frame.size.height - settingView.frame.size.height)
+        } else {
+            return Int(chartView.frame.size.height)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        canAdd = isAllowedShared(for: dataTypeIdentifier)
 
         // Do any additional setup after loading the view.
         self.title = currentTitle
@@ -42,6 +70,18 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         dpkEnd.date = end
         dpkStart.maximumDate = dpkEnd.date
         dpkEnd.minimumDate = dpkStart.date
+        
+        if ViewModels.notificationType.contains(where: {$0 == dataTypeIdentifier}) {
+            mode = .table
+        } else {
+            mode = .chart
+        }
+        
+        if dataTypeIdentifier == HKCategoryTypeIdentifier.sleepAnalysis.rawValue {
+            condenseChartBtn.isHidden = false
+        } else {
+            condenseChartBtn.isHidden = true
+        }
         
         let settingButton = UIBarButtonItem(title: "Setting", style: .plain, target: self, action: #selector(settingTapped))
         self.navigationItem.rightBarButtonItem = settingButton
@@ -57,8 +97,11 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         let sampleType = getSampleType(for: dataTypeIdentifier)
         if sampleType is HKCategoryType {
             let readType = Set([sampleType!])
-            let shareType = Set([sampleType!])
-            HealthData.requestHealthDataAccessIfNeeded(toShare: shareType, read: readType) {success in 
+            var shareType : Set<HKSampleType>? = nil
+            if isAllowedShared(for: dataTypeIdentifier) {
+                shareType?.insert(sampleType!)
+            }
+            HealthData.requestHealthDataAccessIfNeeded(toShare: shareType, read: readType) {success in
                 if success {
                     self.categoryQuery(for: sampleType!) {results in 
                         DispatchQueue.main.async {
@@ -67,21 +110,8 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
                             self.chartView.subviews.forEach({
                                 $0.removeFromSuperview()
                             })
-                            let categoryChart = CategoryDataChart(data: self.dataValues, identifier: self.dataTypeIdentifier, startTime: self.start, endTime: self.end)
-                            let categoryChartController = UIHostingController(rootView: categoryChart)
-                            categoryChartController.view.translatesAutoresizingMaskIntoConstraints = false
-                            categoryChartController.view.isUserInteractionEnabled = true
-                            self.addChild(categoryChartController)
-                            self.chartView.addSubview(categoryChartController.view)
-//                            self.view.addConstraint(categoryChartController.view.centerXAnchor.constraint(equalTo: self.chartView.centerXAnchor))
-//                            self.view.addConstraint(categoryChartController.view.centerYAnchor.constraint(equalTo: self.chartView.centerYAnchor))
-                            NSLayoutConstraint.activate([
-                                categoryChartController.view.topAnchor.constraint(equalTo: self.chartView.topAnchor),
-                                categoryChartController.view.leadingAnchor.constraint(equalTo: self.chartView.leadingAnchor),
-                                categoryChartController.view.trailingAnchor.constraint(equalTo: self.chartView.trailingAnchor),
-                                categoryChartController.view.bottomAnchor.constraint(equalTo: self.chartView.bottomAnchor),
-                            ])
                             
+                            self.display()
                         }
                     }
                 }
@@ -90,7 +120,7 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
     }
     
     func categoryQuery(for sampleType: HKSampleType, completion: @escaping (_ results: [categoryDataValue]) -> Void) {
-        let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [.strictStartDate, .strictEndDate])
         
         let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]) { query,result,error in
             if let error = error {
@@ -107,8 +137,25 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         healthStore.execute(query)
     }
     
-    @objc func settingTapped() {
-        animateView(!isCollapse)
+    func display() {
+        chartView.subviews.forEach({
+            $0.removeFromSuperview()
+        })
+        
+        switch mode {
+        case .chart:
+            if ViewModels.categoryValueType.contains(where: {$0 == self.dataTypeIdentifier}) {
+                self.addCategorySingleValueChart()
+            } else {
+                self.addCategoryChart()
+            }
+        case .condenseChart:
+            addCondenseChart()
+        case .table:
+            setupTableView()
+        default:
+            return
+        }
     }
     
     func animateView(_ collapse: Bool) {
@@ -161,6 +208,58 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         
     }
     
+    func addCategoryChart() {
+        let categoryChart = CategoryDataChart(data: self.dataValues, identifier: self.dataTypeIdentifier, startTime: self.start, endTime: self.end)
+        let categoryChartController = UIHostingController(rootView: categoryChart)
+        categoryChartController.view.translatesAutoresizingMaskIntoConstraints = false
+        categoryChartController.view.isUserInteractionEnabled = true
+        self.addChild(categoryChartController)
+        self.chartView.addSubview(categoryChartController.view)
+        
+        NSLayoutConstraint.activate([
+            categoryChartController.view.topAnchor.constraint(equalTo: self.chartView.topAnchor),
+            categoryChartController.view.leadingAnchor.constraint(equalTo: self.chartView.leadingAnchor),
+            categoryChartController.view.trailingAnchor.constraint(equalTo: self.chartView.trailingAnchor),
+            categoryChartController.view.bottomAnchor.constraint(equalTo: self.chartView.bottomAnchor),
+        ])
+    }
+    
+    func addCategorySingleValueChart() {
+        let categoryChart = CategorySingleValueChart(data: self.dataValues, identifier: self.dataTypeIdentifier, startTime: self.start, endTime: self.end)
+        let categoryChartController = UIHostingController(rootView: categoryChart)
+        categoryChartController.view.translatesAutoresizingMaskIntoConstraints = false
+        categoryChartController.view.isUserInteractionEnabled = true
+        self.addChild(categoryChartController)
+        self.chartView.addSubview(categoryChartController.view)
+        
+        NSLayoutConstraint.activate([
+            categoryChartController.view.topAnchor.constraint(equalTo: self.chartView.topAnchor),
+            categoryChartController.view.leadingAnchor.constraint(equalTo: self.chartView.leadingAnchor),
+            categoryChartController.view.trailingAnchor.constraint(equalTo: self.chartView.trailingAnchor),
+            categoryChartController.view.bottomAnchor.constraint(equalTo: self.chartView.bottomAnchor),
+        ])
+    }
+    
+    func addCondenseChart() {
+        let chart = CategoryCondensedChart(data: dataValues, identifier: dataTypeIdentifier, startTime: start, endTime: end)
+        let chartController = UIHostingController(rootView: chart)
+        chartController.view.translatesAutoresizingMaskIntoConstraints = false
+        chartController.view.isUserInteractionEnabled = true
+        self.addChild(chartController)
+        self.chartView.addSubview(chartController.view)
+        
+        NSLayoutConstraint.activate([
+            chartController.view.topAnchor.constraint(equalTo: chartView.topAnchor),
+            chartController.view.leadingAnchor.constraint(equalTo: chartView.leadingAnchor),
+            chartController.view.trailingAnchor.constraint(equalTo: chartView.trailingAnchor),
+            chartController.view.bottomAnchor.constraint(equalTo: chartView.bottomAnchor)
+        ])
+    }
+    
+    @objc func settingTapped() {
+        animateView(!isCollapse)
+    }
+    
     @objc func clickedFavButton(_ sender: UIButton) {
         var imageName : String
         if isFav {
@@ -191,6 +290,14 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         showData()
     }
     
+    @IBAction func showCondenseChart(_ sender: Any) {
+        if mode == .chart {
+            mode = .condenseChart
+        } else {
+            mode = .chart
+        }
+        display()
+    }
     
     // MARK: - Navigation
 
@@ -207,6 +314,48 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
             
         }
     }
-    
+}
 
+extension CategoryDisplayViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if dataValues.isEmpty {
+            return 1
+        }
+        return dataValues.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "NotificationCell") ??
+        UITableViewCell(style: .default, reuseIdentifier: "NotificationCell")
+        if dataValues.isEmpty {
+            cell.textLabel?.text = "No data"
+        } else {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM dd, yyyy hh:mm"
+            cell.textLabel?.text = formatter.string(from: dataValues[indexPath.row].startDate)
+        }
+        return cell
+    }
+    
+    func setupTableView() {
+        
+        
+        chartView.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: chartView.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: chartView.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: chartView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: chartView.trailingAnchor)
+        ])
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
 }

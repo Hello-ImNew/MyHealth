@@ -8,7 +8,7 @@
 import UIKit
 import HealthKit
 
-class ProfileViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
+class ProfileViewController: UIViewController, UITextFieldDelegate {
     // MARK: Connection
     @IBOutlet weak var firstNameTxt: UITextField!
     @IBOutlet weak var lastNameTxt: UITextField!
@@ -20,6 +20,8 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UIPickerView
     @IBOutlet weak var optionView: UIView!
     @IBOutlet weak var dpkDate: UIDatePicker!
     @IBOutlet weak var dpkOption: UIPickerView!
+    @IBOutlet weak var profileImgView: UIImageView!
+    @IBOutlet weak var profileView: UIView!
     
     // MARK: Variables
     let healthStore = HealthData.healthStore
@@ -47,6 +49,14 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UIPickerView
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tappedOutside(_:)))
         view.addGestureRecognizer(tapGesture)
+        let imgTapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        profileImgView.addGestureRecognizer(imgTapGesture)
+        
+        if let image = ViewModels.profileImage {
+            profileImgView.image = image
+        }
+        profileView.layer.cornerRadius = profileView.frame.size.width / 2
+        
         reloadData()
     }
     
@@ -80,21 +90,21 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UIPickerView
     }
     
     func reloadData() {
-        DispatchQueue.main.async { [self] in
-            bioSexTxt.text = userData.bioSex?.rawValue
-            bloodTypeTxt.text = userData.bloodType?.rawValue
-            skinTypeTxt.text = userData.fitzpatrickSkinType?.rawValue
+        DispatchQueue.main.async {
+            self.bioSexTxt.text = self.userData.bioSex?.rawValue
+            self.bloodTypeTxt.text = self.userData.bloodType?.rawValue
+            self.skinTypeTxt.text = self.userData.fitzpatrickSkinType?.rawValue
             
-            if let birthDate = userData.birthDate {
-                birthDateTxt.text = "\(birthDate.standardString) (\(birthDate.age))"
+            if let birthDate = self.userData.birthDate {
+                self.birthDateTxt.text = "\(birthDate.standardString) (\(birthDate.age))"
             } else {
-                birthDateTxt.text = nil
+                self.birthDateTxt.text = nil
             }
-            let firstName = userData.firstName ?? ""
-            let lastName = userData.lastName ?? ""
-            firstNameTxt.text = firstName
-            lastNameTxt.text = lastName
-            fullNameTxt.text = "\(firstName) \(lastName)"
+            let firstName = self.userData.firstName ?? ""
+            let lastName = self.userData.lastName ?? ""
+            self.firstNameTxt.text = firstName
+            self.lastNameTxt.text = lastName
+            self.fullNameTxt.text = "\(firstName) \(lastName)"
             
         }
     }
@@ -122,10 +132,10 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UIPickerView
     
     func enableTextField(_ txt: UITextField, placeholder: String = "Not Set") {
         txt.isEnabled = true
-        txt.textColor = .blue
+        txt.textColor = .systemBlue
         txt.attributedPlaceholder = NSAttributedString(
             string: placeholder,
-            attributes: [.foregroundColor: UIColor.blue]
+            attributes: [.foregroundColor: UIColor.systemBlue]
         )
     }
     
@@ -237,7 +247,16 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UIPickerView
     @objc func clearBthDayTapped() {
         birthDateTxt.text = nil
         userData.birthDate = nil
-        removeClearButton()
+        hideAllPicker()
+        optionView.isHidden = true
+    }
+    
+    @objc func imageTapped() {
+        let vc = UIImagePickerController()
+        vc.sourceType = .photoLibrary
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated: true)
     }
     
     // MARK: Text Field Delegate
@@ -276,34 +295,6 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UIPickerView
         }
         
         return shouldEdit
-    }
-
-    // MARK: Picker View Delegate
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return selectedOptions.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return selectedOptions[row]
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selectedRow = selectedOptions[row]
-        selectedTxtField?.text = selectedRow
-        switch selectedTxtField {
-        case bioSexTxt:
-            userData.bioSex = UserData.sex(rawValue: selectedRow)
-        case bloodTypeTxt:
-            userData.bloodType = UserData.blood(rawValue: selectedRow)
-        case skinTypeTxt:
-            userData.fitzpatrickSkinType = UserData.skin(rawValue: selectedRow)
-        default:
-            return
-        }
     }
     
     // MARK: Action Event Handlers
@@ -345,4 +336,48 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UIPickerView
     }
     */
 
+}
+
+extension ProfileViewController: UIPickerViewDataSource, UIPickerViewDelegate {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return selectedOptions.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return selectedOptions[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let selectedRow = selectedOptions[row]
+        selectedTxtField?.text = selectedRow
+        switch selectedTxtField {
+        case bioSexTxt:
+            userData.bioSex = UserData.sex(rawValue: selectedRow)
+        case bloodTypeTxt:
+            userData.bloodType = UserData.blood(rawValue: selectedRow)
+        case skinTypeTxt:
+            userData.fitzpatrickSkinType = UserData.skin(rawValue: selectedRow)
+        default:
+            return
+        }
+    }
+}
+
+extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let image = info[.editedImage] as? UIImage {
+            profileImgView.image = image
+            ViewModels.saveProfileImage(image)
+        }
+        
+        picker.dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
 }
