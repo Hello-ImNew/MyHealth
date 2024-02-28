@@ -363,7 +363,7 @@ class HealthTypesTableViewController: UITableViewController {
                 let start = current.date(bySettingHour: 18, minute: 0, second: 0, of: dataValue.startDate)
                 let end = current.date(byAdding: .day, value: 1, to: start!)
                 let dataType = getSampleType(for: identifier)!
-                let datePredicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [.strictEndDate, .strictStartDate])
+                let datePredicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [.strictEndDate])
                 let query = HKSampleQuery(sampleType: dataType, predicate: datePredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil, resultsHandler: { (query, results, error) in
                     if let error = error {
                         print("Error fetching data for \(identifier): \(error.localizedDescription)")

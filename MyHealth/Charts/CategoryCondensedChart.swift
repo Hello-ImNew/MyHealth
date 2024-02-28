@@ -15,7 +15,7 @@ struct CategoryCondensedChart: View {
     var startTime: Date
     var endTime: Date
     
-    let dayInSec = 60*24*24
+    let dayInSec = 60*60*24
     
     var listOfDays: [Date] {
         var res: [Date] = []

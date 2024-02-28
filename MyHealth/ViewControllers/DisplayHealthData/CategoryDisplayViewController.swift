@@ -299,6 +299,13 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         display()
     }
     
+    @IBAction func addDataTapped(_ sender: Any) {
+        if ViewModels.categoryValueType.contains(dataTypeIdentifier) {
+            performSegue(withIdentifier: "AddCategoryValueSegue", sender: self)
+        } else {
+            performSegue(withIdentifier: "AddCategoryDataSegue", sender: self)
+        }
+    }
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -311,7 +318,16 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
                 addCategoryController.identifier = dataTypeIdentifier
                 addCategoryController.delegate = self
             }
-            
+            return
+        }
+        
+        if segue.identifier == "AddCategoryValueSegue" {
+            if let navController = segue.destination as? UINavigationController,
+               let addCategoryController = navController.viewControllers.first as? AddCategoryValueViewController {
+                addCategoryController.identifier = dataTypeIdentifier
+                addCategoryController.delegate = self
+            }
+            return
         }
     }
 }

@@ -128,10 +128,33 @@ func dateIntervalToString(from start: Date?, to end: Date?) -> String {
     return dateIntervalFormatter.string(from: start!, to: end!)
 }
 
-func mergeTimeIntervals(data : [categoryDataValue]) -> [(start: Date, end: Date)] {
+func mergeTimeIntervals(data: [categoryDataValue]) -> [(start: Date, end: Date)] {
     var timeIntervals: [(start: Date, end: Date)] = []
     var index = 0
-    for d in data {
+    var filteredData: [categoryDataValue] = []
+    data.filter({$0.value != 0}).forEach({d in
+        let current = Calendar.current
+        let t1 = current.date(byAdding: .hour, value: 6, to: d.startDate)!
+        let t2 = current.date(byAdding: .hour, value: 6, to: d.endDate)!
+        
+        if current.isDate(t1, inSameDayAs: t2) {
+            filteredData.append(d)
+        } else {
+            filteredData.append(
+                categoryDataValue(identifier: d.identifier,
+                                  startDate: d.startDate,
+                                  endDate: current.date(bySettingHour: 18, minute: 00, second: 00, of: d.startDate)!,
+                                  value: d.value))
+            filteredData.append(
+                categoryDataValue(identifier: d.identifier,
+                                  startDate: current.date(bySettingHour: 18, minute: 00, second: 00, of: d.startDate)!,
+                                  endDate: d.endDate,
+                                  value: d.value))
+        }
+            
+    })
+    
+    for d in filteredData {
         if timeIntervals.isEmpty {
             timeIntervals.append((d.startDate, d.endDate))
             continue

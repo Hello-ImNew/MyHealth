@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import PDFKit
 import HealthKit
+import SwiftUI
 
 struct reportCategory {
     let title: String
@@ -17,10 +18,12 @@ struct reportCategory {
     var maxValue: [String]
     var minValue: [String]
     var avgValue: [String]
+    var data: [[quantityDataValue]]
 }
 
 class PDFCreator: NSObject {
-    let dataTypes: Set<HKSampleType>
+    let dataTypes: Set<HKSampleType>?
+    var categoryIndex: Int?
     let startTime: Date
     let endTime: Date
     
@@ -28,6 +31,14 @@ class PDFCreator: NSObject {
         self.dataTypes = dataTypes
         self.startTime = startTime
         self.endTime = endTime
+        self.categoryIndex = nil
+    }
+    
+    init(category: Int, startTime: Date, endTime: Date) {
+        self.startTime = startTime
+        self.endTime = endTime
+        self.categoryIndex = category
+        self.dataTypes = nil
     }
     
     func createPDF(_ completion: @escaping (Data) -> Void) {
@@ -46,20 +57,37 @@ class PDFCreator: NSObject {
         // query for data
         
         var typeByCategory: [reportCategory] = []
-        
-        for category in ViewModels.HealthCategories {
-            var repCat = reportCategory(title: category.categoryName, dataTypes: [], recentValue: [], maxValue: [], minValue: [], avgValue: [])
+        if let index = categoryIndex {
+            let category = ViewModels.HealthCategories[index]
+            var repCat = reportCategory(title: category.categoryName, dataTypes: [], recentValue: [], maxValue: [], minValue: [], avgValue: [], data: [])
             for type in category.dataTypes {
-                if dataTypes.contains(where: {$0.identifier == type.identifier}) {
-                    repCat.dataTypes.append(type)
-                    repCat.recentValue.append("")
-                    repCat.maxValue.append("")
-                    repCat.minValue.append("")
-                    repCat.avgValue.append("")
-                }
+                repCat.dataTypes.append(type)
+                repCat.recentValue.append("")
+                repCat.maxValue.append("")
+                repCat.minValue.append("")
+                repCat.avgValue.append("")
+                repCat.data.append([])
             }
             if !repCat.dataTypes.isEmpty {
                 typeByCategory.append(repCat)
+            }
+        } 
+        if let dataTypes = dataTypes {
+            for category in ViewModels.HealthCategories {
+                var repCat = reportCategory(title: category.categoryName, dataTypes: [], recentValue: [], maxValue: [], minValue: [], avgValue: [], data: [])
+                for type in category.dataTypes {
+                    if dataTypes.contains(where: {$0.identifier == type.identifier}) {
+                        repCat.dataTypes.append(type)
+                        repCat.recentValue.append("")
+                        repCat.maxValue.append("")
+                        repCat.minValue.append("")
+                        repCat.avgValue.append("")
+                        repCat.data.append([])
+                    }
+                }
+                if !repCat.dataTypes.isEmpty {
+                    typeByCategory.append(repCat)
+                }
             }
         }
         
@@ -76,6 +104,7 @@ class PDFCreator: NSObject {
                 
                 group.enter()
                 performQuery(for: typeByCategory[j].dataTypes[i].identifier, from: startTime, to: endTime) {results in
+                    typeByCategory[j].data[i].append(contentsOf: results)
                     let filteredResults = results.compactMap({$0.value != 0 ? $0 : nil})
                     if filteredResults.isEmpty {
                         typeByCategory[j].maxValue[i] = "No Data"
@@ -131,34 +160,51 @@ class PDFCreator: NSObject {
         group.notify(queue: .main) {
             let renderer = UIGraphicsPDFRenderer(bounds: pageRect, format: format)
             
-            let data = renderer.pdfData { (context) in
+            let data = renderer.pdfData { (pdfContext) in
                 
                 for category in typeByCategory {
-                    context.beginPage()
-                    let context = context.cgContext
+                    pdfContext.beginPage()
                     
-                    self.addHeaderSpace(context, pageRect: pageRect, height: 50)
+                    let context = pdfContext.cgContext
                     
-                    var currentBottom = self.addTitle(pageRect: pageRect, title: category.title, titleTop: 55)
+                    let headerHeight = self.addHeader(context: context, pageRect: pageRect)
+                    
+                    var currentBottom = self.addTitle(pageRect: pageRect, title: category.title, titleTop: headerHeight + 10)
                     let titleBottom = currentBottom + 5
-                    currentBottom = self.addTimeRange(pageRect: pageRect, top: currentBottom + 5)
                     currentBottom = self.addColumnTitles(pageRect: pageRect, titleTop: currentBottom + 5)
                     
                     self.addLine(context, pageRect: pageRect, location: currentBottom + 2)
                     
                     for i in 0..<category.dataTypes.count {
+                        self.addMiddleLine(context, pageRect: pageRect, yStart: titleBottom, yEnd: currentBottom)
+                        self.addFooter(pageRect: pageRect)
+                        
+                        let width: CGFloat = pageRect.width / 2.0 - 30
+                        let height: CGFloat = width / 2.0
+                        if currentBottom + height + 50 > pageRect.height {
+                            pdfContext.beginPage()
+                            
+                            let headerHeight = self.addHeader(context: context, pageRect: pageRect)
+                            
+                            currentBottom = self.addTitle(pageRect: pageRect, title: category.title, titleTop: headerHeight + 10)
+                            let titleBottom = currentBottom + 5
+                            currentBottom = self.addColumnTitles(pageRect: pageRect, titleTop: currentBottom + 5)
+                            
+                            self.addLine(context, pageRect: pageRect, location: currentBottom + 2)
+                        }
+                        
                         let type = category.dataTypes[i]
                         var currentRight: CGFloat
                         let top = currentBottom
                         (currentBottom, currentRight) = self.addTypeName(pageRect: pageRect, nameTop: currentBottom + 5, type: type)
                         
                         currentRight = self.addData(pageRect: pageRect, textLeft: currentRight, textTop: top+5, result: category.recentValue[i])
-                        currentRight = self.addData(pageRect: pageRect, textLeft: currentRight, textTop: top+5, result: category.maxValue[i])
-                        currentRight = self.addData(pageRect: pageRect, textLeft: currentRight, textTop: top+5, result: category.minValue[i])
-                        currentRight = self.addData(pageRect: pageRect, textLeft: currentRight, textTop: top+5, result: category.avgValue[i])
+                        
+                        currentBottom = self.addChart(context, pageRect: pageRect, data: category.data[i], location: CGPoint(x: currentRight + 10, y: top + 10))
                     }
                     
                     self.addMiddleLine(context, pageRect: pageRect, yStart: titleBottom, yEnd: currentBottom)
+                    self.addFooter(pageRect: pageRect)
                 }
             }
             
@@ -281,9 +327,6 @@ class PDFCreator: NSObject {
         
         let attributedTypeColumn = NSAttributedString(string: "Data Type", attributes: titleAttributes)
         let attributedRecentColumn = NSAttributedString(string: "Most Recent", attributes: titleAttributes)
-        let attributedMaxColumn = NSAttributedString(string: "Max", attributes: titleAttributes)
-        let attributedMinColumn = NSAttributedString(string: "Min", attributes: titleAttributes)
-        let attributedAverageColumn = NSAttributedString(string: "Average", attributes: titleAttributes)
         
         let height = attributedTypeColumn.size().height
         let bigWidth = pageRect.width / 3.0 - 5
@@ -291,15 +334,11 @@ class PDFCreator: NSObject {
         
         let typeRect = CGRect(x: 5, y: titleTop, width: pageRect.width / 3.0 - 5, height: height)
         let recentRect = CGRect(x: 5+bigWidth, y: titleTop, width: smallWidth, height: height)
-        let maxRect = CGRect(x: 5+bigWidth+smallWidth, y: titleTop, width: smallWidth, height: height)
-        let minRect = CGRect(x: 5+bigWidth+2*smallWidth, y: titleTop, width: smallWidth, height: height)
-        let avgRect = CGRect(x: 5+bigWidth+3*smallWidth, y: titleTop, width: smallWidth, height: height)
         
         attributedTypeColumn.draw(in: typeRect)
         attributedRecentColumn.draw(in: recentRect)
-        attributedMaxColumn.draw(in: maxRect)
-        attributedMinColumn.draw(in: minRect)
-        attributedAverageColumn.draw(in: avgRect)
+        
+        addTimeRange(pageRect: pageRect, top: titleTop)
         
         return titleTop + height
     }
@@ -323,7 +362,7 @@ class PDFCreator: NSObject {
         drawContext.restoreGState()
     }
     
-    func addTimeRange(pageRect: CGRect, top: CGFloat) -> CGFloat {
+    func addTimeRange(pageRect: CGRect, top: CGFloat) {
         let textFont = UIFont.systemFont(ofSize: 12, weight: .bold)
         let textAttributes: [NSAttributedString.Key: Any] = [.font : textFont]
         let attributedText = NSAttributedString(
@@ -337,7 +376,6 @@ class PDFCreator: NSObject {
             width: textSize.width,
             height: textSize.height)
         attributedText.draw(in: textRect)
-        return textRect.origin.y + textRect.size.height
         
     }
     
@@ -354,5 +392,181 @@ class PDFCreator: NSObject {
         dateIntervalFormatter.timeStyle = .none
         
         return dateIntervalFormatter.string(from: start!, to: end!)
+    }
+    
+    @MainActor
+    func addChart(_ context: CGContext,pageRect: CGRect, data:[quantityDataValue], location: CGPoint) -> CGFloat{
+        let width: CGFloat = pageRect.width / 2.0 - 30
+        let height: CGFloat = width / 2.0
+        
+        let chartFrame = CGRect(x: location.x, y: location.y,
+                                width: width, height: height)
+        let chart = PDFChart(data: data,
+                             frame: chartFrame)
+        
+        
+        let renderer = ImageRenderer(content: chart)
+        let image = renderer.uiImage
+        image?.draw(in: chartFrame)
+        
+//        let renderer = UIGraphicsImageRenderer(size: chartFrame.size)
+//        
+//        let image = renderer.image { context in
+//            return chartVC.view.layer.render(in: context.cgContext)
+//        }
+//        
+//        image.draw(in: chartFrame)
+//        
+//        chartVC.view.frame = chartFrame
+//        
+//        context.saveGState()
+//        context.move(to: location)
+//        chartVC.view.layer.render(in: context)
+//        context.restoreGState()
+//        
+//        chartVC.removeFromParent()
+//        chartVC.view.removeFromSuperview()
+        
+        return location.y + height
+    }
+    
+    func addHeader(context: CGContext, pageRect: CGRect) -> CGFloat {
+        
+        let userData = ViewModels.userData
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy"
+        
+        let fieldFont = UIFont.systemFont(ofSize: 12, weight: .bold)
+        let textFont = UIFont.systemFont(ofSize: 12, weight: .regular)
+        
+        let fieldAttributes: [NSAttributedString.Key: Any] = [.font: fieldFont]
+        let textAttributes: [NSAttributedString.Key: Any] = [.font: textFont]
+        
+        // Add name
+        let attributedName = NSMutableAttributedString(string: "")
+        
+        var name: String {
+            var res = ""
+            if let firstName = userData.firstName {
+                res = "\(firstName) "
+            }
+            
+            if let lastName = userData.lastName {
+                res += lastName
+            }
+            
+            if res.isEmpty {
+                return "No Data"
+            } else {
+                return res
+            }
+        }
+        
+        attributedName.append(NSAttributedString(string: "Name: ", attributes: fieldAttributes))
+        attributedName.append(NSAttributedString(string: name, attributes: textAttributes))
+        
+        let nameSize = attributedName.size()
+        // Add gender
+        
+        let attributedGender = NSMutableAttributedString(string: "")
+        
+        var gender: String {
+            if let bioSex = userData.bioSex {
+                return bioSex.rawValue
+            } else {
+                return "No Data"
+            }
+        }
+        
+        attributedGender.append(NSAttributedString(string: "Gender: ", attributes: fieldAttributes))
+        attributedGender.append(NSAttributedString(string: gender, attributes: textAttributes))
+        
+        let genderSize = attributedGender.size()
+        // Add birthday
+        
+        let attributedBirth = NSMutableAttributedString(string: "")
+        
+        var bDate: String {
+            if let birthDate = userData.birthDate {
+                return formatter.string(from: birthDate)
+            } else {
+                return "No Data"
+            }
+        }
+        
+        attributedBirth.append(NSAttributedString(string: "Birthday: ", attributes: fieldAttributes))
+        attributedBirth.append(NSAttributedString(string: bDate, attributes: textAttributes))
+        
+        let birthDateSize = attributedBirth.size()
+        // Add Profile picture??
+        
+        let imgWidth = nameSize.height + 10 + birthDateSize.height
+        let pfpRect = CGRect(x: 5, y: 5, width: imgWidth, height: imgWidth)
+        
+        let pfpImg = ViewModels.profileImage?
+            .resizeImage(to: CGSize(width: imgWidth, height: imgWidth))
+        
+        // Add today date
+        
+        let attributedDate = NSMutableAttributedString(string: "")
+        
+        let date = formatter.string(from: Date())
+        attributedDate.append(NSAttributedString(string: "Create on: ", attributes: fieldAttributes))
+        attributedDate.append(NSAttributedString(string: date, attributes: textAttributes))
+        let todaySize = attributedDate.size()
+        
+        let nameRect = CGRect(x: pfpRect.origin.x + imgWidth + 10, y: 5,
+                              width: nameSize.width, height: nameSize.height)
+        
+        let bDayRect = CGRect(x: nameRect.origin.x,
+                              y: nameRect.origin.y + nameRect.height + 5,
+                              width: birthDateSize.width,
+                              height: birthDateSize.height)
+        
+        let genderRect = CGRect(x: nameRect.origin.x + 175,
+                                y: bDayRect.origin.y,
+                                width: genderSize.width,
+                                height: genderSize.height)
+        
+        let todayRect = CGRect(x: pageRect.width - todaySize.width - 10,
+                               y: 5, width: todaySize.width, height: todaySize.height)
+        
+        let headerHeight = imgWidth + 15
+        addHeaderSpace(context, pageRect: pageRect, height: headerHeight)
+        
+        pfpImg?.draw(in: pfpRect)
+        attributedName.draw(in: nameRect)
+        attributedBirth.draw(in: bDayRect)
+        attributedGender.draw(in: genderRect)
+        attributedDate.draw(in: todayRect)
+        
+        return headerHeight
+    }
+    
+    func addFooter(pageRect: CGRect) {
+        let footer = "Created By: MyHealth from HIVE"
+        let font = UIFont.systemFont(ofSize: 10, weight: .thin)
+        let attributes: [NSAttributedString.Key: Any] = [.font: font]
+        let attributedString = NSAttributedString(string: footer, attributes: attributes)
+        let stringSize = attributedString.size()
+        
+        let footerRect = CGRect(x: pageRect.width - stringSize.width - 10,
+                                y: pageRect.height - stringSize.height - 10,
+                                width: stringSize.width, height: stringSize.height)
+        attributedString.draw(in: footerRect)
+        
+    }
+    
+    func addPageNum(pageRect: CGRect, pageNum: Int) {
+        let font = UIFont.systemFont(ofSize: 10, weight: .thin)
+        let attributes: [NSAttributedString.Key: Any] = [.font: font]
+        let attrPageNum = NSAttributedString(string: "\(pageNum)", attributes: attributes)
+        let pageNumSize = attrPageNum.size()
+        
+        let pageNumRect = CGRect(x: (pageRect.width - pageNumSize.width) / 2.0,
+                                 y: pageRect.height - pageNumSize.height - 10,
+                                 width: pageNumSize.width, height: pageNumSize.height)
+        attrPageNum.draw(in: pageNumRect)
     }
 }
