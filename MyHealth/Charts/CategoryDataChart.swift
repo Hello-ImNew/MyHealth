@@ -47,7 +47,7 @@ struct CategoryDataChart: View {
                             VStack(alignment: .leading) {
                                 Text("SYMTOM")
                                 Text("\(getCategoryValues(for: identifier)[data.first!.value])")
-                                Text("\(dateIntervalToString(from: startTime ,to: endTime))")
+                                Text("\(dateIntervalToString(from: startTime, to: endTime))")
                             }
                         }
                     }
@@ -130,11 +130,7 @@ struct CategoryDataChart: View {
         return dateToCheck >= startDate && dateToCheck < endDate
     }
     
-    func beginningOfNextDay(_ date: Date) -> Date {
-        let current = Calendar.current
-        let result = current.startOfDay(for: current.date(byAdding: .day, value: 1, to: date)!)
-        return result
-    }
+    
     
     func getVisibleDomain(start: Date, end: Date) -> Int {
         let end = beginningOfNextDay(end)

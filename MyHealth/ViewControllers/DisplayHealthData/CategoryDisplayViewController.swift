@@ -14,6 +14,7 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         case chart = 0
         case condenseChart
         case table
+        case scatterChart
     }
     
     @IBOutlet weak var dpkStart: UIDatePicker!
@@ -74,7 +75,11 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         if ViewModels.notificationType.contains(where: {$0 == dataTypeIdentifier}) {
             mode = .table
         } else {
-            mode = .chart
+            if ViewModels.scatterChartType.contains(where: {$0 == dataTypeIdentifier}) {
+                mode = .scatterChart
+            } else {
+                mode = .chart
+            }
         }
         
         if dataTypeIdentifier == HKCategoryTypeIdentifier.sleepAnalysis.rawValue {
@@ -127,7 +132,18 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
                 print("Error fetching data for \(sampleType.identifier): \(error.localizedDescription)")
             } else {
                 if let result = result as? [HKCategorySample] {
-                    let dataValues = result.compactMap({categoryDataValue(identifier: self.dataTypeIdentifier, startDate: $0.startDate, endDate: $0.endDate, value: $0.value)})
+                    let dataValues = result.compactMap({ element in
+                        let dataValue = categoryDataValue(identifier: self.dataTypeIdentifier,
+                                          startDate: element.startDate,
+                                          endDate: element.endDate,
+                                          value: element.value)
+                        if self.dataTypeIdentifier == HKCategoryTypeIdentifier.menstrualFlow.rawValue {
+                            dataValue.metadata = [HKMetadataKeyMenstrualCycleStart: element.metadata?[HKMetadataKeyMenstrualCycleStart] as? Bool ?? false]
+                        }
+                        return dataValue
+                    })
+                    
+                    
                     
                     completion(dataValues)
                 }
@@ -153,6 +169,8 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
             addCondenseChart()
         case .table:
             setupTableView()
+        case .scatterChart:
+            addScatterChart()
         default:
             return
         }
@@ -256,6 +274,22 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         ])
     }
     
+    func addScatterChart() {
+        let chart = ScatterChartView(data: dataValues, identifier: dataTypeIdentifier, startTime: start, endTime: end)
+        let chartController = UIHostingController(rootView: chart)
+        chartController.view.translatesAutoresizingMaskIntoConstraints = false
+        chartController.view.isUserInteractionEnabled = true
+        self.addChild(chartController)
+        self.chartView.addSubview(chartController.view)
+        
+        NSLayoutConstraint.activate([
+            chartController.view.topAnchor.constraint(equalTo: chartView.topAnchor),
+            chartController.view.leadingAnchor.constraint(equalTo: chartView.leadingAnchor),
+            chartController.view.trailingAnchor.constraint(equalTo: chartView.trailingAnchor),
+            chartController.view.bottomAnchor.constraint(equalTo: chartView.bottomAnchor)
+        ])
+    }
+    
     @objc func settingTapped() {
         animateView(!isCollapse)
     }
@@ -302,9 +336,13 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
     @IBAction func addDataTapped(_ sender: Any) {
         if ViewModels.categoryValueType.contains(dataTypeIdentifier) {
             performSegue(withIdentifier: "AddCategoryValueSegue", sender: self)
-        } else {
-            performSegue(withIdentifier: "AddCategoryDataSegue", sender: self)
+            return
         }
+        if ViewModels.scatterChartType.contains(dataTypeIdentifier) {
+            performSegue(withIdentifier: "AddCategoryScatterValueSegue", sender: self)
+            return
+        }
+        performSegue(withIdentifier: "AddCategoryDataSegue", sender: self)
     }
     // MARK: - Navigation
 

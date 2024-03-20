@@ -364,12 +364,18 @@ class ViewModels {
         var menstruationCycle: HealthCategory {
             var cycleType:[HKSampleType] {
                 let identifier: [String] = [
+                    HKCategoryTypeIdentifier.cervicalMucusQuality.rawValue,
+                    HKCategoryTypeIdentifier.contraceptive.rawValue,
                     HKCategoryTypeIdentifier.infrequentMenstrualCycles.rawValue,
                     HKCategoryTypeIdentifier.intermenstrualBleeding.rawValue,
                     HKCategoryTypeIdentifier.irregularMenstrualCycles.rawValue,
                     HKCategoryTypeIdentifier.lactation.rawValue,
+                    HKCategoryTypeIdentifier.menstrualFlow.rawValue,
+                    HKCategoryTypeIdentifier.ovulationTestResult.rawValue,
                     HKCategoryTypeIdentifier.persistentIntermenstrualBleeding.rawValue,
                     HKCategoryTypeIdentifier.pregnancy.rawValue,
+                    HKCategoryTypeIdentifier.pregnancyTestResult.rawValue,
+                    HKCategoryTypeIdentifier.progesteroneTestResult.rawValue,
                     HKCategoryTypeIdentifier.sexualActivity.rawValue,
                     HKCategoryTypeIdentifier.abdominalCramps.rawValue,
                     HKCategoryTypeIdentifier.acne.rawValue,
@@ -451,6 +457,17 @@ class ViewModels {
             HKCategoryTypeIdentifier.environmentalAudioExposureEvent.rawValue,
             HKCategoryTypeIdentifier.headphoneAudioExposureEvent.rawValue,
             HKCategoryTypeIdentifier.appleWalkingSteadinessEvent.rawValue
+        ]
+    }
+    
+    static var scatterChartType: [String] {
+        return [
+            HKCategoryTypeIdentifier.cervicalMucusQuality.rawValue,
+            HKCategoryTypeIdentifier.contraceptive.rawValue,
+            HKCategoryTypeIdentifier.menstrualFlow.rawValue,
+            HKCategoryTypeIdentifier.ovulationTestResult.rawValue,
+            HKCategoryTypeIdentifier.pregnancyTestResult.rawValue,
+            HKCategoryTypeIdentifier.progesteroneTestResult.rawValue
         ]
     }
 }

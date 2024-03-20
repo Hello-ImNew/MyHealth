@@ -420,7 +420,7 @@ func getDataTypeIcon(for identifier: String) -> String? {
                 description = "heart.fill"
             case .mindfulSession:
                 description = "brain.filled.head.profile"
-            case .infrequentMenstrualCycles, .intermenstrualBleeding, .irregularMenstrualCycles, .lactation, .persistentIntermenstrualBleeding, .pregnancy, .sexualActivity:
+            case .infrequentMenstrualCycles, .intermenstrualBleeding, .irregularMenstrualCycles, .lactation, .persistentIntermenstrualBleeding, .pregnancy, .sexualActivity, .cervicalMucusQuality, .contraceptive, .menstrualFlow, .ovulationTestResult, .pregnancyTestResult, .progesteroneTestResult:
                 description = "arrow.circlepath"
             case .headphoneAudioExposureEvent, .environmentalAudioExposureEvent:
                 description = "ear"
@@ -474,7 +474,7 @@ func getDataTypeColor(for identifier: String) -> UIColor? {
             color = .systemBlue
         case .highHeartRateEvent, .irregularHeartRhythmEvent, .lowHeartRateEvent:
             color = .systemRed
-        case.infrequentMenstrualCycles, .intermenstrualBleeding, .irregularMenstrualCycles, .lactation, .persistentIntermenstrualBleeding, .pregnancy, .sexualActivity:
+        case.infrequentMenstrualCycles, .intermenstrualBleeding, .irregularMenstrualCycles, .lactation, .persistentIntermenstrualBleeding, .pregnancy, .sexualActivity, .cervicalMucusQuality, .contraceptive, .menstrualFlow, .ovulationTestResult, .pregnancyTestResult, .progesteroneTestResult:
             color = .systemPink
         case .environmentalAudioExposureEvent, .headphoneAudioExposureEvent:
             color = .blue
@@ -506,6 +506,18 @@ func getCategoryValues(for identifier: String) -> [String] {
             result = ["Present"]
         case .lowCardioFitnessEvent:
             result = ["Not Present", "Present"]
+        case .cervicalMucusQuality:
+            result = ["", "Dry", "Sticky", "Creamy", "Watery", "Egg White"]
+        case .contraceptive:
+            result = ["", "Unspecified", "Implant", "Injection", "Intrauterine Device", "Intravaginal Ring", "Pill", "Patch"]
+        case .menstrualFlow:
+            result = ["", "Unspecified Flow", "Light", "Medium", "Heavy", "No Flow"]
+        case .ovulationTestResult:
+            result = ["", "Negative/Low", "High", "Intermediate", "Positive/Peak"]
+        case .pregnancyTestResult:
+            result = ["", "Negative", "Positive", "Intermediate"]
+        case .progesteroneTestResult:
+            result = ["", "Negative", "Positive", "Intermediate"]
         default:
             break
         }
@@ -631,7 +643,7 @@ func getUnit(for sampleIdentifier: String) -> String? {
             return "Cal"
         case .flightsClimbed:
             return "Floors"
-        case .bloodPressureSystolic:
+        case .bloodPressureSystolic, .bloodPressureDiastolic:
             return "mmHg"
         case .respiratoryRate:
             return "breaths/min"
@@ -698,7 +710,7 @@ func getStatisticsOptions(for dataTypeIdentifier: String) -> HKStatisticsOptions
         let quantityTypeIdentifier = HKQuantityTypeIdentifier(rawValue: dataTypeIdentifier)
         
         switch quantityTypeIdentifier {
-        case .stepCount, .distanceWalkingRunning, .activeEnergyBurned, .basalEnergyBurned, .distanceSwimming, .flightsClimbed, .appleExerciseTime, .appleMoveTime, .appleStandTime, .distanceCycling, .distanceDownhillSnowSports, .distanceWheelchair, .nikeFuel, .pushCount, .swimmingStrokeCount, .dietaryBiotin, .dietaryCaffeine, .dietaryCalcium, .dietaryCarbohydrates, .dietaryChloride, .dietaryCholesterol, .dietaryChromium, .dietaryCopper, .dietaryEnergyConsumed, .dietaryFatMonounsaturated, .dietaryFatPolyunsaturated, .dietaryFatSaturated, .dietaryFatTotal, .dietaryFiber, .dietaryIodine, .dietaryIron, .dietaryMagnesium, .dietaryManganese, .dietaryMolybdenum, .dietaryNiacin, .dietaryPantothenicAcid, .dietaryPhosphorus, .dietaryPotassium, .dietaryProtein, .dietaryRiboflavin, .dietarySelenium, .dietarySodium, .dietarySugar, .dietaryThiamin, .dietaryVitaminA, .dietaryVitaminB6, .dietaryVitaminB12, .dietaryVitaminC, .dietaryVitaminD, .dietaryVitaminE, .dietaryVitaminK, .dietaryWater, .dietaryZinc, .insulinDelivery, .numberOfAlcoholicBeverages, .numberOfTimesFallen, .timeInDaylight, .inhalerUsage:
+        case .stepCount, .distanceWalkingRunning, .activeEnergyBurned, .basalEnergyBurned, .distanceSwimming, .flightsClimbed, .appleExerciseTime, .appleMoveTime, .appleStandTime, .distanceCycling, .distanceDownhillSnowSports, .distanceWheelchair, .nikeFuel, .pushCount, .swimmingStrokeCount, .dietaryBiotin, .dietaryCaffeine, .dietaryCalcium, .dietaryCarbohydrates, .dietaryChloride, .dietaryCholesterol, .dietaryChromium, .dietaryCopper, .dietaryEnergyConsumed, .dietaryFatMonounsaturated, .dietaryFatPolyunsaturated, .dietaryFatSaturated, .dietaryFatTotal, .dietaryFiber, .dietaryIodine, .dietaryIron, .dietaryMagnesium, .dietaryManganese, .dietaryMolybdenum, .dietaryNiacin, .dietaryPantothenicAcid, .dietaryPhosphorus, .dietaryPotassium, .dietaryProtein, .dietaryRiboflavin, .dietarySelenium, .dietarySodium, .dietarySugar, .dietaryThiamin, .dietaryVitaminA, .dietaryVitaminB6, .dietaryVitaminB12, .dietaryVitaminC, .dietaryVitaminD, .dietaryVitaminE, .dietaryVitaminK, .dietaryWater, .dietaryZinc, .insulinDelivery, .numberOfAlcoholicBeverages, .numberOfTimesFallen, .timeInDaylight, .inhalerUsage, .dietaryFolate:
             options = .cumulativeSum
         case .heartRate, .bloodPressureSystolic, .bloodPressureDiastolic, .respiratoryRate, .appleSleepingWristTemperature, .bodyFatPercentage, .bodyMass, .bodyMassIndex, .electrodermalActivity, .height, .leanBodyMass, .waistCircumference, .cyclingCadence, .cyclingFunctionalThresholdPower, .cyclingPower, .cyclingSpeed, .physicalEffort, .runningPower, .runningSpeed, .underwaterDepth, .environmentalAudioExposure, .environmentalSoundReduction, .headphoneAudioExposure, .atrialFibrillationBurden, .heartRateRecoveryOneMinute, .heartRateVariabilitySDNN, .peripheralPerfusionIndex, .restingHeartRate, .vo2Max, .walkingHeartRateAverage, .appleWalkingSteadiness, .runningGroundContactTime, .runningStrideLength, .runningVerticalOscillation, .sixMinuteWalkTestDistance, .stairAscentSpeed, .stairDescentSpeed, .walkingAsymmetryPercentage, .walkingDoubleSupportPercentage, .walkingSpeed, .walkingStepLength, .bloodAlcoholContent, .uvExposure, .waterTemperature, .basalBodyTemperature, .forcedExpiratoryVolume1, .forcedVitalCapacity, .oxygenSaturation, .peakExpiratoryFlowRate, .bloodGlucose, .bodyTemperature:
             options = .discreteAverage

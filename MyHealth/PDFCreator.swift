@@ -61,12 +61,15 @@ class PDFCreator: NSObject {
             let category = ViewModels.HealthCategories[index]
             var repCat = reportCategory(title: category.categoryName, dataTypes: [], recentValue: [], maxValue: [], minValue: [], avgValue: [], data: [])
             for type in category.dataTypes {
-                repCat.dataTypes.append(type)
-                repCat.recentValue.append("")
-                repCat.maxValue.append("")
-                repCat.minValue.append("")
-                repCat.avgValue.append("")
-                repCat.data.append([])
+                if type is HKQuantityType,
+                   type.identifier != HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue {
+                    repCat.dataTypes.append(type)
+                    repCat.recentValue.append("")
+                    repCat.maxValue.append("")
+                    repCat.minValue.append("")
+                    repCat.avgValue.append("")
+                    repCat.data.append([])
+                }
             }
             if !repCat.dataTypes.isEmpty {
                 typeByCategory.append(repCat)
@@ -161,9 +164,10 @@ class PDFCreator: NSObject {
             let renderer = UIGraphicsPDFRenderer(bounds: pageRect, format: format)
             
             let data = renderer.pdfData { (pdfContext) in
-                
+                var pageNum = 0
                 for category in typeByCategory {
                     pdfContext.beginPage()
+                    pageNum += 1
                     
                     let context = pdfContext.cgContext
                     
@@ -174,15 +178,23 @@ class PDFCreator: NSObject {
                     currentBottom = self.addColumnTitles(pageRect: pageRect, titleTop: currentBottom + 5)
                     
                     self.addLine(context, pageRect: pageRect, location: currentBottom + 2)
-                    
+                    if category.dataTypes.count == 0 {
+                        
+                    }
                     for i in 0..<category.dataTypes.count {
-                        self.addMiddleLine(context, pageRect: pageRect, yStart: titleBottom, yEnd: currentBottom)
-                        self.addFooter(pageRect: pageRect)
+                        
                         
                         let width: CGFloat = pageRect.width / 2.0 - 30
                         let height: CGFloat = width / 2.0
+                        
+                        // add another page
                         if currentBottom + height + 50 > pageRect.height {
+                            self.addMiddleLine(context, pageRect: pageRect, yStart: titleBottom, yEnd: currentBottom)
+                            self.addFooter(pageRect: pageRect)
+                            self.addPageNum(pageRect: pageRect, pageNum: pageNum)
+                            
                             pdfContext.beginPage()
+                            pageNum += 1
                             
                             let headerHeight = self.addHeader(context: context, pageRect: pageRect)
                             
@@ -200,11 +212,13 @@ class PDFCreator: NSObject {
                         
                         currentRight = self.addData(pageRect: pageRect, textLeft: currentRight, textTop: top+5, result: category.recentValue[i])
                         
-                        currentBottom = self.addChart(context, pageRect: pageRect, data: category.data[i], location: CGPoint(x: currentRight + 10, y: top + 10))
+                        currentBottom = self.addChart(context, pageRect: pageRect, data: category.data[i], 
+                                                      location: CGPoint(x: currentRight + 10, y: top + 10))
                     }
                     
                     self.addMiddleLine(context, pageRect: pageRect, yStart: titleBottom, yEnd: currentBottom)
                     self.addFooter(pageRect: pageRect)
+                    self.addPageNum(pageRect: pageRect, pageNum: pageNum)
                 }
             }
             
@@ -308,6 +322,7 @@ class PDFCreator: NSObject {
                         let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
                         performQuery(for: quantityType.identifier, from: startOfDay, to: endOfDay) { results in
                             if let result = results.first {
+                                let temp = quantityType.identifier
                                 let text = "\(result.displayString) \(getUnit(for: quantityType.identifier)!)"
                                 completion(text)
                             }

@@ -58,7 +58,6 @@ class PDFPreviewViewController: UIViewController {
                         res.append(type)
                     }
                 }
-                
                 return res
             }
             dataList = Set(types)

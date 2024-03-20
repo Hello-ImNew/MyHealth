@@ -52,7 +52,16 @@ class HealthData {
         
         print("Requesting HealthKit authorization...")
         
-        healthStore.requestAuthorization(toShare: shareTypes, read: readTypes) { (success, error) in
+        if (shareTypes == nil || (shareTypes?.isEmpty ?? false))
+            && (readTypes == nil || (readTypes?.isEmpty ?? false)) {
+            print("No Data Types Requested.")
+            completion(true)
+            return
+        }
+        
+        let share = shareTypes?.filter({!ViewModels.shareNotAllowedType.contains($0.identifier)})
+        
+        healthStore.requestAuthorization(toShare: share, read: readTypes) { (success, error) in
             if let error = error {
                 print("requestAuthorization error:", error.localizedDescription)
             }

@@ -173,3 +173,9 @@ func mergeTimeIntervals(data: [categoryDataValue]) -> [(start: Date, end: Date)]
     
     return timeIntervals
 }
+
+func beginningOfNextDay(_ date: Date) -> Date {
+    let current = Calendar.current
+    let result = current.startOfDay(for: current.date(byAdding: .day, value: 1, to: date)!)
+    return result
+}

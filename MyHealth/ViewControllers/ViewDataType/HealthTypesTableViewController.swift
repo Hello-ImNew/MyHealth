@@ -53,31 +53,39 @@ class HealthTypesTableViewController: UITableViewController {
         addProfilePicture()
         
         let read = Set(healthDataTypes)
-        HealthData.requestHealthDataAccessIfNeeded(toShare: nil, read: read) { success in
+        let share = Set(healthDataTypes)
+        HealthData.requestHealthDataAccessIfNeeded(toShare: share, read: read) { success in
             if success {
-                self.checkDataAvailability(dataTypesToCheck: self.healthDataTypes)
+                self.checkDataAvailability(dataTypesToCheck: self.healthDataTypes) {
+                    self.sortDataValue()
+                    self.reloadTable(self.noFavMessage)
+                }
             }
         }
     }
     
     
-    func checkDataAvailability(dataTypesToCheck: [HKSampleType]) {
+    func checkDataAvailability(dataTypesToCheck: [HKSampleType], completion: @escaping () -> Void) {
         clearDataTypes()
+        let group = DispatchGroup()
         for dataType in dataTypesToCheck {
             if dataType.identifier == HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue {
                 continue
             }
+            let type = dataType
+            group.enter()
             
             // Create a predicate to specify the time range you want to check
             let datePredicate = HKQuery.predicateForSamples(withStart: Date.distantPast, end: Date(), options: .strictStartDate)
             
             // Create a query to fetch data for the specified data type
-            let query = HKSampleQuery(sampleType: dataType, predicate: datePredicate, limit: 1, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]) { (query, results, error) in
+            let query = HKSampleQuery(sampleType: type, predicate: datePredicate, limit: 1, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]) { (query, results, error) in
                 if let error = error {
-                    print("Error fetching data for \(dataType): \(error.localizedDescription)")
+                    print("Error fetching data for \(type): \(error.localizedDescription)")
+                    group.leave()
                 } else {
                     if let result = results?.first {
-                        if dataType is HKQuantityType {
+                        if type is HKQuantityType {
                             
                             let latestDate = result.startDate
                             let calendar = Calendar.current
@@ -86,13 +94,13 @@ class HealthTypesTableViewController: UITableViewController {
                             let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
                             
                             let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
-                            let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: dataType.identifier))
-                            let option = getStatisticsOptions(for: dataType.identifier)
+                            let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: type.identifier))
+                            let option = getStatisticsOptions(for: type.identifier)
                             //
                             let query = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: option) { (query, statisticResult, error) in
                                 if let statisticResult = statisticResult,
                                    let quantity = getStatisticsQuantity(for: statisticResult, with: option),
-                                   let unit = preferredUnit(for: dataType.identifier) {
+                                   let unit = preferredUnit(for: type.identifier) {
                                     var value = quantity.doubleValue(for: unit)
                                     if unit == .percent() {
                                         value *= 100
@@ -108,16 +116,16 @@ class HealthTypesTableViewController: UITableViewController {
                                     } else {
                                         index = 3
                                     }
-                                    let dataValue = quantityDataValue(identifier: dataType.identifier, startDate: statisticResult.startDate, endDate: result.endDate, value: value)
+                                    let dataValue = quantityDataValue(identifier: type.identifier, startDate: statisticResult.startDate, endDate: result.endDate, value: value)
                                     
                                     // if the datatype is boold pressure, get the diastolic value
-                                    if dataType.identifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
+                                    if type.identifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
                                         let quantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue))
                                         let option = getStatisticsOptions(for: quantityType.identifier)
                                         let secondQuery = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: option) { (query, statisticResult, error) in
                                             if let statisticResult = statisticResult,
                                                let quantity = getStatisticsQuantity(for: statisticResult, with: option),
-                                               let unit = preferredUnit(for: dataType.identifier) {
+                                               let unit = preferredUnit(for: type.identifier) {
                                                 var value = quantity.doubleValue(for: unit)
                                                 if unit == .percent() {
                                                     value *= 100
@@ -129,6 +137,7 @@ class HealthTypesTableViewController: UITableViewController {
                                                 DispatchQueue.main.async {
                                                     self.insertToDataTypes(dataValue: dataValue, at: index)
                                                     self.reloadTable(self.noFavMessage)
+                                                    group.leave()
                                                 }
                                             }
                                         }
@@ -138,20 +147,22 @@ class HealthTypesTableViewController: UITableViewController {
                                         
                                         
                                         DispatchQueue.main.async {
-                                            self.insertToDataTypes(dataValue: dataValue, at: index)
-                                            self.reloadTable(self.noFavMessage)
+                                            self.dataTypeAvailability[index].dataValue.append(dataValue)
+                                            group.leave()
                                         }
                                     }
                                     
                                 } else if let error = error {
                                     // Handle any errors that occurred during the query.
                                     print("Error fetching heart rate data: \(error.localizedDescription)")
+                                    group.leave()
                                 }
                             }
                             
                             self.healthStore.execute(query)
                         } else if let result = result as? HKCategorySample {
-                            let dataValue = categoryDataValue(identifier: dataType.identifier, startDate: result.startDate, endDate: result.endDate, value: result.value)
+                            print(type.identifier)
+                            let dataValue = categoryDataValue(identifier: type.identifier, startDate: result.startDate, endDate: result.endDate, value: result.value)
                             var index: Int
                             if dataValue.endDate.isToday {
                                 index = 0
@@ -164,17 +175,17 @@ class HealthTypesTableViewController: UITableViewController {
                             }
                             
                             DispatchQueue.main.async {
-                                self.insertToDataTypes(dataValue: dataValue, at: index)
-                                self.reloadTable(self.noFavMessage)
+                                self.dataTypeAvailability[index].dataValue.append(dataValue)
+                                group.leave()
                             }
                         }
                         
                         
                     } else {
                         DispatchQueue.main.async {
-                            let emptyDatavalue = HealthDataValue(identifier: dataType.identifier, startDate: Date(), endDate: Date())
-                            self.insertToDataTypes(dataValue: emptyDatavalue, at: 4)
-                            self.reloadTable(self.noFavMessage)
+                            let emptyDatavalue = HealthDataValue(identifier: type.identifier, startDate: Date(), endDate: Date())
+                            self.dataTypeAvailability[4].dataValue.append(emptyDatavalue)
+                            group.leave()
                         }
                     }
                 }
@@ -183,6 +194,10 @@ class HealthTypesTableViewController: UITableViewController {
             // Execute the query
             healthStore.execute(query)
             
+        }
+        
+        group.notify(queue: .main) {
+            completion()
         }
     }
     
@@ -238,9 +253,6 @@ class HealthTypesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if dataTypeAvailability[indexPath.section].dataValue.isEmpty {
-            print("Section \(indexPath.section), row \(indexPath.row)")
-        }
         let datasource = dataTypeAvailability[indexPath.section]
         let dataValue = datasource.dataValue[indexPath.row]
         let identifier = dataValue.identifier
@@ -360,10 +372,18 @@ class HealthTypesTableViewController: UITableViewController {
             // If data is sleep analysis
             if identifier == HKCategoryTypeIdentifier.sleepAnalysis.rawValue {
                 let current = Calendar.current
-                let start = current.date(bySettingHour: 18, minute: 0, second: 0, of: dataValue.startDate)
-                let end = current.date(byAdding: .day, value: 1, to: start!)
+                let start: Date?
+                let end: Date?
+                let startOfDate = current.date(bySettingHour: 18, minute: 0, second: 0, of: dataValue.startDate)
+                if dataValue.startDate >= startOfDate! {
+                    start = startOfDate
+                    end = current.date(byAdding: .day, value: 1, to: start!)
+                } else {
+                    end = startOfDate
+                    start = current.date(byAdding: .day, value: -1, to: end!)
+                }
                 let dataType = getSampleType(for: identifier)!
-                let datePredicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [.strictEndDate])
+                let datePredicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [])
                 let query = HKSampleQuery(sampleType: dataType, predicate: datePredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil, resultsHandler: { (query, results, error) in
                     if let error = error {
                         print("Error fetching data for \(identifier): \(error.localizedDescription)")
@@ -472,6 +492,17 @@ class HealthTypesTableViewController: UITableViewController {
     func insertToDataTypes(dataValue: HealthDataValue, at index: Int){
         let i = self.dataTypeAvailability[index].dataValue.lastIndex(where: {getDataTypeName(for: $0.identifier) ?? "" < getDataTypeName(for: dataValue.identifier) ?? ""}) ?? -1
         self.dataTypeAvailability[index].dataValue.insert(dataValue, at: i+1)
+    }
+    
+    func sortDataValue() {
+        for i in 0..<dataTypeAvailability.count {
+            dataTypeAvailability[i].dataValue.sort(by: {
+                let title1 = getDataTypeName(for: $0.identifier)!
+                let title2 = getDataTypeName(for: $1.identifier)!
+                
+                return title1 < title2
+            })
+        }
     }
     
     func clearDataTypes() {

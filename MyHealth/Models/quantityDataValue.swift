@@ -24,4 +24,5 @@ class quantityDataValue: HealthDataValue {
         self.value = value
         super.init(identifier: identifier, startDate: startDate, endDate: endDate)
     }
+    
 }

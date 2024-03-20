@@ -13,6 +13,7 @@ class HealthDataValue : Identifiable {
     var identifier: String
     let startDate: Date
     let endDate: Date
+    var metadata: [String: Any]?
     
     init(identifier: String, startDate: Date, endDate: Date) {
         self.identifier = identifier

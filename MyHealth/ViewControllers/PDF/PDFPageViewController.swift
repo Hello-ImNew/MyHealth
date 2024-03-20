@@ -141,7 +141,7 @@ class PDFPageViewController: UIViewController {
                     performSegue(withIdentifier: "PDFPreviewSegue", sender: self)
                 }
             case .selectCategory:
-                if let selectedRow = selectedRow {
+                if selectedRow != nil {
                     performSegue(withIdentifier: "PDFPreviewSegue", sender: self)
                 } else {
                     createAlert(title: "No Health Category Selected", message: "Please Select Health Category To Generate Report")

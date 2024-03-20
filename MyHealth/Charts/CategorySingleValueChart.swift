@@ -53,7 +53,7 @@ struct CategorySingleValueChart: View {
                     }else {
                         if let date = selectedDate,
                            !selectedData.isEmpty {
-                            Text("TOOTHBRUSHING")
+                            Text("\(getDataTypeName(for: identifier)!.uppercased())")
                             let avgTime = totalTime(selectedData)
                             HStack {
                                 let hr = Int(avgTime / 3600)
@@ -98,6 +98,7 @@ struct CategorySingleValueChart: View {
                                 y: .value("Time", intervalToTime(d.endDate.timeIntervalSince(d.startDate))))
                         .foregroundStyle(Calendar.current.isDateInToday(d.startDate) ? todayDataColor: pastDataColor)
                         .alignsMarkStylesWithPlotArea()
+                        .opacity(isHighLight(d.startDate) ? 1.0 : 0.5)
                         
                     }
                 }
@@ -173,12 +174,6 @@ struct CategorySingleValueChart: View {
         return min(day*dayInSec, 7*dayInSec)
     }
     
-    func beginningOfNextDay(_ date: Date) -> Date {
-        let current = Calendar.current
-        let result = current.startOfDay(for: current.date(byAdding: .day, value: 1, to: date)!)
-        return result
-    }
-    
     func averageTime() -> Int {
         var total: Int = 0
         for d in data {
@@ -194,6 +189,14 @@ struct CategorySingleValueChart: View {
             sum += Int($0.endDate.timeIntervalSince($0.startDate))
         })
         return sum
+    }
+    
+    func isHighLight(_ date: Date) -> Bool {
+        if let selectedDate = selectedDate{
+            return Calendar.current.isDate(selectedDate, inSameDayAs: date)
+        } else {
+            return true
+        }
     }
 }
 

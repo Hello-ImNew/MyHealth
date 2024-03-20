@@ -107,34 +107,38 @@ struct CategoryCondensedChart: View {
                                                       endDate: current.date(byAdding: .hour, value: 6, to: d.endDate)!,
                                                       value: d.value)
                         
-                        let yStart: Double = Double(current.component(.hour, from: datum.startDate)) + Double(current.component(.minute, from: datum.startDate))/60.0
-                        let yEnd: Double = Double(current.component(.hour, from: datum.endDate)) + Double(current.component(.minute, from: datum.endDate))/60.0
+                        let yStart: Double = -(Double(current.component(.hour, from: datum.startDate)) + Double(current.component(.minute, from: datum.startDate))/60.0)
+                        let yEnd: Double = -(Double(current.component(.hour, from: datum.endDate)) + Double(current.component(.minute, from: datum.endDate))/60.0)
                         
                         if current.isDate(datum.startDate, inSameDayAs: datum.endDate) {
                             BarMark(x: .value("Date", datum.startDate, unit: .day),
                                     yStart: .value("StartTime", yStart),
                                     yEnd: .value("EndTime", yEnd))
                             .foregroundStyle(by: .value("Color", getCategoryValues(for: identifier)[datum.value]))
+                            .opacity(isHighLight(datum.startDate) ? 1.0 : 0.5)
                         } else {
                             BarMark(x: .value("Date", datum.startDate, unit: .day),
                                     yStart: .value("StartTime", yStart),
                                     yEnd: .value("EndTime", 24))
                             .foregroundStyle(by: .value("Color", getCategoryValues(for: identifier)[datum.value]))
+                            .opacity(isHighLight(datum.startDate) ? 1.0 : 0.5)
                             
                             BarMark(x: .value("Date", datum.endDate, unit: .day),
                                     yStart: .value("StartTime", 0),
                                     yEnd: .value("EndTime", yEnd))
                             .foregroundStyle(by: .value("Color", getCategoryValues(for: identifier)[datum.value]))
+                            .opacity(isHighLight(datum.endDate) ? 1.0 : 0.5)
                         }
                     }
                 }
-                .chartYScale(domain: 0...24)
+                .chartYScale(domain: (-24...0))
                 .chartXScale(domain: startTime...Calendar.current.startOfDay(
                     for: Calendar.current.date(byAdding: .day, value: 1, to: endTime)!))
                 .chartYAxis {
-                    AxisMarks(values: [0, 6, 12, 18, 24]) { value in
-                        if let hr = value.as(Int.self) {
+                    AxisMarks(values: [0, -6, -12, -18, -24]) { value in
+                        if let hour = value.as(Int.self) {
                             AxisValueLabel {
+                                let hr = abs(hour)
                                 Text("\((abs(hr-6) - 1) % 12 + 1)\(hr - 6 < 0 || hr - 6 >= 12 ? "pm" : "am")")
                             }
                             AxisGridLine()
@@ -200,9 +204,12 @@ struct CategoryCondensedChart: View {
         return min(day*dayInSec, 7*dayInSec)
     }
     
-    func beginningOfNextDay(_ date: Date) -> Date {
-        let current = Calendar.current
-        let result = current.startOfDay(for: current.date(byAdding: .day, value: 1, to: date)!)
-        return result
+    func isHighLight(_ date: Date) -> Bool {
+        if let selectedDate = selectedDate {
+            return Calendar.current.isDate(Calendar.current.date(byAdding: .hour, value: -6, to: date)!,
+                                    inSameDayAs: selectedDate)
+        } else {
+            return true
+        }
     }
 }
