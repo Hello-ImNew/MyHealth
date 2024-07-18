@@ -9,6 +9,14 @@ import UIKit
 import HealthKit
 import SwiftUI
 
+struct favType: Codable {
+    let type: String
+    
+    enum CodingKeys: String, CodingKey {
+        case type = "fav_health_type"
+    }
+}
+
 struct dataAvailability {
     let displayName: String
     var dataValue: [HealthDataValue] = []
@@ -42,7 +50,15 @@ class HealthTypesTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         if isFavView {
-            healthDataTypes = ViewModels.favDataType
+            let group = DispatchGroup()
+            group.enter()
+            getFavData{ success in
+                if success {
+                    self.healthDataTypes = ViewModels.favDataType
+                }
+                group.leave()
+            }
+            group.wait()
         }
         
         if healthDataTypes.isEmpty {
@@ -201,7 +217,59 @@ class HealthTypesTableViewController: UITableViewController {
         }
     }
     
-    
+    func getFavData(_ completion: @escaping (_ success: Bool) -> Void) {
+        
+        let link = serviceURL + "get_fav_data.php"
+        
+        guard let url = URL(string: link) else {
+            print("Cannot connect to web service.")
+            completion(false)
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let payload = [
+                "user_ID": ViewModels.userID
+            ]
+            
+            let jsondata = try JSONSerialization.data(withJSONObject: payload)
+            request.httpBody = jsondata
+        } catch {
+            print("Error encoding data: \(error)")
+            completion(false)
+            return
+        }
+        
+        URLSession.shared.dataTask(with: request) {(data, response, error) in
+            guard error == nil,
+                  let data = data else {
+                print("Error: \(error!)")
+                self.showAlert(title: "Connection Error", message: error!.localizedDescription)
+                completion(false)
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Server error: \(String(data: data, encoding: .utf8) ?? "")")
+                completion(false)
+                return
+            }
+            do {
+                let items = try JSONDecoder().decode([favType].self, from: data)
+                let types = items.map({$0.type})
+                ViewModels.favHealthTypes = types
+                completion(true)
+            } catch {
+                print("error decoding data: \(error.localizedDescription)")
+                completion(false)
+            }
+        }.resume()
+    }
     
 
     // MARK: - Table view data source

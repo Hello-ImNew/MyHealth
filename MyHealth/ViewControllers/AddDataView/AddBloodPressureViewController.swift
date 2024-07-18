@@ -15,7 +15,7 @@ class AddBloodPressureViewController: UIViewController {
     @IBOutlet weak var txtSystolic: UITextField!
     @IBOutlet weak var txtDiastolic: UITextField!
     
-    var delegate: AddDataDelegate?
+    weak var delegate: AddDataDelegate?
     var isSystolicReady: Bool = false
     var isDiastolicReady: Bool = false
     

@@ -9,6 +9,12 @@ import UIKit
 import HealthKit
 import SwiftUI
 
+enum rangeOption: String {
+    case week = "1 Week"
+    case month = "1 Month"
+    case year = "1 Year"
+}
+
 class CategoryDisplayViewController: UIViewController, AddDataDelegate {
     enum displayMode: Int {
         case chart = 0
@@ -17,12 +23,17 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         case scatterChart
     }
     
-    @IBOutlet weak var dpkStart: UIDatePicker!
-    @IBOutlet weak var dpkEnd: UIDatePicker!
+    @IBOutlet weak var dateView: UIView!
+    @IBOutlet weak var rangeView: UIView!
     @IBOutlet weak var chartView: UIView!
-    @IBOutlet weak var settingView: UIStackView!
+    @IBOutlet weak var settingView: UIView!
     @IBOutlet weak var addDataBtn: UIButton!
     @IBOutlet weak var condenseChartBtn: UIButton!
+    @IBOutlet weak var rangeBtn: UIButton!
+    @IBOutlet weak var dateBtn: UIButton!
+    @IBOutlet weak var datePicker: UIPickerView!
+    @IBOutlet weak var settingParent: UIStackView!
+    @IBOutlet weak var spacerView: UIView!
     
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
@@ -31,8 +42,57 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
     var isCollapse: Bool = false
     var dataValues: [categoryDataValue] = []
     var dataTypeIdentifier: String = ""
-    var start: Date = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: -6, to: Date())!)
-    var end: Date = Date()
+    
+    var selectedRange: rangeOption = .week
+    var selectDay: Int = Calendar.current.component(.day, from: Date())
+    var selectMonth: Int = Calendar.current.component(.month, from: Date())
+    var selectYear: Int = Calendar.current.component(.year, from: Date())
+    
+    let yearOption: [Int] = Array(2015...(Calendar.current.component(.year, from: Date()) + 5))
+    let monthOption: [Int] = Array(1...12)
+    let rangeOptions: [rangeOption] = [.week, .month, .year]
+    
+    var selectedDay: Date {
+        let date = Calendar.current.date(from: DateComponents(year: selectYear, month: selectMonth, day: selectDay))
+        
+        return date!
+    }
+    
+    var start: Date {
+        var res: Date
+        switch selectedRange {
+        case .week:
+            res = endOfDay(Calendar.current.date(byAdding: .day, value: -6, to: selectedDay)!)
+        case .month:
+            res = beginOfMonth(year: selectYear, month: selectMonth)
+        case .year:
+            res = beginOfYear(year: selectYear)
+        }
+        if dataTypeIdentifier == HKCategoryTypeIdentifier.sleepAnalysis.rawValue {
+            res = Calendar.current.date(byAdding: .hour, value: -6, to: res)!
+        }
+        
+        return res
+    }
+    
+    var end: Date {
+        var res: Date
+        switch selectedRange {
+        case .week:
+            res = Calendar.current.startOfDay(for: selectedDay)
+        case .month:
+            res = endOfMonth(year: selectYear, month: selectMonth)
+        case .year:
+            res = endOfYear(year: selectYear)
+        }
+        
+        if dataTypeIdentifier == HKCategoryTypeIdentifier.sleepAnalysis.rawValue {
+            res = Calendar.current.date(byAdding: .hour, value: -6, to: res)!
+        }
+        
+        return res
+    }
+    
     var currentTitle: String {
         if let title = getDataTypeName(for: dataTypeIdentifier) {
             return title
@@ -63,14 +123,15 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        spacerView.layer.zPosition = -1
         canAdd = isAllowedShared(for: dataTypeIdentifier)
 
         // Do any additional setup after loading the view.
+        
+        datePicker.delegate = self
+        datePicker.dataSource = self
+        
         self.title = currentTitle
-        dpkStart.date = start
-        dpkEnd.date = end
-        dpkStart.maximumDate = dpkEnd.date
-        dpkEnd.minimumDate = dpkStart.date
         
         if ViewModels.notificationType.contains(where: {$0 == dataTypeIdentifier}) {
             mode = .table
@@ -90,11 +151,27 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         
         let settingButton = UIBarButtonItem(title: "Setting", style: .plain, target: self, action: #selector(settingTapped))
         self.navigationItem.rightBarButtonItem = settingButton
+        
+        dateBtn.setTitle(selectedDayToString(), for: .normal)
+        datePicker.selectRow(yearOption.firstIndex(of: selectYear)!, inComponent: 0, animated: false)
+        datePicker.selectRow(monthOption.firstIndex(of: selectMonth)!, inComponent: 1, animated: false)
+        datePicker.selectRow(selectDay - 1, inComponent: 2, animated: false)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tappedOutside(_:)))
+        view.addGestureRecognizer(tapGesture)
+        
+        rangeView.layer.cornerRadius = 8
+        dateView.layer.cornerRadius = 8
+        
+        settingView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 10)
+        
         createFavButton()
+        setupRangePicker()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        settingView.isHidden = true
         showData()
     }
     
@@ -178,14 +255,11 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
     
     func animateView(_ collapse: Bool) {
         isCollapse = collapse
-        UIView.animate(withDuration: 1, animations: {
-            if self.isCollapse {
-                self.settingView.alpha = 0
-            } else {
-                self.settingView.alpha = 1
-            }
-            
-            self.settingView.isHidden = self.isCollapse
+        settingParent.isUserInteractionEnabled = !collapse
+        UIView.transition(with: settingParent, duration: 0.5, animations: {
+            self.settingView.isHidden = collapse
+            self.settingParent.layoutIfNeeded()
+            self.spacerView.alpha = collapse ? 0 : 0.5
         })
     }
     
@@ -227,7 +301,7 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
     }
     
     func addCategoryChart() {
-        let categoryChart = CategoryDataChart(data: self.dataValues, identifier: self.dataTypeIdentifier, startTime: self.start, endTime: self.end)
+        let categoryChart = CategoryDataChart(data: self.dataValues, identifier: self.dataTypeIdentifier, startTime: self.start, endTime: self.end, range: selectedRange)
         let categoryChartController = UIHostingController(rootView: categoryChart)
         categoryChartController.view.translatesAutoresizingMaskIntoConstraints = false
         categoryChartController.view.isUserInteractionEnabled = true
@@ -290,6 +364,119 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         ])
     }
     
+    func setupRangePicker() {
+        let rangeClosure = { (action: UIAction) in
+            switch action.title {
+            case self.rangeOptions[0].rawValue:
+                self.selectedRange = .week
+            case self.rangeOptions[1].rawValue:
+                self.selectedRange = .month
+            case self.rangeOptions[2].rawValue:
+                self.selectedRange = .year
+            default:
+                return
+            }
+            
+            self.dateBtn.setTitle(self.selectedDayToString(), for: .normal)
+            self.datePicker.reloadAllComponents()
+            self.datePicker.selectRow(self.yearOption.firstIndex(of: self.selectYear)!, inComponent: 0, animated: false)
+            self.datePicker.selectRow(self.monthOption.firstIndex(of: self.selectMonth)!, inComponent: 1, animated: false)
+            self.datePicker.selectRow(self.selectDay - 1, inComponent: 2, animated: false)
+        }
+        
+        let options = rangeOptions.map({ element in
+            return UIAction(title: element.rawValue, handler: rangeClosure)
+        })
+        
+        options[0].state = .on
+        rangeBtn.changesSelectionAsPrimaryAction = true
+        rangeBtn.showsMenuAsPrimaryAction = true
+        rangeBtn.menu = UIMenu(title: "Choose time range", children: options)
+    }
+    
+    @objc func tappedOutside(_ gesture: UITapGestureRecognizer) {
+        hidePickerView()
+    }
+    
+    func numberOfDays(inMonth month: Int, forYear year: Int) -> Int {
+        let current = Calendar.current
+        if let date = current.date(from: DateComponents(year: year, month: month)),
+           let range = current.range(of: .day, in: .month, for: date) {
+            return range.count
+        } else {
+            return 0
+        }
+    }
+    
+    func togglePickerView() {
+//        UIView.animate(withDuration: 0.5, animations: {
+//            self.datePicker.isHidden.toggle()
+//        })
+        datePicker.isHidden.toggle()
+    }
+    
+    func hidePickerView() {
+//        UIView.animate(withDuration: 0.5, animations: {
+//            self.datePicker.isHidden = true
+//        })
+        datePicker.isHidden = true
+    }
+    
+    func selectedDayToString() -> String {
+        let formatter = DateFormatter()
+        switch selectedRange {
+        case .week:
+            formatter.dateFormat = "yyyy, MMM dd"
+        case .month:
+            formatter.dateFormat = "yyyy, MMM"
+        case .year:
+            formatter.dateFormat = "yyyy"
+        }
+        
+        return formatter.string(from: selectedDay)
+    }
+    
+    func endOfDay(_ date: Date) -> Date {
+        let calendar = Calendar.current
+        return calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
+    }
+    
+    func endOfMonth(year: Int, month: Int) -> Date {
+        let calendar = Calendar.current
+        
+        var endOfMonthComponents = DateComponents(year: year, month: month)
+        endOfMonthComponents.day = calendar.range(of: .day, in: .month,
+                                                  for: calendar.date(from: endOfMonthComponents)!)!.upperBound - 1
+        endOfMonthComponents.hour = 23
+        endOfMonthComponents.minute = 59
+        endOfMonthComponents.second = 59
+        
+        return calendar.date(from: endOfMonthComponents)!
+    }
+    
+    func endOfYear(year: Int) -> Date {
+        let calendar = Calendar.current
+        let endOfYearComponents = DateComponents(year: year, month: 12, day: 31, hour: 23, minute: 59, second: 59)
+        
+        return calendar.date(from: endOfYearComponents)!
+        
+    }
+    
+    func beginOfMonth(year: Int, month: Int) -> Date {
+        let calendar = Calendar.current
+        let startOfMonthComponents = DateComponents(year: year, month: month, day: 1, hour: 0, minute: 0, second: 0)
+        
+        return calendar.date(from: startOfMonthComponents)!
+    }
+
+    func beginOfYear(year: Int) -> Date {
+        let calendar = Calendar.current
+        let startOfYearComponents = DateComponents(year: year, month: 1, day: 1, hour: 0, minute: 0, second: 0)
+        
+        return calendar.date(from: startOfYearComponents)!
+    }
+
+    
     @objc func settingTapped() {
         animateView(!isCollapse)
     }
@@ -306,18 +493,6 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         let image = UIImage(systemName: imageName)
         sender.setImage(image, for: .normal)
         print(ViewModels.favHealthTypes)
-    }
-    
-    @IBAction func startDateChange(_ sender: UIDatePicker) {
-        start = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: sender.date)!
-        dpkEnd.minimumDate = sender.date
-        presentedViewController?.dismiss(animated: true)
-    }
-    
-    @IBAction func endDateChange(_ sender: UIDatePicker) {
-        end = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: sender.date)!
-        dpkStart.maximumDate = sender.date
-        presentedViewController?.dismiss(animated: true)
     }
     
     @IBAction func clickedShow(_ sender: Any) {
@@ -344,6 +519,11 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
         }
         performSegue(withIdentifier: "AddCategoryDataSegue", sender: self)
     }
+    
+    @IBAction func dateBtnTapped(_ sender: Any) {
+        togglePickerView()
+    }
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -413,3 +593,88 @@ extension CategoryDisplayViewController: UITableViewDelegate, UITableViewDataSou
         tableView.dataSource = self
     }
 }
+
+extension CategoryDisplayViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        switch selectedRange {
+        case .week:
+            return 3
+        case .month:
+            return 2
+        case .year:
+            return 1
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if component == 0 {
+            return yearOption.count
+        }
+        
+        if component == 1 {
+            return monthOption.count
+        }
+        
+        if component == 2 {
+            return numberOfDays(inMonth: selectMonth, forYear: selectYear)
+        }
+        
+        return 0
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if component == 0 {
+            return "\(yearOption[row])"
+        }
+        
+        if component == 1 {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMMM"
+            guard let monthDate = Calendar.current.date(from: DateComponents(month: monthOption[row])) else {
+                return nil
+            }
+            
+            return dateFormatter.string(from: monthDate)
+        }
+        
+        if component == 2 {
+            return "\(row + 1)"
+        }
+        
+        return nil
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if component == 0 {
+            selectYear = yearOption[row]
+        }
+        
+        if component == 1 {
+            selectMonth = monthOption[row]
+        }
+        
+        if component == 2 {
+            selectDay = row + 1
+        }
+        
+        dateBtn.setTitle(selectedDayToString(), for: .normal)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        if component == 0 {
+            return pickerView.frame.width / 3.0
+        }
+        
+        if component == 2 {
+            return pickerView.frame.width / 5.0
+        }
+        
+        if component == 1 {
+            return pickerView.frame.width * (7.0 / 15.0)
+        }
+        
+        return 0
+    }
+}
+

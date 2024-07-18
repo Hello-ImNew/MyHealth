@@ -1,20 +1,23 @@
 //
-//  PDFChart.swift
+//  PDFHorBarChart.swift
 //  MyHealth
 //
-//  Created by Bao Bui on 2/9/24.
+//  Created by Bao Bui on 4/29/24.
 //
 
-import Foundation
 import SwiftUI
 import Charts
 
-struct PDFChart: View {
-    let dayInSec = 24*3600
-    let data: [quantityDataValue]
+struct PDFHorBarChart: View {
+    let identifier: String
+    let start: Date
+    let end: Date
+    let data: [categoryDataValue]
     let frame: CGRect
     let color = Color.gray
     let range: rangeOption
+    
+    let dayInSec = 24*3600
     var timelineUnit: Calendar.Component {
         switch range {
         case .week, .month:
@@ -24,26 +27,20 @@ struct PDFChart: View {
         }
     }
     
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d"
-        
-        return formatter
-    }
     var body: some View {
-        VStack{
+        VStack {
             Chart {
-                ForEach(data) { d in
-                    BarMark(x: .value(d.startDate.formatted(), d.startDate, unit: timelineUnit),
-                            y: .value("Value", d.secondaryValue ?? 0))
-                    .foregroundStyle(.clear)
-                    
-                    BarMark(x: .value(d.startDate.formatted(), d.startDate, unit: timelineUnit),
-                            y: .value("Value", d.value - (d.secondaryValue ?? 0)))
+                ForEach(data) {d in
+                    RuleMark(xStart: .value("Start", d.startDate, unit: .minute),
+                             xEnd: .value("End", d.endDate, unit: .minute),
+                             y: .value("Value", getCategoryValues(for: d.identifier)[d.value]))
+                    .lineStyle(StrokeStyle(lineWidth: 5, lineCap: .round))
                     .foregroundStyle(color)
                 }
             }
-            .chartXAxis(content: {
+            .chartYScale(domain: getCategoryValues(for: identifier).reversed())
+            .chartXScale(domain: Calendar.current.startOfDay(for: start)...beginningOfNextDay(end))
+            .chartXAxis {
                 if range == .year {
                     AxisMarks(values: .stride(by: .month, count: 1)) {
                         let value = $0.as(Date.self)!
@@ -70,9 +67,6 @@ struct PDFChart: View {
                         }
                     }
                 }
-            })
-            .if((!data.contains(where: {$0.value != 0 || ($0.secondaryValue ?? 0) != 0})) || (data.isEmpty)) {view in
-                view.chartYScale(domain: 0...10)
             }
         }
         .padding(.all, 5)
@@ -80,20 +74,18 @@ struct PDFChart: View {
         .preferredColorScheme(.light)
     }
     
-    
-    
     func getLabel(_ date: Date) -> String {
         let formatter = DateFormatter()
         switch self.range {
         case .week:
             formatter.dateFormat = "EEE"
-            return String(formatter.string(from: date).first!)
         case .month:
             formatter.dateFormat = "d"
             return formatter.string(from: date)
         case .year:
             formatter.dateFormat = "MMM"
-            return String(formatter.string(from: date).first!)
         }
+        
+        return String(formatter.string(from: date).first!)
     }
 }

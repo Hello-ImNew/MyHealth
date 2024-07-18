@@ -16,18 +16,29 @@ struct PDFOption {
 class PDFPageViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var dpkEnd: UIDatePicker!
-    @IBOutlet weak var dpkStart: UIDatePicker!
     @IBOutlet weak var optSelectBtn: UIButton!
+    @IBOutlet weak var rangeBtn: UIButton!
+    @IBOutlet weak var dateBtn: UIButton!
+    @IBOutlet weak var datePicker: UIPickerView!
+    @IBOutlet weak var rangeView: UIView!
+    @IBOutlet weak var dateView: UIView!
     
-    var start: Date = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: -6, to: Date())!)
-    var end: Date = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: Date())!
+    var selectedRange: rangeOption = .week
+    var selectDay: Int = Calendar.current.component(.day, from: Date())
+    var selectMonth: Int = Calendar.current.component(.month, from: Date())
+    var selectYear: Int = Calendar.current.component(.year, from: Date())
     
-//    let reportTypes: [PDFOption] = [
-//        PDFOption(title: "Report Favorite Health Types", segue: "PDFPreviewSegue"),
-//        PDFOption(title: "Report Selected Health Types", segue: "SelectDataTypeSegue"),
-//        PDFOption(title: "Report Based on Category", segue: "SelectCategorySegue")
-//    ]
+    var yearOption: [Int] = Array(2015...(Calendar.current.component(.year, from: Date()) + 5))
+    var monthOption: [Int] = Array(1...12)
+    let rangeOptions: [rangeOption] = [.week, .month, .year]
+
+    
+    var selectedDay: Date {
+        let date = Calendar.current.date(from: DateComponents(year: selectYear, month: selectMonth, day: selectDay))
+        
+        return date!
+    }
+    
     var selectedRow: Int?
     let actionTitle = ["Report Favorite Health Types",
                        "Report Selected Health Types",
@@ -37,14 +48,30 @@ class PDFPageViewController: UIViewController {
     var selectedOption: PDFoption?
     
     var favType: [HKSampleType] {
-        var res: [HKSampleType] = []
-        for i in ViewModels.favDataType {
-            if i is HKQuantityType {
-                res.append(i)
-            }
-        }
         
-        return res
+        return ViewModels.favDataType
+    }
+    
+    var start: Date {
+        switch selectedRange {
+        case .week:
+            return Calendar.current.date(byAdding: .day, value: -6, to: selectedDay)!
+        case .month:
+            return beginOfMonth(year: selectYear, month: selectMonth)
+        case .year:
+            return beginOfYear(year: selectYear)
+        }
+    }
+    
+    var end: Date {
+        switch selectedRange {
+        case .week:
+            return selectedDay
+        case .month:
+            return endOfMonth(year: selectYear, month: selectMonth)
+        case .year:
+            return endOfYear(year: selectYear)
+        }
     }
     
     let allCategories = ViewModels.HealthCategories
@@ -55,7 +82,6 @@ class PDFPageViewController: UIViewController {
         for category in ViewModels.HealthCategories {
             for type in category.dataTypes {
                 if !visited.contains(type.identifier),
-                   type is HKQuantityType,
                    type.identifier != HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue {
                     visited.insert(type.identifier)
                     res.append(type)
@@ -78,12 +104,24 @@ class PDFPageViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        dpkStart.date = start
-        dpkEnd.date = end
-        dpkStart.maximumDate = dpkEnd.date
-        dpkStart.minimumDate = Calendar.current.date(byAdding: .month, value: -1, to: end)
+        datePicker.delegate = self
+        datePicker.dataSource = self
+        
+        dateBtn.setTitle(selectedDayToString(), for: .normal)
+        datePicker.selectRow(yearOption.firstIndex(of: selectYear)!, inComponent: 0, animated: false)
+        datePicker.selectRow(monthOption.firstIndex(of: selectMonth)!, inComponent: 1, animated: false)
+        datePicker.selectRow(selectDay - 1, inComponent: 2, animated: false)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tappedOutside(_:)))
+        view.addGestureRecognizer(tapGesture)
+        view.isMultipleTouchEnabled = true
+        tapGesture.delegate = self
+        
+        rangeView.layer.cornerRadius = 8
+        dateView.layer.cornerRadius = 8
         
         setUpDropButton()
+        setupRangePicker()
         
     }
     
@@ -113,20 +151,105 @@ class PDFPageViewController: UIViewController {
         optSelectBtn.menu = UIMenu(title: "Report Options", children: options)
     }
     
+    func setupRangePicker() {
+        let rangeClosure = { (action: UIAction) in
+            switch action.title {
+            case self.rangeOptions[0].rawValue:
+                self.selectedRange = .week
+            case self.rangeOptions[1].rawValue:
+                self.selectedRange = .month
+            case self.rangeOptions[2].rawValue:
+                self.selectedRange = .year
+            default:
+                return
+            }
+            
+            self.dateBtn.setTitle(self.selectedDayToString(), for: .normal)
+            self.datePicker.reloadAllComponents()
+        }
+        
+        let options = rangeOptions.map({ element in
+            return UIAction(title: element.rawValue, handler: rangeClosure)
+        })
+        
+        options[0].state = .on
+        rangeBtn.changesSelectionAsPrimaryAction = true
+        rangeBtn.showsMenuAsPrimaryAction = true
+        rangeBtn.menu = UIMenu(title: "Choose time range", children: options)
+    }
+    
     func createAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
         present(alert, animated: true)
     }
     
-    @IBAction func dpkEndChange(_ sender: UIDatePicker) {
-        end = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: sender.date)!
-        dpkStart.maximumDate = end
-        dpkStart.minimumDate = Calendar.current.date(byAdding: .month, value: -1, to: end)
+    func togglePickerView() {
+        self.datePicker.isHidden.toggle()
     }
     
-    @IBAction func dpkStartChange(_ sender: UIDatePicker) {
-        start = Calendar.current.startOfDay(for: sender.date)
+    func hidePickerView() {
+        datePicker.isHidden = true
+    }
+    
+    func selectedDayToString() -> String {
+        let formatter = DateFormatter()
+        switch selectedRange {
+        case .week:
+            formatter.dateFormat = "yyyy, MMM dd"
+        case .month:
+            formatter.dateFormat = "yyyy, MMM"
+        case .year:
+            formatter.dateFormat = "yyyy"
+        }
+        
+        return formatter.string(from: selectedDay)
+    }
+    
+    func numberOfDays(inMonth month: Int, forYear year: Int) -> Int {
+        let current = Calendar.current
+        if let date = current.date(from: DateComponents(year: year, month: month)),
+           let range = current.range(of: .day, in: .month, for: date) {
+            return range.count
+        } else {
+            return 0
+        }
+    }
+    
+    func endOfMonth(year: Int, month: Int) -> Date {
+        let calendar = Calendar.current
+        
+        var endOfMonthComponents = DateComponents(year: year, month: month)
+        endOfMonthComponents.day = calendar.range(of: .day, in: .month,
+                                                  for: calendar.date(from: endOfMonthComponents)!)!.upperBound - 1
+        
+        return calendar.date(from: endOfMonthComponents)!
+    }
+    
+    func endOfYear(year: Int) -> Date {
+        let calendar = Calendar.current
+        let endOfYearComponents = DateComponents(year: year, month: 12, day: 31)
+        
+        return calendar.date(from: endOfYearComponents)!
+        
+    }
+    
+    func beginOfMonth(year: Int, month: Int) -> Date {
+        let calendar = Calendar.current
+        let startOfMonthComponents = DateComponents(year: year, month: month, day: 1)
+        
+        return calendar.date(from: startOfMonthComponents)!
+    }
+
+    func beginOfYear(year: Int) -> Date {
+        let calendar = Calendar.current
+        let startOfYearComponents = DateComponents(year: year, month: 1, day: 1)
+        
+        return calendar.date(from: startOfYearComponents)!
+    }
+    
+    @objc func tappedOutside(_ gesture: UITapGestureRecognizer) {
+        hidePickerView()
     }
     
     @IBAction func shareTapped(_ sender: Any) {
@@ -150,10 +273,11 @@ class PDFPageViewController: UIViewController {
         } else {
             createAlert(title: "No Option Selected", message: "Please Select Report Option")
         }
-        
-        
     }
     
+    @IBAction func dateBtnTapped(_ sender: Any) {
+        togglePickerView()
+    }
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -175,6 +299,7 @@ class PDFPageViewController: UIViewController {
             }
             previewVC?.startDate = start
             previewVC?.endDate = end
+            previewVC?.range = selectedRange
         default:
             return
         }
@@ -205,6 +330,7 @@ extension PDFPageViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReportOptionCell", for: indexPath)
+        cell.isUserInteractionEnabled = true
         if let selectedOption = selectedOption {
             switch selectedOption {
             case .fav:
@@ -238,6 +364,7 @@ extension PDFPageViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        hidePickerView()
         tableView.deselectRow(at: indexPath, animated: true)
         if let selectedOption = selectedOption {
             switch selectedOption {
@@ -290,5 +417,99 @@ extension PDFPageViewController: selectCategoryDelegate {
         
         selectedTypes = Set<HKSampleType>(types)
         performSegue(withIdentifier: "PDFPreviewSegue", sender: self)
+    }
+}
+
+extension PDFPageViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        switch selectedRange {
+        case .week:
+            return 3
+        case .month:
+            return 2
+        case .year:
+            return 1
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if component == 0 {
+            return yearOption.count
+        }
+        
+        if component == 1 {
+            return monthOption.count
+        }
+        
+        if component == 2 {
+            return numberOfDays(inMonth: selectMonth, forYear: selectYear)
+        }
+        
+        return 0
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if component == 0 {
+            return "\(yearOption[row])"
+        }
+        
+        if component == 1 {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMMM"
+            guard let monthDate = Calendar.current.date(from: DateComponents(month: monthOption[row])) else {
+                return nil
+            }
+            
+            return dateFormatter.string(from: monthDate)
+        }
+        
+        if component == 2 {
+            return "\(row + 1)"
+        }
+        
+        return nil
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if component == 0 {
+            selectYear = yearOption[row]
+        }
+        
+        if component == 1 {
+            selectMonth = monthOption[row]
+        }
+        
+        if component == 2 {
+            selectDay = row + 1
+        }
+        
+        dateBtn.setTitle(selectedDayToString(), for: .normal)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        if component == 0 {
+            return pickerView.frame.width / 3.0
+        }
+        
+        if component == 2 {
+            return pickerView.frame.width / 5.0
+        }
+        
+        if component == 1 {
+            return pickerView.frame.width * (7.0 / 15.0)
+        }
+        
+        return 0
+    }
+}
+
+extension PDFPageViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if let view = touch.view, view.isDescendant(of: tableView) {
+            return false
+        }
+        
+        return true
     }
 }

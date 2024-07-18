@@ -31,6 +31,8 @@ class ProfileViewController: UIViewController, UITextFieldDelegate {
     let bloodTypeOptions = ["", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
     let skinTypeOptions = ["", "Type I", "Type II", "Type III", "Type IV", "Type V", "Type VI"]
     var selectedOptions: [String] = []
+    var imgTapGesture: UIGestureRecognizer!
+    var ispfpChanged = false
     
     // MARK: View Cycle
     override func viewDidLoad() {
@@ -49,12 +51,13 @@ class ProfileViewController: UIViewController, UITextFieldDelegate {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tappedOutside(_:)))
         view.addGestureRecognizer(tapGesture)
-        let imgTapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
-        profileImgView.addGestureRecognizer(imgTapGesture)
         
-        if let image = ViewModels.profileImage {
-            profileImgView.image = image
-        }
+        let path = ViewModels.userData.imgPath
+        ViewModels.getImageFromPath(path: path, completion: { image in
+            DispatchQueue.main.async {
+                self.profileImgView.image = image
+            }
+        })
         profileView.layer.cornerRadius = profileView.frame.size.width / 2
         
         reloadData()
@@ -214,6 +217,9 @@ class ProfileViewController: UIViewController, UITextFieldDelegate {
         enableTextField(bloodTypeTxt)
         enableTextField(skinTypeTxt)
         self.navigationItem.rightBarButtonItem = doneButton()
+        
+        imgTapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        profileImgView.addGestureRecognizer(imgTapGesture)
     }
     
     @objc func doneTapped() {
@@ -235,7 +241,15 @@ class ProfileViewController: UIViewController, UITextFieldDelegate {
         fullNameTxt.text = "\(firstName ?? "") \(lastName ?? "")"
         
         ViewModels.saveUserData(userData)
+        
+        if ispfpChanged,
+           let image = profileImgView.image {
+            ViewModels.saveProfileImage(image)
+            ispfpChanged = false
+        }
         self.navigationItem.rightBarButtonItem = editButton()
+        
+        profileImgView.removeGestureRecognizer(imgTapGesture)
     }
     
     @objc func tappedOutside(_ gesture: UITapGestureRecognizer) {
@@ -371,7 +385,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[.editedImage] as? UIImage {
             profileImgView.image = image
-            ViewModels.saveProfileImage(image)
+            ispfpChanged = true
         }
         
         picker.dismiss(animated: true)

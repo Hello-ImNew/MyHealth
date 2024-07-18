@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol selectCategoryDelegate {
+protocol selectCategoryDelegate: AnyObject {
     func receiveCategory(_ category: HealthCategory)
 }
 
 class SelectCategoryTableViewController: UITableViewController {
-    var delegate: selectCategoryDelegate?
+    weak var delegate: selectCategoryDelegate?
     let categories = ViewModels.HealthCategories
     var selectedrow: Int?
 

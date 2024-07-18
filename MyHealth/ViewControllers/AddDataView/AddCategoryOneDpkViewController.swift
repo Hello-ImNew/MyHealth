@@ -16,7 +16,7 @@ class AddCategoryOneDpkViewController: UIViewController {
     @IBOutlet weak var metadataStackView: UIStackView!
     @IBOutlet weak var saveBtn: UIBarButtonItem!
     
-    var delegate: AddDataDelegate?
+    weak var delegate: AddDataDelegate?
     var identifier: String = ""
     var selectedMetadata: metadata?
     var selectedValue: Int?
@@ -68,14 +68,12 @@ class AddCategoryOneDpkViewController: UIViewController {
     @IBAction func saveData(_ sender: Any) {
         let categoryIdentifier = HKCategoryTypeIdentifier(rawValue: identifier)
         guard let type: HKCategoryType = HKObjectType.categoryType(forIdentifier: categoryIdentifier) else {
-            let alertController = showAlert(title: "Identifier Fault", message: "Cannot get Category Type from identifier")
-            self.present(alertController, animated: true)
+            showAlert(title: "Identifier Fault", message: "Cannot get Category Type from identifier")
             return
         }
         
         guard let value = selectedValue else {
-            let alertController = showAlert(title: "No Value Selected", message: "Please select a value")
-            self.present(alertController, animated: true)
+            showAlert(title: "No Value Selected", message: "Please select a value")
             return
         }
         
@@ -92,8 +90,7 @@ class AddCategoryOneDpkViewController: UIViewController {
         HealthData.healthStore.save(sample) { (success, error) in
             if let error = error {
                 DispatchQueue.main.async {
-                    let alertController = showAlert(title: "Error in Saving data", message: "\(error.localizedDescription)")
-                    self.present(alertController, animated: true)
+                    self.showAlert(title: "Error in Saving data", message: "\(error.localizedDescription)")
                 }
             }
             if success {

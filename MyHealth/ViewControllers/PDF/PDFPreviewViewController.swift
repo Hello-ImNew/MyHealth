@@ -17,15 +17,16 @@ class PDFPreviewViewController: UIViewController {
     var dataList = Set<HKSampleType>()
     var startDate: Date!
     var endDate: Date!
+    var range: rangeOption!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         requestAuthorize {
             let pdfCreator: PDFCreator
             if let index = self.categoryIndex {
-                pdfCreator = PDFCreator(category: index, startTime: self.startDate, endTime: self.endDate)
+                pdfCreator = PDFCreator(category: index, startTime: self.startDate, endTime: self.endDate, range: self.range)
             } else {
-                pdfCreator = PDFCreator(dataTypes: self.dataList, startTime: self.startDate, endTime: self.endDate)
+                pdfCreator = PDFCreator(dataTypes: self.dataList, startTime: self.startDate, endTime: self.endDate, range: self.range)
             }
             pdfCreator.createPDF() { data in
                 self.PDFPreview.document = PDFDocument(data: data)
@@ -38,9 +39,9 @@ class PDFPreviewViewController: UIViewController {
         requestAuthorize {
             let pdfCreator: PDFCreator
             if let index = self.categoryIndex {
-                pdfCreator = PDFCreator(category: index, startTime: self.startDate, endTime: self.endDate)
+                pdfCreator = PDFCreator(category: index, startTime: self.startDate, endTime: self.endDate, range: self.range)
             } else {
-                pdfCreator = PDFCreator(dataTypes: self.dataList, startTime: self.startDate, endTime: self.endDate)
+                pdfCreator = PDFCreator(dataTypes: self.dataList, startTime: self.startDate, endTime: self.endDate, range: self.range)
             }
             pdfCreator.createPDF() { data in
                 let vc = UIActivityViewController(activityItems: [data], applicationActivities: [])
@@ -54,9 +55,7 @@ class PDFPreviewViewController: UIViewController {
             var types: [HKSampleType] {
                 var res: [HKSampleType] = []
                 for type in ViewModels.HealthCategories[index].dataTypes {
-                    if type is HKQuantityType {
-                        res.append(type)
-                    }
+                    res.append(type)
                 }
                 return res
             }

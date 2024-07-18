@@ -16,7 +16,7 @@ class AddCategoryDataViewController: UIViewController, UITableViewDataSource, UI
     @IBOutlet weak var optionsView: UITableView!
     @IBOutlet weak var saveBtn: UIBarButtonItem!
     
-    var delegate: AddDataDelegate?
+    weak var delegate: AddDataDelegate?
     var identifier: String = ""
     var options: [String] {
         return getCategoryValues(for: identifier)
@@ -123,14 +123,12 @@ class AddCategoryDataViewController: UIViewController, UITableViewDataSource, UI
     @IBAction func saveTapped(_ sender: UIBarButtonItem) {
         let categoryIdentifier = HKCategoryTypeIdentifier(rawValue: identifier)
         guard let type: HKCategoryType = HKObjectType.categoryType(forIdentifier: categoryIdentifier) else {
-            let alertController = showAlert(title: "Identifier Fault", message: "Cannot get Category Type from identifier")
-            self.present(alertController, animated: true)
+            showAlert(title: "Identifier Fault", message: "Cannot get Category Type from identifier")
             return
         }
         
         guard let value = selectedRow else {
-            let alertController = showAlert(title: "No Value Selected", message: "Please select a value")
-            self.present(alertController, animated: true)
+            showAlert(title: "No Value Selected", message: "Please select a value")
             return
         }
         
@@ -141,8 +139,7 @@ class AddCategoryDataViewController: UIViewController, UITableViewDataSource, UI
         HealthData.healthStore.save(sample) { (success, error) in
             if let error = error {
                 DispatchQueue.main.async {
-                    let alertController = showAlert(title: "Error in Saving data", message: "\(error.localizedDescription)")
-                    self.present(alertController, animated: true)
+                    self.showAlert(title: "Error in Saving data", message: "\(error.localizedDescription)")
                 }
             }
             if success {

@@ -8,7 +8,7 @@
 import UIKit
 import HealthKit
 
-protocol selectedTypeDelegate {
+protocol selectedTypeDelegate: AnyObject {
     func receivedTypes( _ types: Set<HKSampleType>)
 }
 
@@ -32,7 +32,7 @@ class SelectTypesTableViewController: UITableViewController {
         return res
     }
     
-    var delegate: selectedTypeDelegate?
+    weak var delegate: selectedTypeDelegate?
     var visitedTypes = Set<HKSampleType>()
 
     override func viewDidLoad() {

@@ -12,25 +12,38 @@ import HealthKit
 
 class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AddDataDelegate {
     
-    
-    
-    @IBOutlet weak var startDate: UIDatePicker!
-    @IBOutlet weak var endDate: UIDatePicker!
     @IBOutlet weak var healthTableView: UITableView!
-    @IBOutlet weak var settingView: UIStackView!
+    @IBOutlet weak var settingView: UIView!
     @IBOutlet weak var btnShowChart: UIButton!
     @IBOutlet weak var viewTableOrChart: UIView!
     @IBOutlet weak var btnAddData: UIButton!
+    @IBOutlet weak var rangeBtn: UIButton!
+    @IBOutlet weak var dateBtn: UIButton!
+    @IBOutlet weak var datePicker: UIPickerView!
+    @IBOutlet weak var rangeView: UIView!
+    @IBOutlet weak var dateView: UIView!
+    @IBOutlet weak var showDataBtn: UIButton!
+    @IBOutlet weak var settingParent: UIStackView!
+    @IBOutlet weak var spacerView: UIView!
+    @IBOutlet weak var contentView: UIStackView!
     
     
     let healthStore = HealthData.healthStore
     var dataTypeIdentifier: String = ""
     var dataValues: [quantityDataValue] = []
-    var start : Date = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: -6, to: Date())!)
-    var end : Date = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: Date())!
     var isCollapsed: Bool = false
-    var settingViewHeight : Double = 0
     var isChartShow = false
+    
+    var selectedRange: rangeOption = .week
+    var selectDay: Int = Calendar.current.component(.day, from: Date())
+    var selectMonth: Int = Calendar.current.component(.month, from: Date())
+    var selectYear: Int = Calendar.current.component(.year, from: Date())
+    
+    var selectedDay: Date {
+        let date = Calendar.current.date(from: DateComponents(year: selectYear, month: selectMonth, day: selectDay))
+        
+        return date!
+    }
     var currentTitle: String {
         if let title = getDataTypeName(for: dataTypeIdentifier) {
             return title
@@ -42,32 +55,100 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         return ViewModels.favHealthTypes.contains(dataTypeIdentifier)
     }
     
+    var start: Date {
+        switch selectedRange {
+        case .week:
+            return Calendar.current.date(byAdding: .day, value: -6, to: selectedDay)!
+        case .month:
+            return beginOfMonth(year: selectYear, month: selectMonth)
+        case .year:
+            return beginOfYear(year: selectYear)
+        }
+    }
+    
+    var end: Date {
+        switch selectedRange {
+        case .week:
+            return selectedDay
+        case .month:
+            return endOfMonth(year: selectYear, month: selectMonth)
+        case .year:
+            return endOfYear(year: selectYear)
+        }
+    }
+    
+    var yearOption: [Int] = Array(2015...(Calendar.current.component(.year, from: Date()) + 5))
+    var monthOption: [Int] = Array(1...12)
+    let rangeOptions: [rangeOption] = [.week, .month, .year]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         healthTableView.delegate = self
         healthTableView.dataSource = self
+        datePicker.delegate = self
+        datePicker.dataSource = self
+        
         self.title = currentTitle
         reloadTable("Adjust setting to show your health data.")
-        startDate.date = start
-        startDate.maximumDate = endDate.date
-        endDate.minimumDate = startDate.date
-        settingViewHeight = settingView.bounds.size.height
-        
-        print("current Identifier \(dataTypeIdentifier)")
         
         let settingButton: UIBarButtonItem = UIBarButtonItem(title: "Setting", style: .plain, target: self, action: #selector(animateView))
         
         self.navigationItem.rightBarButtonItem = settingButton
         self.view.backgroundColor = healthTableView.backgroundColor
+        
+        dateBtn.setTitle(selectedDayToString(), for: .normal)
+        datePicker.selectRow(yearOption.firstIndex(of: selectYear)!, inComponent: 0, animated: false)
+        datePicker.selectRow(monthOption.firstIndex(of: selectMonth)!, inComponent: 1, animated: false)
+        datePicker.selectRow(selectDay - 1, inComponent: 2, animated: false)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tappedOutside(_:)))
+        view.addGestureRecognizer(tapGesture)
+        
+        rangeView.layer.cornerRadius = 8
+        dateView.layer.cornerRadius = 8
+        
         checkAdding()
         createFavButton()
+        setupRangePicker()
+        settingView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 10)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        settingView.isHidden = true
         showData()
+    }
+    
+    func setupRangePicker() {
+        let rangeClosure = { (action: UIAction) in
+            switch action.title {
+            case self.rangeOptions[0].rawValue:
+                self.selectedRange = .week
+            case self.rangeOptions[1].rawValue:
+                self.selectedRange = .month
+            case self.rangeOptions[2].rawValue:
+                self.selectedRange = .year
+            default:
+                return
+            }
+            
+            self.dateBtn.setTitle(self.selectedDayToString(), for: .normal)
+            self.datePicker.reloadAllComponents()
+            self.datePicker.selectRow(self.yearOption.firstIndex(of: self.selectYear)!, inComponent: 0, animated: false)
+            self.datePicker.selectRow(self.monthOption.firstIndex(of: self.selectMonth)!, inComponent: 1, animated: false)
+            self.datePicker.selectRow(self.selectDay - 1, inComponent: 2, animated: false)
+        }
+        
+        let options = rangeOptions.map({ element in
+            return UIAction(title: element.rawValue, handler: rangeClosure)
+        })
+        
+        options[0].state = .on
+        rangeBtn.changesSelectionAsPrimaryAction = true
+        rangeBtn.showsMenuAsPrimaryAction = true
+        rangeBtn.menu = UIMenu(title: "Choose time range", children: options)
     }
     
     func checkAdding() {
@@ -76,43 +157,6 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         } else {
             self.btnAddData.isHidden = true
         }
-    }
-    
-    @IBAction func startDate(_ sender: Any) {
-        start = Calendar.current.date(bySettingHour: 2, minute: 0, second: 0, of: startDate.date)!
-        endDate.isEnabled = true
-        endDate.minimumDate = startDate.date
-        presentedViewController?.dismiss(animated: true)
-    }
-    
-    @IBAction func endDate(_ sender: Any) {
-        end = endDate.date
-        startDate.maximumDate = endDate.date
-        presentedViewController?.dismiss(animated: true)
-    }
-    
-    @IBAction func clickedShow(_ sender: Any) {
-        showData()
-    }
-
-    @IBAction func clinkedAddData(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if dataTypeIdentifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
-            let controller = storyboard.instantiateViewController(withIdentifier: "AddBloodPressureController") as? AddBloodPressureViewController
-            let navVC = UINavigationController(rootViewController: controller!)
-            controller?.title = getDataTypeName(for: dataTypeIdentifier)
-            controller?.delegate = self
-            self.showDetailViewController(navVC, sender: self)
-            
-        } else {
-            let controller = storyboard.instantiateViewController(withIdentifier: "AddDataController") as? AddHealthDataViewController
-            let navVC = UINavigationController(rootViewController: controller!)
-            controller?.title = getDataTypeName(for: dataTypeIdentifier)
-            controller?.dataTypeIDentifier = dataTypeIdentifier
-            controller?.delegate = self
-            self.showDetailViewController(navVC, sender: self)
-        }
-        
     }
     
     func showData() {
@@ -130,7 +174,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
             }
             HealthData.requestHealthDataAccessIfNeeded(toShare: shareType, read: readType) { success in
                 if success {
-                    performQuery(for: self.dataTypeIdentifier, from: self.start, to: self.end) { result in
+                    performQuery(for: self.dataTypeIdentifier, from: self.start, to: self.end, range: self.selectedRange) { result in
                         DispatchQueue.main.async {
                             self.dataValues = result
                             self.reloadTable()
@@ -144,25 +188,6 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
                 }
             }
         }
-    }
-    
-    @objc func animateView() {
-        isCollapsed = !isCollapsed
-        UIView.animate(withDuration: 1, animations: {
-            if self.isCollapsed {
-                self.settingView.alpha = 0
-            } else {
-                self.settingView.alpha = 1
-            }
-            self.settingView.isHidden = self.isCollapsed
-        })
-    }
-    
-    @IBAction func clickedShowChart(_ sender: Any) {
-        if dataValues.count == 0 {
-            return
-        }
-        toggleView()
     }
     
     func toggleView() {
@@ -185,16 +210,29 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
                 $0.isHidden = true
             }
         })
-        let chartView = HealthChartView(dataIdentifier: dataTypeIdentifier, data: dataValues )
-        let chartUIView = UIHostingController(rootView: chartView)
-        chartUIView.view.translatesAutoresizingMaskIntoConstraints = false
-        chartUIView.view.isUserInteractionEnabled = true
-        addChild(chartUIView)
-        viewTableOrChart.addSubview(chartUIView.view)
-        view.addConstraint(chartUIView.view.centerXAnchor.constraint(equalTo: self.viewTableOrChart.centerXAnchor))
-        view.addConstraint(chartUIView.view.centerYAnchor.constraint(equalTo: self.viewTableOrChart.centerYAnchor))
-        
-        chartUIView.didMove(toParent: self)
+        if selectedRange == .year {
+            let chartView = YearlyHealthChartView(dataIdentifier: dataTypeIdentifier, data: dataValues )
+            let chartUIView = UIHostingController(rootView: chartView)
+            chartUIView.view.translatesAutoresizingMaskIntoConstraints = false
+            chartUIView.view.isUserInteractionEnabled = true
+            addChild(chartUIView)
+            viewTableOrChart.addSubview(chartUIView.view)
+            view.addConstraint(chartUIView.view.centerXAnchor.constraint(equalTo: self.viewTableOrChart.centerXAnchor))
+            view.addConstraint(chartUIView.view.centerYAnchor.constraint(equalTo: self.viewTableOrChart.centerYAnchor))
+            
+            chartUIView.didMove(toParent: self)
+        } else {
+            let chartView = HealthChartView(dataIdentifier: dataTypeIdentifier, data: dataValues, range: selectedRange)
+            let chartUIView = UIHostingController(rootView: chartView)
+            chartUIView.view.translatesAutoresizingMaskIntoConstraints = false
+            chartUIView.view.isUserInteractionEnabled = true
+            addChild(chartUIView)
+            viewTableOrChart.addSubview(chartUIView.view)
+            view.addConstraint(chartUIView.view.centerXAnchor.constraint(equalTo: self.viewTableOrChart.centerXAnchor))
+            view.addConstraint(chartUIView.view.centerYAnchor.constraint(equalTo: self.viewTableOrChart.centerYAnchor))
+            
+            chartUIView.didMove(toParent: self)
+        }
     }
     
     func addTable() {
@@ -243,6 +281,136 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         
     }
     
+    func togglePickerView() {
+//        settingView.autoresizesSubviews = false
+//        UIView.animate(withDuration: 0.0, delay: 0, options: [.beginFromCurrentState], animations: {
+//            self.datePicker.isHidden.toggle()
+//            self.rangeView.layoutIfNeeded()
+//            self.showDataBtn.layoutIfNeeded()
+//            self.btnAddData.layoutIfNeeded()
+//        })
+//        settingView.autoresizesSubviews = true
+        self.datePicker.isHidden.toggle()
+    }
+    
+    func hidePickerView() {
+//        UIView.animate(withDuration: 0.5, animations: {
+//            self.datePicker.isHidden = true
+//            self.rangeView.layoutIfNeeded()
+//            self.showDataBtn.layoutIfNeeded()
+//            self.btnAddData.layoutIfNeeded()
+//        })
+        datePicker.isHidden = true
+    }
+    
+    func selectedDayToString() -> String {
+        let formatter = DateFormatter()
+        switch selectedRange {
+        case .week:
+            formatter.dateFormat = "yyyy, MMM dd"
+        case .month:
+            formatter.dateFormat = "yyyy, MMM"
+        case .year:
+            formatter.dateFormat = "yyyy"
+        }
+        
+        return formatter.string(from: selectedDay)
+    }
+    
+    func numberOfDays(inMonth month: Int, forYear year: Int) -> Int {
+        let current = Calendar.current
+        if let date = current.date(from: DateComponents(year: year, month: month)),
+           let range = current.range(of: .day, in: .month, for: date) {
+            return range.count
+        } else {
+            return 0
+        }
+    }
+    
+    func endOfMonth(year: Int, month: Int) -> Date {
+        let calendar = Calendar.current
+        
+        var endOfMonthComponents = DateComponents(year: year, month: month)
+        endOfMonthComponents.day = calendar.range(of: .day, in: .month,
+                                                  for: calendar.date(from: endOfMonthComponents)!)!.upperBound - 1
+        
+        return calendar.date(from: endOfMonthComponents)!
+    }
+    
+    func endOfYear(year: Int) -> Date {
+        let calendar = Calendar.current
+        let endOfYearComponents = DateComponents(year: year, month: 12, day: 31)
+        
+        return calendar.date(from: endOfYearComponents)!
+        
+    }
+    
+    func beginOfMonth(year: Int, month: Int) -> Date {
+        let calendar = Calendar.current
+        let startOfMonthComponents = DateComponents(year: year, month: month, day: 1)
+        
+        return calendar.date(from: startOfMonthComponents)!
+    }
+
+    func beginOfYear(year: Int) -> Date {
+        let calendar = Calendar.current
+        let startOfYearComponents = DateComponents(year: year, month: 1, day: 1)
+        
+        return calendar.date(from: startOfYearComponents)!
+    }
+    
+    @IBAction func clickedShow(_ sender: Any) {
+        showData()
+        hidePickerView()
+    }
+
+    @IBAction func clinkedAddData(_ sender: Any) {
+        hidePickerView()
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if dataTypeIdentifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
+            let controller = storyboard.instantiateViewController(withIdentifier: "AddBloodPressureController") as? AddBloodPressureViewController
+            let navVC = UINavigationController(rootViewController: controller!)
+            controller?.title = getDataTypeName(for: dataTypeIdentifier)
+            controller?.delegate = self
+            self.showDetailViewController(navVC, sender: self)
+            
+        } else {
+            let controller = storyboard.instantiateViewController(withIdentifier: "AddDataController") as? AddHealthDataViewController
+            let navVC = UINavigationController(rootViewController: controller!)
+            controller?.title = getDataTypeName(for: dataTypeIdentifier)
+            controller?.dataTypeIDentifier = dataTypeIdentifier
+            controller?.delegate = self
+            self.showDetailViewController(navVC, sender: self)
+        }
+    }
+    
+    @IBAction func dateBtnTapped(_ sender: Any) {
+        togglePickerView()
+    }
+    
+    @objc func tappedOutside(_ gesture: UITapGestureRecognizer) {
+        hidePickerView()
+    }
+    
+    @objc func animateView() {
+        hidePickerView()
+        self.settingParent.isUserInteractionEnabled = self.isCollapsed
+        isCollapsed = !isCollapsed
+        
+        UIView.transition(with: settingParent, duration: 0.5, animations: {
+            self.settingView.isHidden = self.isCollapsed
+            self.settingParent.layoutIfNeeded()
+            self.spacerView.alpha = self.isCollapsed ? 0 : 0.5
+        })
+    }
+    
+    @IBAction func clickedShowChart(_ sender: Any) {
+        if dataValues.count == 0 {
+            return
+        }
+        toggleView()
+    }
+    
     @objc func clickedFavButton(_ sender: UIButton) {
         var imageName : String
         if isFav {
@@ -270,11 +438,19 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
         let cell = tableView.dequeueReusableCell(withIdentifier: "HealthDataCell", for: indexPath)
         let value = dataValues[indexPath.row]
         let dateformatter = DateFormatter()
-        dateformatter.dateFormat = "dd/MM/yyyy"
+        if selectedRange == .year {
+            dateformatter.dateFormat = "MMM yyyy"
+        } else {
+            dateformatter.dateFormat = "MM/dd/yyyy"
+        }
         
         cell.textLabel?.text = "\(value.displayString) \(getUnit(for: dataTypeIdentifier) ?? "")"
         cell.detailTextLabel?.text = dateformatter.string(from: value.startDate)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func reloadTable(_ message: String = "No Data"){
@@ -308,6 +484,86 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
 
 }
 
-
-
-
+extension HealthDisplayViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        switch selectedRange {
+        case .week:
+            return 3
+        case .month:
+            return 2
+        case .year:
+            return 1
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if component == 0 {
+            return yearOption.count
+        }
+        
+        if component == 1 {
+            return monthOption.count
+        }
+        
+        if component == 2 {
+            return numberOfDays(inMonth: selectMonth, forYear: selectYear)
+        }
+        
+        return 0
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if component == 0 {
+            return "\(yearOption[row])"
+        }
+        
+        if component == 1 {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMMM"
+            guard let monthDate = Calendar.current.date(from: DateComponents(month: monthOption[row])) else {
+                return nil
+            }
+            
+            return dateFormatter.string(from: monthDate)
+        }
+        
+        if component == 2 {
+            return "\(row + 1)"
+        }
+        
+        return nil
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if component == 0 {
+            selectYear = yearOption[row]
+        }
+        
+        if component == 1 {
+            selectMonth = monthOption[row]
+        }
+        
+        if component == 2 {
+            selectDay = row + 1
+        }
+        
+        dateBtn.setTitle(selectedDayToString(), for: .normal)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        if component == 0 {
+            return pickerView.frame.width / 3.0
+        }
+        
+        if component == 2 {
+            return pickerView.frame.width / 5.0
+        }
+        
+        if component == 1 {
+            return pickerView.frame.width * (7.0 / 15.0)
+        }
+        
+        return 0
+    }
+}

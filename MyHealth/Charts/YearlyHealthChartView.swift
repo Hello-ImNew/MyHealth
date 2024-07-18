@@ -1,21 +1,18 @@
 //
-//  HealthChartView.swift
+//  YearlyHealthChartView.swift
 //  MyHealth
 //
-//  Created by Bao Bui on 10/3/23.
+//  Created by Bao Bui on 3/22/24.
 //
 
-import Foundation
-import HealthKit
 import SwiftUI
 import Charts
+import HealthKit
 
-@available(iOS 17.0, *)
-struct HealthChartView: View {
+struct YearlyHealthChartView: View {
     let dayInSec = 24*3600
     let dataIdentifier: String
     let data:[quantityDataValue]
-    let range: rangeOption
     let pastDataColor : LinearGradient = .linearGradient(colors: [.blue, .purple], startPoint: .top, endPoint: .bottom)
     let todayDataColor : LinearGradient = .linearGradient(colors: [.orange, .red], startPoint: .top, endPoint: .bottom)
     var averageValue: Double {
@@ -27,9 +24,6 @@ struct HealthChartView: View {
                 sum += value
                 count += 1
             }
-        }
-        if count == 0 {
-            return 0
         }
         return sum/count
     }
@@ -75,58 +69,44 @@ struct HealthChartView: View {
                     Text("\(formatter.string(from: value as NSNumber) ?? "0.0")").bold()
                     + Text(selectedSecondValue != nil ? "/\(formatter.string(from: selectedSecondValue! as NSNumber) ?? "")" : "").bold()
                     + Text(" \(getUnit(for: dataIdentifier)!)")
-                    Text(date.formatted(date: .abbreviated, time: .omitted))
+                    Text(date.monthYear)
                 } else {
-                    Text("DAILY AVERAGE")
+                    Text("AVERAGE")
                     Text(formatter.string(from: averageValue as NSNumber) ?? "0.0").bold()
                     + Text(averageSecondValue != nil ? "/\(formatter.string(from: averageSecondValue! as NSNumber) ?? "")" : "").bold()
                     + Text(" \(getUnit(for: dataIdentifier)!)")
                     
-                    Text(dateIntervalToString(from: data.first?.startDate, to: data.last?.startDate))
+                    Text(dateIntervalToString(from: data.first?.startDate, to: data.last?.endDate))
                 }
             }
             Chart {
-                
                 ForEach(data) {d in
-                    BarMark(x: .value(d.startDate.formatted(), d.startDate, unit: .day), y: .value("Value", d.secondaryValue ?? 0))
+                    BarMark(x: .value(d.startDate.formatted(), d.startDate, unit: .month), y: .value("Value", d.secondaryValue ?? 0))
                         .foregroundStyle(.clear)
                 }
                 ForEach(data) {d in
-                    BarMark(x: .value(d.startDate.formatted(), d.startDate, unit: .day), y: .value("Value", d.value - (d.secondaryValue ?? 0)))
-                        .foregroundStyle(Calendar.current.isDateInToday(d.startDate) ? todayDataColor : pastDataColor)
+                    BarMark(x: .value(d.startDate.formatted(), d.startDate, unit: .month), y: .value("Value", d.value - (d.secondaryValue ?? 0)))
+                        .foregroundStyle(pastDataColor)
                         .alignsMarkStylesWithPlotArea()
-                        .opacity(selectedDate != nil ? (Calendar.current.isDate(selectedDate!, equalTo: d.startDate, toGranularity: .day) ? 1 : 0.5) : 1)
+                        .opacity(selectedDate != nil ? (Calendar.current.isDate(selectedDate!, equalTo: d.startDate, toGranularity: .month) ? 1 : 0.5) : 1)
                 }
             }
             .if(data.isEmpty) {view in
                 view.chartYScale(domain: 0...10)
             }
-            .chartXScale(domain: data.first!.startDate...data.last!.endDate)
             .chartXAxis {
-                if range == .week {
-                    AxisMarks(values: .stride(by: .day, count: 1)) {
-                        let value = $0.as(Date.self)!
-                        AxisValueLabel {
-                            Text("\(getDayOfWeek(value))")
-                        }
-                        
-                        AxisGridLine()
+                AxisMarks(values: .stride(by: .month, count: 1)) {
+                    let value = $0.as(Date.self)!
+                    AxisValueLabel {
+                        Text("\(getMonth(value))")
                     }
-                }
-                
-                if range == .month  {
-                    AxisMarks(values: .automatic(desiredCount: 6)) {
-                        let value = $0.as(Date.self)!
-                        AxisValueLabel {
-                            Text("\(Calendar.current.component(.day, from: value))")
-                        }
-                        
-                        AxisGridLine()
-                    }
+                    
+                    AxisGridLine()
                 }
             }
             .frame(width: 350, height: 300)
             .chartOverlay { proxy in
+                
                 GeometryReader { geometry in
                     ZStack(alignment: .top) {
                         Rectangle().fill(.clear).contentShape(Rectangle())
@@ -152,15 +132,15 @@ struct HealthChartView: View {
         guard let date : Date = proxy.value(atX: xPosition) else {
             return
         }
+        
         selectedDate = nil
         selectedValue = nil
         selectedSecondValue = nil
         
-        let selectedData = data.first(where: { Calendar.current.isDate($0.startDate, equalTo: date, toGranularity: .day) })
+        let selectedData = data.first(where: { Calendar.current.isDate($0.startDate, equalTo: date, toGranularity: .month) })
         if selectedData?.value == 0 {
             return
         }
-        
         selectedDate = date
         selectedValue = selectedData?.value
         selectedSecondValue = selectedData?.secondaryValue
@@ -168,17 +148,23 @@ struct HealthChartView: View {
     }
     
     func dateIntervalToString(from start: Date?, to end: Date?) -> String {
-        let dateIntervalFormatter = DateIntervalFormatter()
-        dateIntervalFormatter.dateStyle = .medium
-        dateIntervalFormatter.timeStyle = .none
-        
-        return dateIntervalFormatter.string(from: start!, to: end!)
+        guard let start = start,
+              let end = end else {
+            return ""
+        }
+        let calendar = Calendar.current
+        if calendar.component(.year, from: start) == calendar.component(.year, from: end) {
+            return "\(calendar.component(.year, from: start))"
+        } else {
+            return "\(start.monthYear ) - \(end.monthYear )"
+        }
     }
     
-    func getDayOfWeek(_ date: Date) -> String {
+    func getMonth(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEE"
+        formatter.dateFormat = "MMM"
         
         return formatter.string(from: date)
     }
 }
+

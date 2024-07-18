@@ -93,7 +93,7 @@ func getSampleType(for identifier: String) -> HKSampleType? {
     return nil
 }
 
-func performQuery(for dataTypeIdentifier: String, from start: Date, to end: Date,_ completion: @escaping ([quantityDataValue]) -> Void) {
+func performQuery(for dataTypeIdentifier: String, from start: Date, to end: Date, range: rangeOption? = nil, _ completion: @escaping ([quantityDataValue]) -> Void) {
     let healthStore = HealthData.healthStore
     let current = Calendar.current
     let startQueryDate = current.startOfDay(for: start)
@@ -103,9 +103,14 @@ func performQuery(for dataTypeIdentifier: String, from start: Date, to end: Date
     let predicate = HKQuery.predicateForSamples(withStart: startQueryDate, end: endQueryDate)
     let options = getStatisticsOptions(for: dataTypeIdentifier)
     let anchorDate = createAnchorDate(for: startQueryDate)
-    let dailyInterval = DateComponents(day: 1)
+    let interval: DateComponents
+    if range == .year {
+        interval = DateComponents(month: 1)
+    } else {
+        interval = DateComponents(day: 1)
+    }
     
-    let query = HKStatisticsCollectionQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: options, anchorDate: anchorDate, intervalComponents: dailyInterval)
+    let query = HKStatisticsCollectionQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: options, anchorDate: anchorDate, intervalComponents: interval)
     
     let updateInterfaceWithStaticstics: (HKStatisticsCollection) -> Void = {statisticsCollection in
         var dataValues: [quantityDataValue] = []
@@ -121,6 +126,18 @@ func performQuery(for dataTypeIdentifier: String, from start: Date, to end: Date
                 if unit == .percent() {
                      dataValue.value *= 100
                 }
+                
+                if range == .year && options == .cumulativeSum {
+                    if statistics.startDate > Date() {
+                        dataValue.value = 0
+                    } else if let range = Calendar.current.range(of: .day, in: .month, for: statistics.startDate) {
+                        if statistics.startDate.timeIntervalSinceNow < Double(range.count * 60 * 60 * 24) {
+                            dataValue.value = dataValue.value / ceil(abs(statistics.startDate.timeIntervalSinceNow) / (60 * 60 * 24))
+                        } else {
+                            dataValue.value = dataValue.value / Double(range.count)
+                        }
+                    }
+                }
             }
             dataValues.append(dataValue)
             
@@ -129,7 +146,7 @@ func performQuery(for dataTypeIdentifier: String, from start: Date, to end: Date
         if dataTypeIdentifier == HKQuantityTypeIdentifier.bloodPressureSystolic.rawValue {
             let secondQuantityType = HKQuantityType(HKQuantityTypeIdentifier(rawValue: HKQuantityTypeIdentifier.bloodPressureDiastolic.rawValue))
             let secondOption = getStatisticsOptions(for: secondQuantityType.identifier)
-            let secondQuery = HKStatisticsCollectionQuery(quantityType: secondQuantityType, quantitySamplePredicate: predicate, options: secondOption, anchorDate: anchorDate, intervalComponents: dailyInterval)
+            let secondQuery = HKStatisticsCollectionQuery(quantityType: secondQuantityType, quantitySamplePredicate: predicate, options: secondOption, anchorDate: anchorDate, intervalComponents: interval)
             let updateInterfaceWithSecondStatistics: (HKStatisticsCollection) -> Void = { statisticsCollection in
                 var count = 0
                 statisticsCollection.enumerateStatistics(from: startDate, to: endDate) { (statistic, stop) in

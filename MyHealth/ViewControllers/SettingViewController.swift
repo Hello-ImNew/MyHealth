@@ -12,7 +12,7 @@ struct settingOption{
     let segue: String
 }
 
-protocol settingViewDelegate {
+protocol settingViewDelegate: AnyObject {
     func addProfilePicture()
 }
 
@@ -24,11 +24,13 @@ class SettingViewController: UIViewController {
     
     let settingOptions = [settingOption(title: "Health Details", segue: "ProfilePageSegue"),
                           settingOption(title: "Authorize Health Data", segue: "AuthorizePageSegue"),
-                          settingOption(title: "Share Report", segue: "PDFPageSegue")]
+                          settingOption(title: "Share Report", segue: "PDFPageSegue"),
+                          settingOption(title: "Upload Data", segue: "UploadDataSegue"),
+                          settingOption(title: "Log out", segue: "No Segue")]
     
     let userData = ViewModels.userData
     var isDetailedView = false
-    var delegate: settingViewDelegate?
+    weak var delegate: settingViewDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,10 +54,12 @@ class SettingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if let image = ViewModels.profileImage {
-            profileImgView.image = image
-        }
+        let path = ViewModels.userData.imgPath
+        ViewModels.getImageFromPath(path: path, completion: {image in
+            DispatchQueue.main.async {
+                self.profileImgView.image = image
+            }
+        })
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -106,6 +110,14 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if settingOptions[indexPath.row].title == "Log out" {
+            ViewModels.removeSavedAccount()
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginViewController = mainStoryboard.instantiateViewController(withIdentifier: "LogInView")
+            UIApplication.shared.windows.first?.rootViewController = loginViewController
+            UIApplication.shared.windows.first?.makeKeyAndVisible()
+            return
+        }
         performSegue(withIdentifier: settingOptions[indexPath.row].segue, sender: self)
     }
 }

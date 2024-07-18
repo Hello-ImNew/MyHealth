@@ -766,3 +766,5 @@ func processHealthSample(for typeIdentifier: String, value: Double, date: Date) 
 func isAllowedShared(for type: String) -> Bool {
     return !ViewModels.shareNotAllowedType.contains(type)
 }
+
+

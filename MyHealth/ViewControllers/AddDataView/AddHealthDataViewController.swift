@@ -14,7 +14,7 @@ protocol AddDataDelegate: AnyObject {
 class AddHealthDataViewController: UIViewController {
     
     var dataTypeIDentifier: String = ""
-    var delegate: AddDataDelegate?
+    weak var delegate: AddDataDelegate?
     @IBOutlet weak var lblUnit: UILabel!
     @IBOutlet weak var dtpDate: UIDatePicker!
     @IBOutlet weak var dtpTime: UIDatePicker!

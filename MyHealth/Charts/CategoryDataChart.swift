@@ -18,6 +18,7 @@ struct CategoryDataChart: View {
     var identifier: String
     var startTime: Date
     var endTime: Date
+    var range: rangeOption
     
     @State var selectedDate: Date?
     @State var selectedData: [categoryDataValue]?
@@ -57,7 +58,7 @@ struct CategoryDataChart: View {
                         RuleMark(xStart: .value("date", datum.startDate, unit: .minute),
                                  xEnd: .value("date", datum.endDate, unit: .minute),
                                  y: .value("value", getCategoryValues(for: datum.identifier)[datum.value]))
-                        .lineStyle(StrokeStyle(lineWidth: 15, lineCap: .round))
+                        .lineStyle(StrokeStyle(lineWidth: 10, lineCap: .round))
                         .foregroundStyle(by: .value("Color", getCategoryValues(for: datum.identifier)[datum.value]))
                         
                         if let selectedDate = selectedDate,
@@ -71,14 +72,34 @@ struct CategoryDataChart: View {
                 }
                 .chartYScale(domain: getCategoryValues(for: identifier).reversed())
                 .chartXScale(domain: startTime...beginningOfNextDay(endTime))
-                .chartScrollableAxes(.horizontal)
-                .chartXVisibleDomain(length: getVisibleDomain(start: startTime, end: endTime))
-                .chartScrollPosition(initialX: max(startTime, beginningOfNextDay(endTime)-TimeInterval(7*dayInSec)))
-                .chartScrollTargetBehavior(
-                    .valueAligned(matching: DateComponents(hour: 0),
-                                  majorAlignment: .matching(DateComponents(hour: 0, weekday: Calendar.current.component(.weekday, from: endTime) + 1))))
+                
                 .chartXAxis {
-                    AxisMarks(values: .stride(by: .day, count: 1))
+                    if range == .year {
+                        AxisMarks(values: .stride(by: .month, count: 1)) {
+                            let value = $0.as(Date.self)!
+                            AxisValueLabel {
+                                Text("\(getLabel(value))")
+                            }
+                        }
+                    }
+                    
+                    if range == .month {
+                        AxisMarks(values: .automatic(desiredCount: 6)) {
+                            let value = $0.as(Date.self)!
+                            AxisValueLabel {
+                                Text("\(getLabel(value))")
+                            }
+                        }
+                    }
+                    
+                    if range == .week {
+                        AxisMarks(values: .stride(by: .day, count: 1)) {
+                            let value = $0.as(Date.self)!
+                            AxisValueLabel {
+                                Text("\(getLabel(value))")
+                            }
+                        }
+                    }
                 }
                 .chartOverlay { proxy in
                     GeometryReader {geometry in
@@ -107,18 +128,31 @@ struct CategoryDataChart: View {
             return
         }
         
-        let selectedData: [categoryDataValue] = data.compactMap({element in
-            if isDateInRange(dateToCheck: date, startDate: element.startDate, endDate: element.endDate) {
-                return element
-            } else {
-                return nil
-            }
-        })
+        let selectedData: [categoryDataValue] = data.filter({isDateInRange(dateToCheck: date, startDate: $0.startDate, endDate: $0.endDate)})
         
         self.selectedDate = nil
         self.selectedData = nil
         
         if selectedData.isEmpty {
+            let nearbyData = data.filter({d in
+                let component: Calendar.Component
+                switch self.range {
+                case .week, .month:
+                    component = .day
+                case .year:
+                    component = .month
+                }
+                return  Calendar.current.isDate(date, equalTo: d.startDate, toGranularity: component) || Calendar.current.isDate(date, equalTo: d.endDate, toGranularity: component)
+            })
+            
+            if nearbyData.isEmpty {
+                return
+            }
+            
+            if let temp = nearbyData.min(by: {min(abs(date.timeIntervalSince($0.startDate)), abs(date.timeIntervalSince($0.endDate))) < min(abs(date.timeIntervalSince($1.startDate)), abs(date.timeIntervalSince($1.endDate)))}) {
+                self.selectedData = [temp]
+                self.selectedDate = middleDate(between: temp.startDate, and: temp.endDate)
+            }
             return
         }
         
@@ -149,5 +183,28 @@ struct CategoryDataChart: View {
         default:
             return ""
         }
+    }
+    
+    func middleDate(between date1: Date, and date2: Date) -> Date {
+        let interval1 = date1.timeIntervalSince1970
+        let interval2 = date2.timeIntervalSince1970
+        
+        let middleInterval = (interval1 + interval2) / 2
+        
+        return Date(timeIntervalSince1970: middleInterval)
+    }
+    
+    func getLabel(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        switch self.range {
+        case .week:
+            formatter.dateFormat = "EEE"
+        case .month:
+            formatter.dateFormat = "d"
+        case .year:
+            formatter.dateFormat = "MMM"
+        }
+        
+        return formatter.string(from: date)
     }
 }

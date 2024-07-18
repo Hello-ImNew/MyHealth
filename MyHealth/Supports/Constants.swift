@@ -6,3 +6,5 @@
 //
 
 import Foundation
+let serviceURL = "http://192.168.1.60/HealthDataService/"
+let webserviceToken = "b5Y8pRfA2qK6sJ9t"

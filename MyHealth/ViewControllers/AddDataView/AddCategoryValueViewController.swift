@@ -16,7 +16,7 @@ class AddCategoryValueViewController: UIViewController {
     
     var identifier: String = ""
     var secNum: Int?
-    var delegate: AddDataDelegate?
+    weak var delegate: AddDataDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,13 +27,11 @@ class AddCategoryValueViewController: UIViewController {
     @IBAction func saveTapped(_ sender: Any) {
         let categoryIdentifier = HKCategoryTypeIdentifier(rawValue: identifier)
         guard let type = HKObjectType.categoryType(forIdentifier: categoryIdentifier) else {
-            let alertController = showAlert(title: "Identifier Fault", message: "Cannot get Category Type from identifier")
-            self.present(alertController, animated: true)
+            showAlert(title: "Identifier Fault", message: "Cannot get Category Type from identifier")
             return
         }
         guard let secnum = self.secNum else {
-            let alert = showAlert(title: "Duration Not Neconized", message: "Please enter duration time")
-            self.present(alert, animated: true)
+            showAlert(title: "Duration Not Neconized", message: "Please enter duration time")
             return
         }
         
@@ -45,8 +43,7 @@ class AddCategoryValueViewController: UIViewController {
         HealthData.healthStore.save(sample, withCompletion: {(success, error) in
             if let error = error {
                 DispatchQueue.main.async {
-                    let alertController = showAlert(title: "Error in Saving data", message: "\(error.localizedDescription)")
-                    self.present(alertController, animated: true)
+                    self.showAlert(title: "Error in Saving data", message: "\(error.localizedDescription)")
                 }
             }
             if success {

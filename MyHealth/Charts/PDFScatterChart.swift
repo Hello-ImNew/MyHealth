@@ -1,49 +1,48 @@
 //
-//  PDFChart.swift
+//  PDFScatterChart.swift
 //  MyHealth
 //
-//  Created by Bao Bui on 2/9/24.
+//  Created by Bao Bui on 5/23/24.
 //
 
-import Foundation
 import SwiftUI
 import Charts
+import HealthKit
 
-struct PDFChart: View {
-    let dayInSec = 24*3600
-    let data: [quantityDataValue]
+struct PDFScatterChart: View {
+    let identifier: String
+    let start: Date
+    let end: Date
+    let data: [categoryDataValue]
     let frame: CGRect
     let color = Color.gray
     let range: rangeOption
-    var timelineUnit: Calendar.Component {
-        switch range {
-        case .week, .month:
-            return .day
-        case .year:
-            return.month
-        }
-    }
     
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d"
-        
-        return formatter
-    }
+    let dayInSec = 24*3600
+    
     var body: some View {
-        VStack{
+        VStack {
             Chart {
                 ForEach(data) { d in
-                    BarMark(x: .value(d.startDate.formatted(), d.startDate, unit: timelineUnit),
-                            y: .value("Value", d.secondaryValue ?? 0))
-                    .foregroundStyle(.clear)
-                    
-                    BarMark(x: .value(d.startDate.formatted(), d.startDate, unit: timelineUnit),
-                            y: .value("Value", d.value - (d.secondaryValue ?? 0)))
-                    .foregroundStyle(color)
+                    PointMark(x: .value("Time", d.startDate, unit: .minute),
+                              y: .value("Value", getCategoryValues(for: identifier)[d.value]))
+                    .symbol {
+                        if let isCycleStart = d.metadata?[HKMetadataKeyMenstrualCycleStart] as? Bool,
+                           isCycleStart == true {
+                            Image(systemName: "circle")
+                                .foregroundStyle(Color(uiColor: .systemBlue))
+                                .font(.system(size: 5))
+                        } else {
+                            Image(systemName: "circle.fill")
+                                .foregroundStyle(Color(uiColor: .systemBlue))
+                                .font(.system(size: 5))
+                        }
+                    }
                 }
             }
-            .chartXAxis(content: {
+            .chartXScale(domain: Calendar.current.startOfDay(for: start)...beginningOfNextDay(end))
+            .chartYScale(domain: getCategoryValues(for: identifier)[1...])
+            .chartXAxis {
                 if range == .year {
                     AxisMarks(values: .stride(by: .month, count: 1)) {
                         let value = $0.as(Date.self)!
@@ -70,9 +69,6 @@ struct PDFChart: View {
                         }
                     }
                 }
-            })
-            .if((!data.contains(where: {$0.value != 0 || ($0.secondaryValue ?? 0) != 0})) || (data.isEmpty)) {view in
-                view.chartYScale(domain: 0...10)
             }
         }
         .padding(.all, 5)
@@ -80,11 +76,9 @@ struct PDFChart: View {
         .preferredColorScheme(.light)
     }
     
-    
-    
     func getLabel(_ date: Date) -> String {
         let formatter = DateFormatter()
-        switch self.range {
+        switch range {
         case .week:
             formatter.dateFormat = "EEE"
             return String(formatter.string(from: date).first!)

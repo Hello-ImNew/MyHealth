@@ -79,6 +79,13 @@ extension Date {
         let ageComponent = Calendar.current.dateComponents([.year], from: self, to: Date())
         return ageComponent.year!
     }
+    
+    var monthYear: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM yyyy"
+        
+        return formatter.string(from: self)
+    }
 }
 
 extension UIImage {
@@ -96,8 +103,12 @@ extension UIViewController : settingViewDelegate {
         button.layer.cornerRadius = 15
         button.clipsToBounds = true
         button.imageView?.contentMode = .scaleAspectFit
-        let image = ViewModels.profileImage?.resizeImage(to: button.frame.size)
-        button.setBackgroundImage(image, for: .normal)
+        ViewModels.getImageFromPath(path: ViewModels.userData.imgPath, completion: { image in
+            DispatchQueue.main.async {
+                button.setBackgroundImage(image, for: .normal)
+            }
+            
+        })
         self.navigationItem.rightBarButtonItem = nil
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         button.addTarget(self, action: #selector(toSettingPage), for: .touchUpInside)
@@ -111,9 +122,17 @@ extension UIViewController : settingViewDelegate {
         controller?.delegate = self
         self.showDetailViewController(navVC, sender: self)
     }
+    
+    func showAlert(title: String, message: String) {
+        let alert = createAlert(title: title, message: message)
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true)
+        }
+    }
 }
 
-func showAlert(title: String, message: String) -> UIAlertController {
+func createAlert(title: String, message: String) -> UIAlertController {
     let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let cancelAction = UIAlertAction(title: "OK", style: .cancel)
     alertController.addAction(cancelAction)
@@ -178,4 +197,22 @@ func beginningOfNextDay(_ date: Date) -> Date {
     let current = Calendar.current
     let result = current.startOfDay(for: current.date(byAdding: .day, value: 1, to: date)!)
     return result
+}
+
+func isValidUUID(for str: String) -> Bool {
+    if let _ = UUID(uuidString: str) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+extension UIView {
+    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
+        let maskPath = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let shape = CAShapeLayer()
+        shape.path = maskPath.cgPath
+        layer.mask = shape
+    }
 }
