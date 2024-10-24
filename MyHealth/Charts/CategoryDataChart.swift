@@ -117,7 +117,7 @@ struct CategoryDataChart: View {
             .background(Color(uiColor: UIColor.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 15))
             .clipped()
-            .layoutPriority(999)
+//            .layoutPriority(999)
             
         }
     }

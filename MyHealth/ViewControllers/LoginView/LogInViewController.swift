@@ -14,31 +14,50 @@ class LogInViewController: UIViewController {
     @IBOutlet weak var failLbl: UILabel!
     @IBOutlet weak var signInBtn: UIButton!
     @IBOutlet weak var signUpBtn: UIButton!
+    @IBOutlet weak var forgotPassBtn: UIButton!
+    @IBOutlet weak var loadingView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tappedOutside(_:)))
+        view.addGestureRecognizer(tapGesture)
         // Do any additional setup after loading the view.
+        overrideUserInterfaceStyle = .light
         failLbl.layer.cornerRadius = 10
         failLbl.layer.borderWidth = 1
         failLbl.layer.borderColor = UIColor.red.cgColor
         failLbl.layer.masksToBounds = true
         
+        forgotPassBtn.layer.cornerRadius = 10
+        forgotPassBtn.layer.borderWidth = 1
+        forgotPassBtn.layer.borderColor = UIColor.systemBackground.cgColor
+        forgotPassBtn.layer.masksToBounds = true
+        
         if let savedAccount = ViewModels.getSavedAccount() {
-            signin(username: savedAccount.username, password: savedAccount.password, { success in
+            signin(username: savedAccount.username, password: savedAccount.password) { success in
                 if success {
+                    ViewModels.isOnline = true
                     ViewModels.getUserData() { data in
                         if let data = data {
                             DispatchQueue.main.async {
-                                self.successSignedIn(with: data)
+                                self.successSignedIn(with: data, account: savedAccount)
                             }
                         }
+                        DispatchQueue.main.async {
+                            self.loadingView.isHidden = true
+                        }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.loadingView.isHidden = true
                     }
                 }
-            })
+            }
         }
     }
     
-    func successSignedIn(with data: UserData) {
+    func successSignedIn(with data: UserData, account: Account) {
+        ViewModels.isOnline = true
         ViewModels.userData = data
         guard let window = self.view.window else {
             return
@@ -52,8 +71,9 @@ class LogInViewController: UIViewController {
         
         guard data.isInterestSelected else {
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let interestVC = mainStoryboard.instantiateViewController(withIdentifier: "InterestAreasVC")
+            let interestVC = mainStoryboard.instantiateViewController(withIdentifier: "InterestAreasVC") as! InterestSelectionViewController
             let interestNavVC = UINavigationController(rootViewController: interestVC)
+            interestVC.account = account
             window.rootViewController = interestNavVC
             window.makeKeyAndVisible()
             
@@ -72,10 +92,12 @@ class LogInViewController: UIViewController {
     }
     
     func signin(username: String, password: String, _ completion: @escaping (Bool) -> Void) {
+        loadingView.isHidden = false
         let link = serviceURL + "sign_in.php"
         let url = URL(string: link)
         guard let url = url else {
             print("Cannot connect to web service.")
+            completion(false)
             return
         }
         
@@ -93,10 +115,11 @@ class LogInViewController: UIViewController {
             request.httpBody = jsondata
         } catch {
             print("Error encoding data: \(error)")
+            completion(false)
             return
         }
         
-        URLSession.shared.dataTask(with: request) {(data, response, error) in
+        ViewModels.sharedSession.dataTask(with: request) {(data, response, error) in
             guard error == nil,
                   let data = data,
                   let httpResponse = response as? HTTPURLResponse else {
@@ -137,18 +160,52 @@ class LogInViewController: UIViewController {
         
         signin(username: username, password: password) { success in
             if success {
+                ViewModels.isOnline = true
                 ViewModels.getUserData() { data in
                     if let data = data {
                         DispatchQueue.main.async {
+                            self.loadingView.isHidden = true
                             let account = Account(username: username, password: password)
-                            ViewModels.saveAccount(account)
+                            if (data.isInterestSelected) {
+                                ViewModels.saveAccount(account)
+                            }
                             
-                            self.successSignedIn(with: data)
+                            self.successSignedIn(with: data, account: account)
+                            
                         }
                     }
                 }
+            } else {
+                DispatchQueue .main.async {
+                    self.loadingView.isHidden = true
+                }
             }
         }
+    }
+    
+    @IBAction func offlineTapped(_ sender: Any) {
+        ViewModels.isOnline = false
+        ViewModels.userID = nil
+        ViewModels.userData = ViewModels.getOfflineUserData()
+        
+        guard let window = self.view.window else {
+            return
+        }
+        
+        let transition = CATransition()
+        transition.type = .push
+        transition.subtype = .fromRight
+        transition.duration = 0.3
+        window.layer.add(transition, forKey: kCATransition)
+        
+        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let tabBarViewController = mainStoryboard.instantiateViewController(withIdentifier: "MainTabBarView")
+        window.rootViewController = tabBarViewController
+        window.makeKeyAndVisible()
+    }
+    
+    @objc func tappedOutside(_ gesture: UITapGestureRecognizer) {
+        view.endEditing(true)
     }
     /*
     // MARK: - Navigation

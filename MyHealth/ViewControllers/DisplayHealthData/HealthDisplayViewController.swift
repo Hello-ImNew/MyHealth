@@ -14,6 +14,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     
     @IBOutlet weak var healthTableView: UITableView!
     @IBOutlet weak var settingView: UIView!
+    @IBOutlet weak var settingStack: UIStackView!
     @IBOutlet weak var btnShowChart: UIButton!
     @IBOutlet weak var viewTableOrChart: UIView!
     @IBOutlet weak var btnAddData: UIButton!
@@ -23,7 +24,7 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var rangeView: UIView!
     @IBOutlet weak var dateView: UIView!
     @IBOutlet weak var showDataBtn: UIButton!
-    @IBOutlet weak var settingParent: UIStackView!
+//    @IBOutlet weak var settingParent: UIStackView!
     @IBOutlet weak var spacerView: UIView!
     @IBOutlet weak var contentView: UIStackView!
     
@@ -137,8 +138,12 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
             self.dateBtn.setTitle(self.selectedDayToString(), for: .normal)
             self.datePicker.reloadAllComponents()
             self.datePicker.selectRow(self.yearOption.firstIndex(of: self.selectYear)!, inComponent: 0, animated: false)
-            self.datePicker.selectRow(self.monthOption.firstIndex(of: self.selectMonth)!, inComponent: 1, animated: false)
-            self.datePicker.selectRow(self.selectDay - 1, inComponent: 2, animated: false)
+            if self.selectedRange == .month || self.selectedRange == .week {
+                self.datePicker.selectRow(self.monthOption.firstIndex(of: self.selectMonth)!, inComponent: 1, animated: false)
+            }
+            if self.selectedRange == .week {
+                self.datePicker.selectRow(self.selectDay - 1, inComponent: 2, animated: false)
+            }
         }
         
         let options = rangeOptions.map({ element in
@@ -290,7 +295,16 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
 //            self.btnAddData.layoutIfNeeded()
 //        })
 //        settingView.autoresizesSubviews = true
+        print(settingStack.frame.height)
         self.datePicker.isHidden.toggle()
+        self.settingStack.layoutIfNeeded()
+        var frame = settingView.frame
+        frame.size.height = settingStack.frame.height + 20
+        settingView.frame = frame
+        
+        settingView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 10)
+        print(settingStack.frame.height)
+        print(settingView.frame.height)
     }
     
     func hidePickerView() {
@@ -394,13 +408,16 @@ class HealthDisplayViewController: UIViewController, UITableViewDelegate, UITabl
     
     @objc func animateView() {
         hidePickerView()
-        self.settingParent.isUserInteractionEnabled = self.isCollapsed
+        self.settingView.isUserInteractionEnabled = self.isCollapsed
+        spacerView.isUserInteractionEnabled = self.isCollapsed
         isCollapsed = !isCollapsed
-        
-        UIView.transition(with: settingParent, duration: 0.5, animations: {
+        settingView.alpha = isCollapsed ? 1 : 0
+        UIView.transition(with: settingView, duration: 0.5, options: [], animations: {
             self.settingView.isHidden = self.isCollapsed
-            self.settingParent.layoutIfNeeded()
+            self.settingView.alpha = self.isCollapsed ? 0 : 1
+//            self.settingParent.layoutIfNeeded()
             self.spacerView.alpha = self.isCollapsed ? 0 : 0.5
+            self.settingView.layoutIfNeeded()
         })
     }
     

@@ -12,6 +12,10 @@ import CoreData
 
 class ViewModels {
     
+    static var isOnline = false
+    
+    static let sharedSession = URLSession.shared
+    
     // MARK: Favorite data types
     private static let userDefaults = UserDefaults.standard
     
@@ -21,24 +25,29 @@ class ViewModels {
     private static let savedAccountKey = "SavedAccount"
     
     static var favHealthTypes: [String] = []
-//    {
-//        let healthTypes: [String] = userDefaults.object(forKey: healthTypesKey) as? [String] ?? []
-//        
-//        return healthTypes
-//    }
     
     static var favDataType: [HKSampleType] {
-        return favHealthTypes.compactMap({ getSampleType(for: $0)})
+        if !isOnline {
+            let healthTypes: [String] = userDefaults.object(forKey: healthTypesKey) as? [String] ?? []
+    
+            return healthTypes.compactMap({getSampleType(for: $0)})
+        } else {
+            return favHealthTypes.compactMap({ getSampleType(for: $0)})
+        }
     }
     
     static func removeFavHealthType(for healthType: String) {
         favHealthTypes.removeAll(where: {$0 == healthType})
-        var healthTypes = favHealthTypes
-        healthTypes.removeAll(where: {
-            $0 == healthType
-        })
-        userDefaults.set(healthTypes, forKey: healthTypesKey)
-        userDefaults.synchronize()
+        
+        guard isOnline else {
+            var healthTypes = favHealthTypes
+            healthTypes.removeAll(where: {
+                $0 == healthType
+            })
+            userDefaults.set(healthTypes, forKey: healthTypesKey)
+            userDefaults.synchronize()
+            return
+        }
         
         let link = serviceURL + "remove_fav_data.php"
         
@@ -64,7 +73,7 @@ class ViewModels {
             return
         }
         
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
+        ViewModels.sharedSession.dataTask(with: request) { (data, response, error) in
             guard error == nil,
                   let data = data else {
                 print("Error: \(error!)")
@@ -86,11 +95,13 @@ class ViewModels {
         if !favHealthTypes.contains(healthType) {
             favHealthTypes.append(healthType)
         }
-        
-        var healthTypes = favHealthTypes
-        healthTypes.append(healthType)
-        userDefaults.set(healthTypes, forKey: healthTypesKey)
-        userDefaults.synchronize()
+        guard isOnline else {
+            var healthTypes = favHealthTypes
+            healthTypes.append(healthType)
+            userDefaults.set(healthTypes, forKey: healthTypesKey)
+            userDefaults.synchronize()
+            return
+        }
         
         let link = serviceURL + "add_fav_data.php"
         
@@ -116,7 +127,7 @@ class ViewModels {
             return
         }
         
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
+        ViewModels.sharedSession.dataTask(with: request) { (data, response, error) in
             guard error == nil,
                   let data = data else {
                 print("Error: \(error!)")
@@ -177,7 +188,8 @@ class ViewModels {
     }
     static func getUserData(_ completion: @escaping (UserData?) -> Void) {
         
-        if let id = userID {
+        if let id = userID,
+           isOnline {
             let link = serviceURL + "get_personal_info.php"
             
             let url = URL(string: link)
@@ -202,7 +214,7 @@ class ViewModels {
             
             var res: UserData? = nil
             
-            URLSession.shared.dataTask(with: request) { (data, response, error) in
+            ViewModels.sharedSession.dataTask(with: request) { (data, response, error) in
                 guard let data = data,
                       error == nil else {
                     return
@@ -223,8 +235,11 @@ class ViewModels {
     }
     
     static func saveUserData(_ userData: UserData) {
-        if let encodedData = try? NSKeyedArchiver.archivedData(withRootObject: userData, requiringSecureCoding: true) {
-            userDefaults.set(encodedData, forKey: userDataKey)
+        guard isOnline else {
+            if let encodedData = try? NSKeyedArchiver.archivedData(withRootObject: userData, requiringSecureCoding: true) {
+                userDefaults.set(encodedData, forKey: userDataKey)
+            }
+            return
         }
         
         let id = userID
@@ -250,7 +265,7 @@ class ViewModels {
                 return
             }
             
-            URLSession.shared.dataTask(with: request) { (data, response, error) in
+            ViewModels.sharedSession.dataTask(with: request) { (data, response, error) in
                 guard error == nil else {
                     print("Error: \(error!)")
                     return
@@ -285,7 +300,7 @@ class ViewModels {
                 return
             }
             
-            URLSession.shared.dataTask(with: request) {(data, response, error) in
+            ViewModels.sharedSession.dataTask(with: request) {(data, response, error) in
                 guard let data = data,
                       error == nil else {
                     return
@@ -312,7 +327,8 @@ class ViewModels {
     static func getImageFromPath(path: String?, completion: @escaping (UIImage?) -> Void) {
         let defaultImage = UIImage(systemName: "person.circle.fill")
         if let path = path,
-           !path.isEmpty {
+           !path.isEmpty,
+           isOnline{
             let urlString = serviceURL + path
             let url = URL(string: urlString)
             
@@ -322,7 +338,7 @@ class ViewModels {
                 return
             }
             
-            URLSession.shared.dataTask(with: url) { (data, response, error) in
+            ViewModels.sharedSession.dataTask(with: url) { (data, response, error) in
                 
                 guard let data = data,
                       error == nil else {
@@ -360,6 +376,10 @@ class ViewModels {
             UserDefaults.standard.synchronize()
         }
         
+        guard isOnline else {
+            return
+        }
+        
         if let _ = userData.imgPath {
             let link = serviceURL + "update_pfpimage.php"
             let url = URL(string: link)
@@ -386,7 +406,7 @@ class ViewModels {
                 return
             }
             
-            URLSession.shared.dataTask(with: request) { (data, response, error) in
+            ViewModels.sharedSession.dataTask(with: request) { (data, response, error) in
                 guard error == nil else {
                     print("Error: \(error!)")
                     return
@@ -408,6 +428,10 @@ class ViewModels {
         if let imageData = image.pngData() {
             UserDefaults.standard.set(imageData, forKey: "savedImageKey")
             UserDefaults.standard.synchronize()
+        }
+        
+        guard isOnline else {
+            return
         }
         
         let link = serviceURL + "new_pfpimage.php"
@@ -434,7 +458,7 @@ class ViewModels {
             return
         }
         
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
+        ViewModels.sharedSession.dataTask(with: request) { (data, response, error) in
             guard error == nil,
                   let data = data else {
                 print("Error: \(error!)")

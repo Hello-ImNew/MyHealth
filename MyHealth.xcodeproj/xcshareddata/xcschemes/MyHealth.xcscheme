@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E863CAA02ABDE2030000E489"
-               BuildableName = "MyHealth.app"
+               BuildableName = "BeeHealth.app"
                BlueprintName = "MyHealth"
                ReferencedContainer = "container:MyHealth.xcodeproj">
             </BuildableReference>
@@ -44,7 +44,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E863CAA02ABDE2030000E489"
-            BuildableName = "MyHealth.app"
+            BuildableName = "BeeHealth.app"
             BlueprintName = "MyHealth"
             ReferencedContainer = "container:MyHealth.xcodeproj">
          </BuildableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E863CAA02ABDE2030000E489"
-            BuildableName = "MyHealth.app"
+            BuildableName = "BeeHealth.app"
             BlueprintName = "MyHealth"
             ReferencedContainer = "container:MyHealth.xcodeproj">
          </BuildableReference>

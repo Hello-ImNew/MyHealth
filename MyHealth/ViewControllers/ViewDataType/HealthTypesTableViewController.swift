@@ -48,26 +48,28 @@ class HealthTypesTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        addProfilePicture()
         
         if isFavView {
-            let group = DispatchGroup()
-            group.enter()
-            getFavData{ success in
-                if success {
-                    self.healthDataTypes = ViewModels.favDataType
+            if ViewModels.isOnline {
+                let group = DispatchGroup()
+                group.enter()
+                getFavData{ success in
+                    if success {
+                        self.healthDataTypes = ViewModels.favDataType
+                    }
+                    group.leave()
                 }
-                group.leave()
+                group.wait()
+            } else {
+                self.healthDataTypes = ViewModels.favDataType
             }
-            group.wait()
         }
         
         if healthDataTypes.isEmpty {
             reloadTable(noFavMessage)
             return
         }
-        
-        addProfilePicture()
-        
         let read = Set(healthDataTypes)
         let share = Set(healthDataTypes)
         HealthData.requestHealthDataAccessIfNeeded(toShare: share, read: read) { success in
@@ -244,7 +246,7 @@ class HealthTypesTableViewController: UITableViewController {
             return
         }
         
-        URLSession.shared.dataTask(with: request) {(data, response, error) in
+        ViewModels.sharedSession.dataTask(with: request) {(data, response, error) in
             guard error == nil,
                   let data = data else {
                 print("Error: \(error!)")

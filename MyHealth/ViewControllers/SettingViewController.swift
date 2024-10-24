@@ -104,7 +104,12 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.textLabel?.text = settingOptions[indexPath.row].title
         
-        
+        if ViewModels.isOnline == false {
+            if settingOptions[indexPath.row].title == "Log out" {
+                cell.backgroundColor = .separator
+                cell.isUserInteractionEnabled = false
+            }
+        }
         return cell
     }
     
@@ -112,10 +117,20 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         if settingOptions[indexPath.row].title == "Log out" {
             ViewModels.removeSavedAccount()
+            guard let window = self.view.window else {
+                return
+            }
+            
+            let transition = CATransition()
+            transition.type = .push
+            transition.subtype = .fromRight
+            transition.duration = 0.3
+            window.layer.add(transition, forKey: kCATransition)
+            
             let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let loginViewController = mainStoryboard.instantiateViewController(withIdentifier: "LogInView")
-            UIApplication.shared.windows.first?.rootViewController = loginViewController
-            UIApplication.shared.windows.first?.makeKeyAndVisible()
+            window.rootViewController = loginViewController
+            window.makeKeyAndVisible()
             return
         }
         performSegue(withIdentifier: settingOptions[indexPath.row].segue, sender: self)

@@ -103,6 +103,10 @@ extension UIViewController : settingViewDelegate {
         button.layer.cornerRadius = 15
         button.clipsToBounds = true
         button.imageView?.contentMode = .scaleAspectFit
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: 30),
+            button.heightAnchor.constraint(equalTo: button.widthAnchor, multiplier: 1)
+        ])
         ViewModels.getImageFromPath(path: ViewModels.userData.imgPath, completion: { image in
             DispatchQueue.main.async {
                 button.setBackgroundImage(image, for: .normal)
@@ -199,7 +203,11 @@ func beginningOfNextDay(_ date: Date) -> Date {
     return result
 }
 
-func isValidUUID(for str: String) -> Bool {
+func isValidUUID(for str: String?) -> Bool {
+    guard let str = str else {
+        return false
+    }
+    
     if let _ = UUID(uuidString: str) {
         return true
     }
@@ -214,5 +222,18 @@ extension UIView {
         let shape = CAShapeLayer()
         shape.path = maskPath.cgPath
         layer.mask = shape
+    }
+}
+
+extension UITableViewCell {
+    var parentViewController: UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder!.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
     }
 }

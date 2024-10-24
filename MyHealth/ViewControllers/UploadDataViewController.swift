@@ -224,7 +224,7 @@ class UploadDataViewController: UIViewController {
                     fatalError("Error encoding data: \(error)")
                 }
                 
-                URLSession.shared.dataTask(with: request) { (data, response, error) in
+                ViewModels.sharedSession.dataTask(with: request) { (data, response, error) in
                     guard let data = data,
                           error == nil else {
                         self.showAlert(title: "Connection Error", message: error!.localizedDescription)
@@ -317,7 +317,7 @@ class UploadDataViewController: UIViewController {
                         fatalError("Error encoding data: \(error)")
                     }
                     
-                    URLSession.shared.dataTask(with: request) { (data, response, error) in
+                    ViewModels.sharedSession.dataTask(with: request) { (data, response, error) in
                         guard let data = data,
                               error == nil else {
                             self.showAlert(title: "Connection Error", message: error!.localizedDescription)

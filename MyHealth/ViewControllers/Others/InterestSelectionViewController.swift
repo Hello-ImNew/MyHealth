@@ -14,6 +14,7 @@ class InterestSelectionViewController: UIViewController {
     let interestAreas = ViewModels.interestAreas
     let maxSelection = 3
     var selectedRow = Set<Int>()
+    var account: Account!
     
     let columnLayout = ColumnFlowLayout(cellsPerRow: 3,
                                         minimumInteritemSpacing: 10,
@@ -29,6 +30,7 @@ class InterestSelectionViewController: UIViewController {
         
         collectionView.collectionViewLayout = columnLayout
         collectionView.contentInsetAdjustmentBehavior = .always
+        overrideUserInterfaceStyle = .light
     }
     
     func toMainScreen() {        
@@ -80,7 +82,7 @@ class InterestSelectionViewController: UIViewController {
             return
         }
         
-        URLSession.shared.dataTask(with: request) {(data, response, error) in
+        ViewModels.sharedSession.dataTask(with: request) {(data, response, error) in
             guard error == nil,
                   let data = data else {
                 print("Error: \(error!)")
@@ -97,6 +99,9 @@ class InterestSelectionViewController: UIViewController {
             ViewModels.userData.isInterestSelected = true
             ViewModels.favHealthTypes = types
             DispatchQueue.main.async {
+                if let account = self.account {
+                    ViewModels.saveAccount(account)
+                }
                 self.toMainScreen()
             }
             

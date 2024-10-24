@@ -27,12 +27,13 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
     @IBOutlet weak var rangeView: UIView!
     @IBOutlet weak var chartView: UIView!
     @IBOutlet weak var settingView: UIView!
+    @IBOutlet weak var settingStack: UIStackView!
     @IBOutlet weak var addDataBtn: UIButton!
     @IBOutlet weak var condenseChartBtn: UIButton!
     @IBOutlet weak var rangeBtn: UIButton!
     @IBOutlet weak var dateBtn: UIButton!
     @IBOutlet weak var datePicker: UIPickerView!
-    @IBOutlet weak var settingParent: UIStackView!
+    //@IBOutlet weak var settingParent: UIStackView!
     @IBOutlet weak var spacerView: UIView!
     
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -123,7 +124,6 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        spacerView.layer.zPosition = -1
         canAdd = isAllowedShared(for: dataTypeIdentifier)
 
         // Do any additional setup after loading the view.
@@ -255,10 +255,12 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
     
     func animateView(_ collapse: Bool) {
         isCollapse = collapse
-        settingParent.isUserInteractionEnabled = !collapse
-        UIView.transition(with: settingParent, duration: 0.5, animations: {
+        settingView.isUserInteractionEnabled = !collapse
+        spacerView.isUserInteractionEnabled = !collapse
+        UIView.transition(with: settingView, duration: 0.5, animations: {
             self.settingView.isHidden = collapse
-            self.settingParent.layoutIfNeeded()
+            self.settingView.alpha = collapse ? 0 : 1
+            self.settingView.layoutIfNeeded()
             self.spacerView.alpha = collapse ? 0 : 0.5
         })
     }
@@ -380,8 +382,12 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
             self.dateBtn.setTitle(self.selectedDayToString(), for: .normal)
             self.datePicker.reloadAllComponents()
             self.datePicker.selectRow(self.yearOption.firstIndex(of: self.selectYear)!, inComponent: 0, animated: false)
-            self.datePicker.selectRow(self.monthOption.firstIndex(of: self.selectMonth)!, inComponent: 1, animated: false)
-            self.datePicker.selectRow(self.selectDay - 1, inComponent: 2, animated: false)
+            if self.selectedRange == .month || self.selectedRange == .week {
+                self.datePicker.selectRow(self.monthOption.firstIndex(of: self.selectMonth)!, inComponent: 1, animated: false)
+            }
+            if self.selectedRange == .week {
+                self.datePicker.selectRow(self.selectDay - 1, inComponent: 2, animated: false)
+            }
         }
         
         let options = rangeOptions.map({ element in
@@ -413,6 +419,13 @@ class CategoryDisplayViewController: UIViewController, AddDataDelegate {
 //            self.datePicker.isHidden.toggle()
 //        })
         datePicker.isHidden.toggle()
+        
+        self.settingStack.layoutIfNeeded()
+        var frame = settingView.frame
+        frame.size.height = settingStack.frame.height + 20
+        settingView.frame = frame
+        
+        settingView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 10)
     }
     
     func hidePickerView() {

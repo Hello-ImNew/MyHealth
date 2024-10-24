@@ -14,6 +14,7 @@
 		E86054F92BFCFA3400004881 /* PDFCateValueYearChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86054F82BFCFA3400004881 /* PDFCateValueYearChart.swift */; };
 		E8613ACB2BA340BF0064AE24 /* UploadDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8613ACA2BA340BF0064AE24 /* UploadDataViewController.swift */; };
 		E863015B2B4EDFC100876059 /* CategoryCondensedChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863015A2B4EDFC100876059 /* CategoryCondensedChart.swift */; };
+		E863327E2CAC82460059DB11 /* AddFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863327D2CAC82460059DB11 /* AddFriendViewController.swift */; };
 		E863CAA52ABDE2030000E489 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CAA42ABDE2030000E489 /* AppDelegate.swift */; };
 		E863CAA72ABDE2030000E489 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CAA62ABDE2030000E489 /* SceneDelegate.swift */; };
 		E863CAAC2ABDE2030000E489 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E863CAAA2ABDE2030000E489 /* Main.storyboard */; };
@@ -28,6 +29,7 @@
 		E865DE852AF3E87100958688 /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E865DE842AF3E87100958688 /* CategoriesViewController.swift */; };
 		E865E1A72B23879000A80033 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E865E1A62B23879000A80033 /* UserData.swift */; };
 		E865E1A92B23A97700A80033 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E865E1A82B23A97700A80033 /* ProfileViewController.swift */; };
+		E8667BD92C6C01A9000CAF0B /* NewPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8667BD82C6C01A9000CAF0B /* NewPasswordViewController.swift */; };
 		E866B0DC2AE082840005F747 /* HealthCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E866B0DB2AE082840005F747 /* HealthCategory.swift */; };
 		E866BF2D2AC1C7F4001F93DC /* quantityDataValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E866BF2C2AC1C7F4001F93DC /* quantityDataValue.swift */; };
 		E866BF2F2AC1C8BE001F93DC /* HealthKitSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = E866BF2E2AC1C8BE001F93DC /* HealthKitSupport.swift */; };
@@ -35,9 +37,11 @@
 		E867AA222BE0042200C98F90 /* PDFHorBarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E867AA212BE0042200C98F90 /* PDFHorBarChart.swift */; };
 		E867FAAD2BADE4E80017223A /* YearlyHealthChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E867FAAC2BADE4E80017223A /* YearlyHealthChartView.swift */; };
 		E86915CB2BE93BE4000B5288 /* PDFCateValueChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86915CA2BE93BE4000B5288 /* PDFCateValueChart.swift */; };
+		E8694F7C2CB46A17006D860B /* AddFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8694F7B2CB46A17006D860B /* AddFriendTableViewCell.swift */; };
 		E86A185C2C2DAFFB00E0B96F /* InterestSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A185B2C2DAFFB00E0B96F /* InterestSelectionViewController.swift */; };
 		E86A185E2C2DF51200E0B96F /* HealthAreaCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A185D2C2DF51200E0B96F /* HealthAreaCollectionViewCell.swift */; };
 		E86AAD532AD85DBC00BE6075 /* SummaryChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86AAD522AD85DBC00BE6075 /* SummaryChartView.swift */; };
+		E86AC0902C6FB1510082B2D9 /* CreateAccountCongratViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86AC08F2C6FB1510082B2D9 /* CreateAccountCongratViewController.swift */; };
 		E86BC6DD2AE6B97B00782083 /* AddHealthDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86BC6DC2AE6B97B00782083 /* AddHealthDataViewController.swift */; };
 		E86BC6DF2AE6B99700782083 /* AddBloodPressureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86BC6DE2AE6B99700782083 /* AddBloodPressureViewController.swift */; };
 		E86BDAC02AD04927000F3EB8 /* Support+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86BDABF2AD04927000F3EB8 /* Support+Extension.swift */; };
@@ -47,7 +51,14 @@
 		E86C868C2ACCB5DD0059B538 /* HealthChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86C868B2ACCB5DD0059B538 /* HealthChartView.swift */; };
 		E86CBBF52B925BDC005BE9F6 /* AddCategoryOneDpkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86CBBF42B925BDC005BE9F6 /* AddCategoryOneDpkViewController.swift */; };
 		E86CEA042AFD88BC007D9F86 /* AuthorizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86CEA032AFD88BC007D9F86 /* AuthorizeViewController.swift */; };
+		E86D35D72C9B6FB0003B5786 /* FriendRequestListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86D35D62C9B6FB0003B5786 /* FriendRequestListViewController.swift */; };
+		E86D35D92C9B7364003B5786 /* RequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86D35D82C9B7364003B5786 /* RequestTableViewCell.swift */; };
 		E86DC75B2B76A3F6004FD494 /* PDFChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86DC75A2B76A3F6004FD494 /* PDFChart.swift */; };
+		E86E570B2CC0313D009B5099 /* LoadingDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86E570A2CC0313D009B5099 /* LoadingDataView.swift */; };
+		E86EDF242C88DE8B00CDC7D6 /* FriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86EDF232C88DE8B00CDC7D6 /* FriendsViewController.swift */; };
+		E86EDF262C88DF0D00CDC7D6 /* FriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86EDF252C88DF0D00CDC7D6 /* FriendListTableViewCell.swift */; };
+		E8722EE52C626ECB0062B656 /* ForgotPasswordVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8722EE42C626ECB0062B656 /* ForgotPasswordVerificationViewController.swift */; };
+		E8722EE72C626EDF0062B656 /* CreateAccountVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8722EE62C626EDF0062B656 /* CreateAccountVerificationViewController.swift */; };
 		E8728FA52B616A590053BAA6 /* PDFCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8728FA42B616A590053BAA6 /* PDFCreator.swift */; };
 		E87553E02AC751B3000996D9 /* HealthTypesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87553DF2AC751B2000996D9 /* HealthTypesTableViewController.swift */; };
 		E87592B42B96703300850BAC /* ScatterChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87592B32B96703300850BAC /* ScatterChartView.swift */; };
@@ -80,7 +91,8 @@
 		E86054F82BFCFA3400004881 /* PDFCateValueYearChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFCateValueYearChart.swift; sourceTree = "<group>"; };
 		E8613ACA2BA340BF0064AE24 /* UploadDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDataViewController.swift; sourceTree = "<group>"; };
 		E863015A2B4EDFC100876059 /* CategoryCondensedChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCondensedChart.swift; sourceTree = "<group>"; };
-		E863CAA12ABDE2030000E489 /* MyHealth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyHealth.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E863327D2CAC82460059DB11 /* AddFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewController.swift; sourceTree = "<group>"; };
+		E863CAA12ABDE2030000E489 /* BeeHealth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeeHealth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E863CAA42ABDE2030000E489 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E863CAA62ABDE2030000E489 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E863CAAB2ABDE2030000E489 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -96,6 +108,7 @@
 		E865DE842AF3E87100958688 /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
 		E865E1A62B23879000A80033 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		E865E1A82B23A97700A80033 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		E8667BD82C6C01A9000CAF0B /* NewPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPasswordViewController.swift; sourceTree = "<group>"; };
 		E866B0DB2AE082840005F747 /* HealthCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthCategory.swift; sourceTree = "<group>"; };
 		E866BF2B2AC1C657001F93DC /* MyHealth.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MyHealth.entitlements; sourceTree = "<group>"; };
 		E866BF2C2AC1C7F4001F93DC /* quantityDataValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = quantityDataValue.swift; sourceTree = "<group>"; };
@@ -104,9 +117,11 @@
 		E867AA212BE0042200C98F90 /* PDFHorBarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFHorBarChart.swift; sourceTree = "<group>"; };
 		E867FAAC2BADE4E80017223A /* YearlyHealthChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearlyHealthChartView.swift; sourceTree = "<group>"; };
 		E86915CA2BE93BE4000B5288 /* PDFCateValueChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFCateValueChart.swift; sourceTree = "<group>"; };
+		E8694F7B2CB46A17006D860B /* AddFriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendTableViewCell.swift; sourceTree = "<group>"; };
 		E86A185B2C2DAFFB00E0B96F /* InterestSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestSelectionViewController.swift; sourceTree = "<group>"; };
 		E86A185D2C2DF51200E0B96F /* HealthAreaCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthAreaCollectionViewCell.swift; sourceTree = "<group>"; };
 		E86AAD522AD85DBC00BE6075 /* SummaryChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryChartView.swift; sourceTree = "<group>"; };
+		E86AC08F2C6FB1510082B2D9 /* CreateAccountCongratViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountCongratViewController.swift; sourceTree = "<group>"; };
 		E86BC6DC2AE6B97B00782083 /* AddHealthDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHealthDataViewController.swift; sourceTree = "<group>"; };
 		E86BC6DE2AE6B99700782083 /* AddBloodPressureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBloodPressureViewController.swift; sourceTree = "<group>"; };
 		E86BDABF2AD04927000F3EB8 /* Support+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Support+Extension.swift"; sourceTree = "<group>"; };
@@ -116,7 +131,14 @@
 		E86C868B2ACCB5DD0059B538 /* HealthChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthChartView.swift; sourceTree = "<group>"; };
 		E86CBBF42B925BDC005BE9F6 /* AddCategoryOneDpkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryOneDpkViewController.swift; sourceTree = "<group>"; };
 		E86CEA032AFD88BC007D9F86 /* AuthorizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeViewController.swift; sourceTree = "<group>"; };
+		E86D35D62C9B6FB0003B5786 /* FriendRequestListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestListViewController.swift; sourceTree = "<group>"; };
+		E86D35D82C9B7364003B5786 /* RequestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestTableViewCell.swift; sourceTree = "<group>"; };
 		E86DC75A2B76A3F6004FD494 /* PDFChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFChart.swift; sourceTree = "<group>"; };
+		E86E570A2CC0313D009B5099 /* LoadingDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingDataView.swift; sourceTree = "<group>"; };
+		E86EDF232C88DE8B00CDC7D6 /* FriendsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewController.swift; sourceTree = "<group>"; };
+		E86EDF252C88DF0D00CDC7D6 /* FriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListTableViewCell.swift; sourceTree = "<group>"; };
+		E8722EE42C626ECB0062B656 /* ForgotPasswordVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVerificationViewController.swift; sourceTree = "<group>"; };
+		E8722EE62C626EDF0062B656 /* CreateAccountVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountVerificationViewController.swift; sourceTree = "<group>"; };
 		E8728FA42B616A590053BAA6 /* PDFCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFCreator.swift; sourceTree = "<group>"; };
 		E87553DF2AC751B2000996D9 /* HealthTypesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthTypesTableViewController.swift; sourceTree = "<group>"; };
 		E87592B32B96703300850BAC /* ScatterChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScatterChartView.swift; sourceTree = "<group>"; };
@@ -175,7 +197,7 @@
 		E863CAA22ABDE2030000E489 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E863CAA12ABDE2030000E489 /* MyHealth.app */,
+				E863CAA12ABDE2030000E489 /* BeeHealth.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -238,6 +260,7 @@
 		E86AAD4F2AD85D3500BE6075 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				E86EDF222C88DE6D00CDC7D6 /* FriendView */,
 				E87C61F52C0F89D700D27450 /* LoginView */,
 				E87430122B221EF800D999BF /* BrowsingView */,
 				E87430112B221ED000D999BF /* AddDataView */,
@@ -260,6 +283,9 @@
 				E86C86872ACC78BF0059B538 /* HealthTypeTableViewCell.swift */,
 				E87AE53E2B20E462004A09EB /* CategoryDataTableViewCell.swift */,
 				E86A185D2C2DF51200E0B96F /* HealthAreaCollectionViewCell.swift */,
+				E86EDF252C88DF0D00CDC7D6 /* FriendListTableViewCell.swift */,
+				E86D35D82C9B7364003B5786 /* RequestTableViewCell.swift */,
+				E8694F7B2CB46A17006D860B /* AddFriendTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -282,6 +308,16 @@
 				E866ECD52BFFE46800E8A258 /* PDFScatterChart.swift */,
 			);
 			path = Charts;
+			sourceTree = "<group>";
+		};
+		E86EDF222C88DE6D00CDC7D6 /* FriendView */ = {
+			isa = PBXGroup;
+			children = (
+				E86EDF232C88DE8B00CDC7D6 /* FriendsViewController.swift */,
+				E86D35D62C9B6FB0003B5786 /* FriendRequestListViewController.swift */,
+				E863327D2CAC82460059DB11 /* AddFriendViewController.swift */,
+			);
+			path = FriendView;
 			sourceTree = "<group>";
 		};
 		E874300E2B221E3100D999BF /* Authorize */ = {
@@ -336,6 +372,7 @@
 				E86A185B2C2DAFFB00E0B96F /* InterestSelectionViewController.swift */,
 				E85C6F892AFAAE31000D81E9 /* SleepChartViewController.swift */,
 				E863CAC22ABE00210000E489 /* EmptyDataBackgroundView.swift */,
+				E86E570A2CC0313D009B5099 /* LoadingDataView.swift */,
 			);
 			path = Others;
 			sourceTree = "<group>";
@@ -356,7 +393,11 @@
 			children = (
 				E87C61F62C0F8A8E00D27450 /* LogInViewController.swift */,
 				E87C61F82C0F8A9F00D27450 /* SignUpViewController.swift */,
+				E8722EE62C626EDF0062B656 /* CreateAccountVerificationViewController.swift */,
+				E86AC08F2C6FB1510082B2D9 /* CreateAccountCongratViewController.swift */,
 				E85E99B02C18AD6A00EF303B /* ForgotPasswordViewController.swift */,
+				E8722EE42C626ECB0062B656 /* ForgotPasswordVerificationViewController.swift */,
+				E8667BD82C6C01A9000CAF0B /* NewPasswordViewController.swift */,
 			);
 			path = LoginView;
 			sourceTree = "<group>";
@@ -387,7 +428,7 @@
 			);
 			name = MyHealth;
 			productName = MyHealth;
-			productReference = E863CAA12ABDE2030000E489 /* MyHealth.app */;
+			productReference = E863CAA12ABDE2030000E489 /* BeeHealth.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -444,9 +485,12 @@
 				E863015B2B4EDFC100876059 /* CategoryCondensedChart.swift in Sources */,
 				E86AAD532AD85DBC00BE6075 /* SummaryChartView.swift in Sources */,
 				E87690222B600A1A0020E4F9 /* SelectTypesTableViewController.swift in Sources */,
+				E8722EE52C626ECB0062B656 /* ForgotPasswordVerificationViewController.swift in Sources */,
 				E87592B42B96703300850BAC /* ScatterChartView.swift in Sources */,
+				E86D35D92C9B7364003B5786 /* RequestTableViewCell.swift in Sources */,
 				E86BDAC02AD04927000F3EB8 /* Support+Extension.swift in Sources */,
 				E87690242B600A670020E4F9 /* PDFPreviewViewController.swift in Sources */,
+				E8722EE72C626EDF0062B656 /* CreateAccountVerificationViewController.swift in Sources */,
 				E867AA222BE0042200C98F90 /* PDFHorBarChart.swift in Sources */,
 				E86DC75B2B76A3F6004FD494 /* PDFChart.swift in Sources */,
 				E86915CB2BE93BE4000B5288 /* PDFCateValueChart.swift in Sources */,
@@ -455,7 +499,9 @@
 				E866B0DC2AE082840005F747 /* HealthCategory.swift in Sources */,
 				E87D4A732B89326400BF31F8 /* AddCategoryValueViewController.swift in Sources */,
 				E865DE852AF3E87100958688 /* CategoriesViewController.swift in Sources */,
+				E8667BD92C6C01A9000CAF0B /* NewPasswordViewController.swift in Sources */,
 				E863CABF2ABDF49C0000E489 /* HealthDisplayViewController.swift in Sources */,
+				E863327E2CAC82460059DB11 /* AddFriendViewController.swift in Sources */,
 				E863CAAF2ABDE2030000E489 /* MyHealth.xcdatamodeld in Sources */,
 				E85C6F882AFA9FC8000D81E9 /* SleepChart.swift in Sources */,
 				E87F21D62C32F76500F1A4A0 /* ColumnFlowLayout.swift in Sources */,
@@ -471,6 +517,7 @@
 				E87AE5412B21130F004A09EB /* HealthDataValue.swift in Sources */,
 				E86054F92BFCFA3400004881 /* PDFCateValueYearChart.swift in Sources */,
 				E8F851CA2BA2035C00DC6A54 /* Constants.swift in Sources */,
+				E8694F7C2CB46A17006D860B /* AddFriendTableViewCell.swift in Sources */,
 				E87553E02AC751B3000996D9 /* HealthTypesTableViewController.swift in Sources */,
 				E87AE53F2B20E462004A09EB /* CategoryDataTableViewCell.swift in Sources */,
 				E85FEE412AE1621A00E59384 /* ViewModels.swift in Sources */,
@@ -479,18 +526,23 @@
 				E8613ACB2BA340BF0064AE24 /* UploadDataViewController.swift in Sources */,
 				E8794F5F2B2B43C0007DCEE1 /* CategorySingleValueChart.swift in Sources */,
 				E86CBBF52B925BDC005BE9F6 /* AddCategoryOneDpkViewController.swift in Sources */,
+				E86D35D72C9B6FB0003B5786 /* FriendRequestListViewController.swift in Sources */,
 				E883F8002B18FA0B00EE8157 /* CategoryTableViewController.swift in Sources */,
 				E8EDC5752B29F82B00B608AD /* SettingViewController.swift in Sources */,
 				E865E1A72B23879000A80033 /* UserData.swift in Sources */,
 				E87C61F72C0F8A8E00D27450 /* LogInViewController.swift in Sources */,
 				E863CAA52ABDE2030000E489 /* AppDelegate.swift in Sources */,
+				E86EDF242C88DE8B00CDC7D6 /* FriendsViewController.swift in Sources */,
+				E86EDF262C88DF0D00CDC7D6 /* FriendListTableViewCell.swift in Sources */,
 				E865D0A72B1F7AA700092581 /* AddCategoryDataViewController.swift in Sources */,
 				E883F8022B18FA2700EE8157 /* CategoryDisplayViewController.swift in Sources */,
 				E867FAAD2BADE4E80017223A /* YearlyHealthChartView.swift in Sources */,
+				E86E570B2CC0313D009B5099 /* LoadingDataView.swift in Sources */,
 				E86C86882ACC78BF0059B538 /* HealthTypeTableViewCell.swift in Sources */,
 				E883F8062B1A367900EE8157 /* categoryDataValue.swift in Sources */,
 				E883F8042B19384600EE8157 /* CategoryDataChart.swift in Sources */,
 				E86BC6DD2AE6B97B00782083 /* AddHealthDataViewController.swift in Sources */,
+				E86AC0902C6FB1510082B2D9 /* CreateAccountCongratViewController.swift in Sources */,
 				E85E99B12C18AD6A00EF303B /* ForgotPasswordViewController.swift in Sources */,
 				E866BF2D2AC1C7F4001F93DC /* quantityDataValue.swift in Sources */,
 				E86BDAC22AD04C5B000F3EB8 /* AvailableDataTypeTableViewCell.swift in Sources */,
@@ -648,6 +700,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = MyHealth/MyHealth.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -668,7 +721,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.louisville.HIVE.MyHealth;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BeeHealth;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -680,6 +733,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = MyHealth/MyHealth.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -700,7 +754,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.louisville.HIVE.MyHealth;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BeeHealth;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

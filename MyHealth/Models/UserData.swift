@@ -203,7 +203,7 @@ class UserData: NSObject, NSSecureCoding, Codable {
             
             group.enter()
             
-            URLSession.shared.dataTask(with: request) { (data, response, error) in
+            ViewModels.sharedSession.dataTask(with: request) { (data, response, error) in
                 guard let data = data, error == nil else {
                     print("Error connect to server \(error!)")
                     result = ViewModels.userData
