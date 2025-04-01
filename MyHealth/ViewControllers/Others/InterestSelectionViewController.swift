@@ -59,7 +59,7 @@ class InterestSelectionViewController: UIViewController {
         }
         
         let types = Array(healthTypes)
-        let link = serviceURL + "selected_interest_area.php"
+        let link = newServiceURL + "fav_data/selected_interest_area.php"
         
         guard let url = URL(string: link) else  {
             print("Cannot connect to web service.")

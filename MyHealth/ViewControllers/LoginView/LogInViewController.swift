@@ -93,7 +93,7 @@ class LogInViewController: UIViewController {
     
     func signin(username: String, password: String, _ completion: @escaping (Bool) -> Void) {
         loadingView.isHidden = false
-        let link = serviceURL + "sign_in.php"
+        let link = newServiceURL + "sign_in/sign_in.php"
         let url = URL(string: link)
         guard let url = url else {
             print("Cannot connect to web service.")
@@ -140,7 +140,7 @@ class LogInViewController: UIViewController {
                 return
             }
             
-            let id = String(data: data, encoding: .utf8) ?? ""
+            let id = String(data: data, encoding: .utf8)!
             if isValidUUID(for: id) {
                 ViewModels.userID = id
                 print(id)

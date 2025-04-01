@@ -10,11 +10,18 @@ struct SearchResult: Decodable {
     let firstName: String
     let lastName: String
     let imgPath: String?
+    let userID: String
+    let isRequested: Bool
+    let isFriend: Bool
     
     enum CodingKeys: String, CodingKey {
         case firstName = "first_name"
         case lastName = "last_name"
         case imgPath = "image_path"
+        case userID = "user_ID"
+        case isRequested = "is_requested"
+        case isFriend = "is_friend"
+        
     }
     
     init(from decoder: Decoder) throws {
@@ -22,10 +29,13 @@ struct SearchResult: Decodable {
         self.firstName = try container.decode(String.self, forKey: .firstName)
         self.lastName = try container.decode(String.self, forKey: .lastName)
         self.imgPath = try? container.decodeIfPresent(String.self, forKey: .imgPath)
+        self.userID = try container.decode(String.self, forKey: .userID)
+        self.isRequested = try container.decode(Bool.self, forKey: .isRequested)
+        self.isFriend = try container.decode(Bool.self, forKey: .isFriend)
     }
 }
 
-class AddFriendViewController: UIViewController {
+class AddFriendViewController: UIViewController, AddFriendCellDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
@@ -87,6 +97,10 @@ extension AddFriendViewController: UITableViewDelegate, UITableViewDataSource {
         }.resume()
     }
     
+    @objc func addButtonTapped() {
+        
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -131,6 +145,8 @@ extension AddFriendViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "AddFriendCell", for: indexPath) as! AddFriendTableViewCell
         let result = searchResults[indexPath.row]
+        cell.parentVC = self
+        cell.searchResult = result
         
         let name = result.firstName + " " + result.lastName
         cell.nameLbl.text = name
@@ -140,6 +156,16 @@ extension AddFriendViewController: UITableViewDelegate, UITableViewDataSource {
                     cell.pfpImage.image = image
                 }
             })
+        }
+        
+        if result.isRequested {
+            cell.addBtn.setTitle("Requested", for: .normal)
+            cell.addBtn.isEnabled = false
+        }
+        
+        if result.isFriend {
+            cell.addBtn.setTitle("Added", for: .normal)
+            cell.addBtn.isEnabled = false
         }
         
         return cell
@@ -187,7 +213,7 @@ extension AddFriendViewController: UISearchBarDelegate {
     }
     
     func startSearching(searchText: String, completion: @escaping ([SearchResult]?) -> Void) -> URLSessionDataTask? {
-        let link = serviceURL + "search_friend.php"
+        let link = newServiceURL  + "friend/search_friend.php"
         guard let url = URL(string: link) else {
             print("Cannot connect to website.")
             return nil

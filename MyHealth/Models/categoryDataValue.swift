@@ -34,7 +34,7 @@ class categoryDataValue: HealthDataValue, Codable {
         try container.encode(Double(self.value), forKey: .value)
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM-dd-yyyy hh:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
         
         let startStr = formatter.string(from: self.startDate)
         let endStr = formatter.string(from: self.endDate)

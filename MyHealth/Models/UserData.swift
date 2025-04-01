@@ -180,7 +180,7 @@ class UserData: NSObject, NSSecureCoding, Codable {
         let group = DispatchGroup()
         
         if let id = userDefaults.string(forKey: userIDKey) {
-            let path = serviceURL + "get_personal_info.php"
+            let path = newServiceURL + "personal_info/get_personal_info.php"
             let url = URL(string: path)
             
             guard let url = url else {
@@ -217,20 +217,6 @@ class UserData: NSObject, NSSecureCoding, Codable {
                 }
                 group.leave()
             }.resume()
-        } else {
-            let path = serviceURL + "new_personal_info.php"
-            let url = URL(string: path)
-            guard let url = url else {
-                return result
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            do {
-                
-            }
         }
         group.wait()
         return result

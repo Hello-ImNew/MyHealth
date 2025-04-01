@@ -221,7 +221,7 @@ class HealthTypesTableViewController: UITableViewController {
     
     func getFavData(_ completion: @escaping (_ success: Bool) -> Void) {
         
-        let link = serviceURL + "get_fav_data.php"
+        let link = newServiceURL + "fav_data/get_fav_data.php"
         
         guard let url = URL(string: link) else {
             print("Cannot connect to web service.")
@@ -262,6 +262,8 @@ class HealthTypesTableViewController: UITableViewController {
                 return
             }
             do {
+                let result = String(data: data, encoding: .utf8)
+                print(String(data: data, encoding: .utf8))
                 let items = try JSONDecoder().decode([favType].self, from: data)
                 let types = items.map({$0.type})
                 ViewModels.favHealthTypes = types

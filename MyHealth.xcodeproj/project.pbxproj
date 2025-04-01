@@ -15,6 +15,7 @@
 		E8613ACB2BA340BF0064AE24 /* UploadDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8613ACA2BA340BF0064AE24 /* UploadDataViewController.swift */; };
 		E863015B2B4EDFC100876059 /* CategoryCondensedChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863015A2B4EDFC100876059 /* CategoryCondensedChart.swift */; };
 		E863327E2CAC82460059DB11 /* AddFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863327D2CAC82460059DB11 /* AddFriendViewController.swift */; };
+		E863AF6F2D076CDE00B7546D /* FriendDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863AF6E2D076CDE00B7546D /* FriendDetailViewController.swift */; };
 		E863CAA52ABDE2030000E489 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CAA42ABDE2030000E489 /* AppDelegate.swift */; };
 		E863CAA72ABDE2030000E489 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863CAA62ABDE2030000E489 /* SceneDelegate.swift */; };
 		E863CAAC2ABDE2030000E489 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E863CAAA2ABDE2030000E489 /* Main.storyboard */; };
@@ -92,6 +93,7 @@
 		E8613ACA2BA340BF0064AE24 /* UploadDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDataViewController.swift; sourceTree = "<group>"; };
 		E863015A2B4EDFC100876059 /* CategoryCondensedChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCondensedChart.swift; sourceTree = "<group>"; };
 		E863327D2CAC82460059DB11 /* AddFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewController.swift; sourceTree = "<group>"; };
+		E863AF6E2D076CDE00B7546D /* FriendDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDetailViewController.swift; sourceTree = "<group>"; };
 		E863CAA12ABDE2030000E489 /* BeeHealth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeeHealth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E863CAA42ABDE2030000E489 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E863CAA62ABDE2030000E489 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				E86EDF232C88DE8B00CDC7D6 /* FriendsViewController.swift */,
 				E86D35D62C9B6FB0003B5786 /* FriendRequestListViewController.swift */,
 				E863327D2CAC82460059DB11 /* AddFriendViewController.swift */,
+				E863AF6E2D076CDE00B7546D /* FriendDetailViewController.swift */,
 			);
 			path = FriendView;
 			sourceTree = "<group>";
@@ -530,6 +533,7 @@
 				E883F8002B18FA0B00EE8157 /* CategoryTableViewController.swift in Sources */,
 				E8EDC5752B29F82B00B608AD /* SettingViewController.swift in Sources */,
 				E865E1A72B23879000A80033 /* UserData.swift in Sources */,
+				E863AF6F2D076CDE00B7546D /* FriendDetailViewController.swift in Sources */,
 				E87C61F72C0F8A8E00D27450 /* LogInViewController.swift in Sources */,
 				E863CAA52ABDE2030000E489 /* AppDelegate.swift in Sources */,
 				E86EDF242C88DE8B00CDC7D6 /* FriendsViewController.swift in Sources */,

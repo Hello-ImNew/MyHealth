@@ -33,7 +33,7 @@ class ForgotPasswordVerificationViewController: UIViewController {
     
     func createVerificationCode(for username: String) {
         
-        let link = serviceURL + "forgot_password_verification.php"
+        let link = newServiceURL + "sign_in/forgot_password_verification.php"
         guard let url = URL(string: link) else {
             print("Cannot connect to web service.")
             return
@@ -95,7 +95,7 @@ class ForgotPasswordVerificationViewController: UIViewController {
             return
         }
         
-        let link = serviceURL + "reset_password_verify_code.php"
+        let link = newServiceURL + "sign_in/reset_password_verify_code.php"
         guard let url = URL(string: link)else {
             print("Cannot connect to web service.")
             return
@@ -174,8 +174,7 @@ class ForgotPasswordVerificationViewController: UIViewController {
         // Pass the selected object to the new view controller.
         
         if segue.identifier == "SetNewPasswordSegue" {
-            let NewPassNav = segue.destination as? UINavigationController
-            let newPassVC = NewPassNav?.topViewController as? NewPasswordViewController
+            let newPassVC = segue.destination as? NewPasswordViewController
             
             newPassVC?.username = self.username
         }

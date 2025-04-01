@@ -196,7 +196,7 @@ class UploadDataViewController: UIViewController {
             if let statisticsCollection = statisticsCollection {
                 let dataValues = updateInterfaceWithStaticstics(statisticsCollection)
                 
-                let link = serviceURL + "add_data.php"
+                let link = newServiceURL + "upload/add_quantity_data.php"
                 let url  = URL(string: link)
                 guard let url = url else {
                     print("Cannot connect to web service.")
@@ -209,7 +209,7 @@ class UploadDataViewController: UIViewController {
                 
                 do {
                     let formatter = DateFormatter()
-                    formatter.dateFormat = "MM-dd-yyyy hh:mm:ss"
+                    formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
                     let startStr = formatter.string(from: startQueryDate)
                     let endStr = formatter.string(from: endQueryDate)
                     
@@ -287,7 +287,7 @@ class UploadDataViewController: UIViewController {
                         return dataValue
                     })
                     
-                    let link = serviceURL + "add_data.php"
+                    let link = newServiceURL + "upload/add_category_data.php"
                     let url = URL(string:  link)
                     
                     guard let url = url else {
@@ -301,7 +301,7 @@ class UploadDataViewController: UIViewController {
                     
                     do {
                         let formatter = DateFormatter()
-                        formatter.dateFormat = "MM-dd-yyyy hh:mm:ss"
+                        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
                         let startStr = formatter.string(from: startQueryDate)
                         let endStr = formatter.string(from: endQueryDate)
                         

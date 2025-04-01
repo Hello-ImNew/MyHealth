@@ -49,7 +49,7 @@ class ViewModels {
             return
         }
         
-        let link = serviceURL + "remove_fav_data.php"
+        let link = newServiceURL + "fav_data/remove_fav_data.php"
         
         guard let url = URL(string: link) else {
             print("Error connect to web service.")
@@ -103,7 +103,7 @@ class ViewModels {
             return
         }
         
-        let link = serviceURL + "add_fav_data.php"
+        let link = newServiceURL + "fav_data/add_fav_data.php"
         
         guard let url = URL(string: link) else {
             print("Error connect to web service.")
@@ -190,7 +190,7 @@ class ViewModels {
         
         if let id = userID,
            isOnline {
-            let link = serviceURL + "get_personal_info.php"
+            let link = newServiceURL + "personal_info/get_personal_info.php"
             
             let url = URL(string: link)
             guard let url = url else {
@@ -209,7 +209,7 @@ class ViewModels {
                 let jsonData = try JSONEncoder().encode(payload)
                 request.httpBody = jsonData
             } catch {
-                fatalError("Error endoding userID")
+                fatalError("Error encoding userID")
             }
             
             var res: UserData? = nil
@@ -222,8 +222,11 @@ class ViewModels {
                 
                 guard let httpResponse = response as? HTTPURLResponse,
                       (200...299).contains(httpResponse.statusCode) else {
+                    print(String(data: data, encoding: .utf8) ?? "")
                     return
                 }
+                
+                print(String(data: data, encoding: .utf8) ?? "")
                 
                 let decoder = JSONDecoder()
                 res = try? decoder.decode(UserData.self, from: data)
@@ -245,7 +248,7 @@ class ViewModels {
         let id = userID
         
         if id != nil {
-            let link = serviceURL + "update_personal_info.php"
+            let link = newServiceURL + "personal_info/update_personal_info.php"
             let url = URL(string: link)
             
             guard let url = url else {
@@ -280,43 +283,7 @@ class ViewModels {
                 print("Successfully update health detail.")
             }.resume()
         } else {
-            let link = serviceURL + "new_personal_info.php"
-            let url = URL(string: link)
-            
-            guard let url = url else {
-                print("Cannot connect to web service.")
-                return
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            do {
-                let jsonData = try JSONEncoder().encode(userData)
-                request.httpBody = jsonData
-            } catch {
-                print("Error encoding Data: \(error)")
-                return
-            }
-            
-            ViewModels.sharedSession.dataTask(with: request) {(data, response, error) in
-                guard let data = data,
-                      error == nil else {
-                    return
-                }
-                
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    print("Server error.")
-                    return
-                }
-                
-                let result = String(data: data, encoding: .utf8) ?? ""
-                if let _ = UUID(uuidString: result) {
-                    saveUserID(id: result)
-                }
-            }.resume()
+            print("No user ID detected")
         }
         
         
@@ -329,7 +296,7 @@ class ViewModels {
         if let path = path,
            !path.isEmpty,
            isOnline{
-            let urlString = serviceURL + path
+            let urlString = newServiceURL + path
             let url = URL(string: urlString)
             
             guard let url = url else {
@@ -381,7 +348,7 @@ class ViewModels {
         }
         
         if let _ = userData.imgPath {
-            let link = serviceURL + "update_pfpimage.php"
+            let link = newServiceURL + "personal_info/update_pfpimage.php"
             let url = URL(string: link)
             
             guard let url = url else {
@@ -434,7 +401,7 @@ class ViewModels {
             return
         }
         
-        let link = serviceURL + "new_pfpimage.php"
+        let link = newServiceURL + "personal_info/new_pfpimage.php"
         let url = URL(string: link)
         guard let url = url else {
             print("Cannot connect to web service.")

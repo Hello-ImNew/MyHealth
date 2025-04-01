@@ -135,7 +135,7 @@ class SignUpViewController: UIViewController {
         guard let payload = getCredentials() else {
             return
         }
-        let link = serviceURL + "check_username.php"
+        let link = newServiceURL + "sign_in/check_username.php"
         guard let url = URL(string: link) else {
             print("Cannot connect to web service.")
             return

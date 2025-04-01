@@ -76,7 +76,7 @@ class NewPasswordViewController: UIViewController {
         }
         errorPasswordLbl.alpha = 0
 
-        let link = serviceURL + "forgot_password.php"
+        let link = newServiceURL + "sign_in/change_password.php"
         guard let url = URL(string: link) else {
             print("Cannot connect to web service.")
             return

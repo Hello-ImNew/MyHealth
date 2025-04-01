@@ -48,7 +48,7 @@ extension FriendRequestListViewController: RequestCellDelegate {
 
 extension FriendRequestListViewController: UITableViewDelegate, UITableViewDataSource {
     func getFriendInfo(for id: String, _ completion: @escaping (FriendInfo?) -> Void) {
-        let link = serviceURL + "get_friend_info.php"
+        let link = newServiceURL + "friend/get_friend_info.php"
         guard let url = URL(string: link) else {
             print("Cannot connect to web server")
             return

@@ -32,7 +32,7 @@ class CreateAccountVerificationViewController: UIViewController {
     }
     
     func sendVerificationCode() {
-        let link = serviceURL + "create_account_verification.php"
+        let link = newServiceURL + "sign_in/create_account_verification.php"
         guard let url = URL(string: link) else {
             print("Cannot connect to web service.")
             return
@@ -77,8 +77,8 @@ class CreateAccountVerificationViewController: UIViewController {
             return
         }
         
-        let link = serviceURL + "new_account.php"
-        guard let url = URL(string: link)else {
+        let link = newServiceURL + "sign_in/new_account.php"
+        guard let url = URL(string: link) else {
             print("Cannot connect to web service.")
             return
         }

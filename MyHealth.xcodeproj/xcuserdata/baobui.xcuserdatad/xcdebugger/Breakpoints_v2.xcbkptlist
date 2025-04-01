@@ -1249,49 +1249,19 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "414FC6AB-1C2E-4FB7-B2BA-BF01DE5F7FF4"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyHealth/ViewModels/ViewModels.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "264"
-            endingLineNumber = "264"
+            startingLineNumber = "267"
+            endingLineNumber = "267"
             landmarkName = "saveUserData(_:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "414FC6AB-1C2E-4FB7-B2BA-BF01DE5F7FF4 - 94383a65efac788a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static MyHealth.ViewModels.saveUserData(MyHealth.UserData) -&gt; ()"
-                  moduleName = "MyHealth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "262"
-                  endingLineNumber = "262"
-                  offsetFromSymbolStart = "3736">
-               </Location>
-               <Location
-                  uuid = "414FC6AB-1C2E-4FB7-B2BA-BF01DE5F7FF4 - 94383a65efac788a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static MyHealth.ViewModels.saveUserData(MyHealth.UserData) -&gt; ()"
-                  moduleName = "MyHealth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "262"
-                  endingLineNumber = "262"
-                  offsetFromSymbolStart = "3768">
-               </Location>
-               <Location
-                  uuid = "414FC6AB-1C2E-4FB7-B2BA-BF01DE5F7FF4 - 29d9c9d586bb9492"
+                  uuid = "414FC6AB-1C2E-4FB7-B2BA-BF01DE5F7FF4 - 29d9c9d586bb9454"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1301,12 +1271,12 @@
                   urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "262"
-                  endingLineNumber = "262"
-                  offsetFromSymbolStart = "3768">
+                  startingLineNumber = "268"
+                  endingLineNumber = "268"
+                  offsetFromSymbolStart = "4016">
                </Location>
                <Location
-                  uuid = "414FC6AB-1C2E-4FB7-B2BA-BF01DE5F7FF4 - 29d9c9d586bb9492"
+                  uuid = "414FC6AB-1C2E-4FB7-B2BA-BF01DE5F7FF4 - 29d9c9d586bb9454"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1316,39 +1286,9 @@
                   urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "262"
-                  endingLineNumber = "262"
-                  offsetFromSymbolStart = "3968">
-               </Location>
-               <Location
-                  uuid = "414FC6AB-1C2E-4FB7-B2BA-BF01DE5F7FF4 - 29d9c9d586bb94d0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static BeeHealth.ViewModels.saveUserData(BeeHealth.UserData) -&gt; ()"
-                  moduleName = "BeeHealth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "264"
-                  endingLineNumber = "264"
+                  startingLineNumber = "268"
+                  endingLineNumber = "268"
                   offsetFromSymbolStart = "3728">
-               </Location>
-               <Location
-                  uuid = "414FC6AB-1C2E-4FB7-B2BA-BF01DE5F7FF4 - 29d9c9d586bb94d0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static BeeHealth.ViewModels.saveUserData(BeeHealth.UserData) -&gt; ()"
-                  moduleName = "BeeHealth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "264"
-                  endingLineNumber = "264"
-                  offsetFromSymbolStart = "3928">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1363,43 +1303,13 @@
             filePath = "MyHealth/ViewModels/ViewModels.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "417"
-            endingLineNumber = "417"
+            startingLineNumber = "384"
+            endingLineNumber = "384"
             landmarkName = "saveProfileImage(_:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "DB39BCB0-C455-4B42-A088-6DCF27271AB4 - 1b06d32f8cc6f62e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static MyHealth.ViewModels.saveProfileImage(__C.UIImage) -&gt; ()"
-                  moduleName = "MyHealth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "415"
-                  endingLineNumber = "415"
-                  offsetFromSymbolStart = "516">
-               </Location>
-               <Location
-                  uuid = "DB39BCB0-C455-4B42-A088-6DCF27271AB4 - 1b06d32f8cc6f62e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static MyHealth.ViewModels.saveProfileImage(__C.UIImage) -&gt; ()"
-                  moduleName = "MyHealth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "415"
-                  endingLineNumber = "415"
-                  offsetFromSymbolStart = "1112">
-               </Location>
-               <Location
-                  uuid = "DB39BCB0-C455-4B42-A088-6DCF27271AB4 - b6b9748a37025366"
+                  uuid = "DB39BCB0-C455-4B42-A088-6DCF27271AB4 - b6b9748a3705af65"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1409,12 +1319,12 @@
                   urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "415"
-                  endingLineNumber = "415"
-                  offsetFromSymbolStart = "1112">
+                  startingLineNumber = "384"
+                  endingLineNumber = "384"
+                  offsetFromSymbolStart = "524">
                </Location>
                <Location
-                  uuid = "DB39BCB0-C455-4B42-A088-6DCF27271AB4 - b6b9748a37025366"
+                  uuid = "DB39BCB0-C455-4B42-A088-6DCF27271AB4 - b6b9748a3705af65"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1424,12 +1334,12 @@
                   urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "415"
-                  endingLineNumber = "415"
+                  startingLineNumber = "384"
+                  endingLineNumber = "384"
                   offsetFromSymbolStart = "1144">
                </Location>
                <Location
-                  uuid = "DB39BCB0-C455-4B42-A088-6DCF27271AB4 - b6b9748a37025324"
+                  uuid = "DB39BCB0-C455-4B42-A088-6DCF27271AB4 - b6b9748a3705af65"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1439,24 +1349,9 @@
                   urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "417"
-                  endingLineNumber = "417"
+                  startingLineNumber = "384"
+                  endingLineNumber = "384"
                   offsetFromSymbolStart = "1112">
-               </Location>
-               <Location
-                  uuid = "DB39BCB0-C455-4B42-A088-6DCF27271AB4 - b6b9748a37025324"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static BeeHealth.ViewModels.saveProfileImage(__C.UIImage) -&gt; ()"
-                  moduleName = "BeeHealth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "417"
-                  endingLineNumber = "417"
-                  offsetFromSymbolStart = "1144">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1471,8 +1366,8 @@
             filePath = "MyHealth/ViewModels/ViewModels.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "398"
-            endingLineNumber = "398"
+            startingLineNumber = "365"
+            endingLineNumber = "365"
             landmarkName = "saveProfileImage(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2332,8 +2227,8 @@
             filePath = "MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "538"
-            endingLineNumber = "538"
+            startingLineNumber = "540"
+            endingLineNumber = "540"
             landmarkName = "tableView(_:commit:forRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2396,8 +2291,8 @@
             filePath = "MyHealth/ViewControllers/FriendView/AddFriendViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "231"
-            endingLineNumber = "231"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
             landmarkName = "startSearching(searchText:completion:)"
             landmarkType = "7">
             <Locations>
@@ -2459,8 +2354,8 @@
             filePath = "MyHealth/ViewControllers/FriendView/AddFriendViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "177"
-            endingLineNumber = "177"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "searchBar(_:textDidChange:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2475,8 +2370,8 @@
             filePath = "MyHealth/ViewControllers/FriendView/AddFriendViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2507,10 +2402,723 @@
             filePath = "MyHealth/ViewControllers/FriendView/AddFriendViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "203"
-            endingLineNumber = "203"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
             landmarkName = "startSearching(searchText:completion:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9C981F34-5E44-48A0-BB76-4DC0C1EA9D02"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/LoginView/SignUpViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
+            landmarkName = "createAccount(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EAAEE299-D0D7-4B81-920C-E0519C835B26"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/LoginView/SignUpViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
+            landmarkName = "createAccount(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9645E5A7-A52F-4466-8676-DCFB1E4D73CF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/LoginView/SignUpViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
+            landmarkName = "createAccount(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EC71BB31-4193-44A8-ADDD-8FC2CF578845"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/LoginView/LogInViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "signin(username:password:_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "EC71BB31-4193-44A8-ADDD-8FC2CF578845 - f0f3e26297c3e432"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.LogInViewController.signin(username: Swift.String, password: Swift.String, _: (Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/LoginView/LogInViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "2212">
+               </Location>
+               <Location
+                  uuid = "EC71BB31-4193-44A8-ADDD-8FC2CF578845 - f0f3e26297c3e432"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.LogInViewController.signin(username: Swift.String, password: Swift.String, _: (Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/LoginView/LogInViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "2224">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FF97FC0F-2FA2-4608-A60A-AB03168B6242"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/LoginView/LogInViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
+            landmarkName = "signin(username:password:_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "FF97FC0F-2FA2-4608-A60A-AB03168B6242 - f0f3e26297c3e5d5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.LogInViewController.signin(username: Swift.String, password: Swift.String, _: (Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/LoginView/LogInViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "144"
+                  endingLineNumber = "144"
+                  offsetFromSymbolStart = "1868">
+               </Location>
+               <Location
+                  uuid = "FF97FC0F-2FA2-4608-A60A-AB03168B6242 - f0f3e26297c3e5d5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.LogInViewController.signin(username: Swift.String, password: Swift.String, _: (Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/LoginView/LogInViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "144"
+                  endingLineNumber = "144"
+                  offsetFromSymbolStart = "1880">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "50A187E9-0100-4CC5-973E-3ED429996CEA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewModels/ViewModels.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
+            landmarkName = "getUserData(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "50A187E9-0100-4CC5-973E-3ED429996CEA - a9d1e218320c751b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static BeeHealth.ViewModels.getUserData((Swift.Optional&lt;BeeHealth.UserData&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "231"
+                  endingLineNumber = "231"
+                  offsetFromSymbolStart = "1472">
+               </Location>
+               <Location
+                  uuid = "50A187E9-0100-4CC5-973E-3ED429996CEA - a9d1e218320c7538"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static BeeHealth.ViewModels.getUserData((Swift.Optional&lt;BeeHealth.UserData&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "232"
+                  endingLineNumber = "232"
+                  offsetFromSymbolStart = "1472">
+               </Location>
+               <Location
+                  uuid = "50A187E9-0100-4CC5-973E-3ED429996CEA - a9d1e218320c7538"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static BeeHealth.ViewModels.getUserData((Swift.Optional&lt;BeeHealth.UserData&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "232"
+                  endingLineNumber = "232"
+                  offsetFromSymbolStart = "1568">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3CBCCD04-16EA-430A-88A6-0E7EFEE1B785"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewModels/ViewModels.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
+            landmarkName = "getUserData(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3CBCCD04-16EA-430A-88A6-0E7EFEE1B785 - a9d1e218320c7221"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static BeeHealth.ViewModels.getUserData((Swift.Optional&lt;BeeHealth.UserData&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "225"
+                  endingLineNumber = "225"
+                  offsetFromSymbolStart = "1924">
+               </Location>
+               <Location
+                  uuid = "3CBCCD04-16EA-430A-88A6-0E7EFEE1B785 - a9d1e218320c7221"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static BeeHealth.ViewModels.getUserData((Swift.Optional&lt;BeeHealth.UserData&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "225"
+                  endingLineNumber = "225"
+                  offsetFromSymbolStart = "1952">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "901C7687-C28B-4EB9-9147-D16771125111"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewModels/ViewModels.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
+            landmarkName = "getUserData(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3D4D1F2D-3E47-48AB-A7FD-0C88AE575380"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewModels/ViewModels.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "226"
+            endingLineNumber = "226"
+            landmarkName = "getUserData(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3D4D1F2D-3E47-48AB-A7FD-0C88AE575380 - a9d1e218320c72a5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static BeeHealth.ViewModels.getUserData((Swift.Optional&lt;BeeHealth.UserData&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "229"
+                  endingLineNumber = "229"
+                  offsetFromSymbolStart = "1228">
+               </Location>
+               <Location
+                  uuid = "3D4D1F2D-3E47-48AB-A7FD-0C88AE575380 - a9d1e218320c7267"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static BeeHealth.ViewModels.getUserData((Swift.Optional&lt;BeeHealth.UserData&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "227"
+                  endingLineNumber = "227"
+                  offsetFromSymbolStart = "2760">
+               </Location>
+               <Location
+                  uuid = "3D4D1F2D-3E47-48AB-A7FD-0C88AE575380 - a9d1e218320c7267"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static BeeHealth.ViewModels.getUserData((Swift.Optional&lt;BeeHealth.UserData&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewModels/ViewModels.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "227"
+                  endingLineNumber = "227"
+                  offsetFromSymbolStart = "2856">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7071DD11-8580-4607-90C3-EAFA45398C9F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/LoginView/NewPasswordViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "confirmTapped(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B5FBCB35-D9C0-47EF-8839-4774EC989828"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/Others/InterestSelectionViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
+            landmarkName = "setSelectedInterest()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F291DD51-8850-413B-A5FC-738BB2B2CA6F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/Others/InterestSelectionViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
+            landmarkName = "setSelectedInterest()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2FD1B041-119A-4D1D-ADEE-7ACF4276CB65"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/Others/InterestSelectionViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "setSelectedInterest()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "198FED36-FDA1-4C60-816F-3675714F6206"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/Others/InterestSelectionViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
+            landmarkName = "setSelectedInterest()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "67E459C9-C2D1-4365-8E10-FDA47F965662"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/Others/InterestSelectionViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
+            landmarkName = "setSelectedInterest()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E887AE0B-7A03-4958-997B-CC9002F65906"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/LoginView/LogInViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "signin(username:password:_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E887AE0B-7A03-4958-997B-CC9002F65906 - f0f3e26297c3e641"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.LogInViewController.signin(username: Swift.String, password: Swift.String, _: (Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/LoginView/LogInViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "132"
+                  endingLineNumber = "132"
+                  offsetFromSymbolStart = "1092">
+               </Location>
+               <Location
+                  uuid = "E887AE0B-7A03-4958-997B-CC9002F65906 - f0f3e26297c3e641"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.LogInViewController.signin(username: Swift.String, password: Swift.String, _: (Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/LoginView/LogInViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "132"
+                  endingLineNumber = "132"
+                  offsetFromSymbolStart = "1176">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "261E170C-E732-472D-9A56-F44619F5A3D8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/LoginView/SignUpViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
+            landmarkName = "createAccount(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "261E170C-E732-472D-9A56-F44619F5A3D8 - a7a4317cd0072439"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.SignUpViewController.createAccount(Any) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/LoginView/SignUpViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "167"
+                  endingLineNumber = "167"
+                  offsetFromSymbolStart = "1436">
+               </Location>
+               <Location
+                  uuid = "261E170C-E732-472D-9A56-F44619F5A3D8 - c9acfd3c73a30e97"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.SignUpViewController.createAccount(Any) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/LoginView/SignUpViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "168"
+                  endingLineNumber = "168"
+                  offsetFromSymbolStart = "168">
+               </Location>
+               <Location
+                  uuid = "261E170C-E732-472D-9A56-F44619F5A3D8 - a7a4317cd0072439"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.SignUpViewController.createAccount(Any) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/LoginView/SignUpViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "167"
+                  endingLineNumber = "167"
+                  offsetFromSymbolStart = "1352">
+               </Location>
+               <Location
+                  uuid = "261E170C-E732-472D-9A56-F44619F5A3D8 - c9acfd3c73a30e97"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.SignUpViewController.createAccount(Any) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/LoginView/SignUpViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "168"
+                  endingLineNumber = "168"
+                  offsetFromSymbolStart = "148">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "699404F2-D90F-4247-B5A6-C4D191FA463C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "260"
+            endingLineNumber = "260"
+            landmarkName = "getFavData(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3BD3F2E8-CD43-4E79-8BEC-E1FC9D464A80"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "261"
+            endingLineNumber = "261"
+            landmarkName = "getFavData(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3BD3F2E8-CD43-4E79-8BEC-E1FC9D464A80 - c24408948d7cceb9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.HealthTypesTableViewController.getFavData((Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "261"
+                  endingLineNumber = "261"
+                  offsetFromSymbolStart = "1888">
+               </Location>
+               <Location
+                  uuid = "3BD3F2E8-CD43-4E79-8BEC-E1FC9D464A80 - c24408948d7cceb9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.HealthTypesTableViewController.getFavData((Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "261"
+                  endingLineNumber = "261"
+                  offsetFromSymbolStart = "2148">
+               </Location>
+               <Location
+                  uuid = "3BD3F2E8-CD43-4E79-8BEC-E1FC9D464A80 - c24408948d7cceb9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.HealthTypesTableViewController.getFavData((Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "261"
+                  endingLineNumber = "261"
+                  offsetFromSymbolStart = "2124">
+               </Location>
+               <Location
+                  uuid = "3BD3F2E8-CD43-4E79-8BEC-E1FC9D464A80 - c24408948d7cceb9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.HealthTypesTableViewController.getFavData((Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "261"
+                  endingLineNumber = "261"
+                  offsetFromSymbolStart = "2080">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CB5DCC81-4158-4433-89CE-F55E75D22B12"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "267"
+            endingLineNumber = "267"
+            landmarkName = "getFavData(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "CB5DCC81-4158-4433-89CE-F55E75D22B12 - c24408948d7cce73"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.HealthTypesTableViewController.getFavData((Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "267"
+                  endingLineNumber = "267"
+                  offsetFromSymbolStart = "1400">
+               </Location>
+               <Location
+                  uuid = "CB5DCC81-4158-4433-89CE-F55E75D22B12 - 161d004b62403636"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (BeeHealth.favType) -&gt; Swift.String in closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.HealthTypesTableViewController.getFavData((Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "267"
+                  endingLineNumber = "267"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "CB5DCC81-4158-4433-89CE-F55E75D22B12 - c24408948d7cce73"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BeeHealth.HealthTypesTableViewController.getFavData((Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "BeeHealth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/baobui/Desktop/MyHealth/MyHealth/ViewControllers/ViewDataType/HealthTypesTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "267"
+                  endingLineNumber = "267"
+                  offsetFromSymbolStart = "1248">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

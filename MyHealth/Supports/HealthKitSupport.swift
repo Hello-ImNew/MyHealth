@@ -305,7 +305,7 @@ func getDataTypeName(for identifier: String) -> String? {
         case .pelvicPain:
             description = "Pelvic Pain"
         case .rapidPoundingOrFlutteringHeartbeat:
-            description = "Raping, Pounding, or Fluttering Heartbeat"
+            description = "Rapid, Pounding, or Fluttering Heartbeat"
         case .runnyNose:
             description = "Runny Nose"
         case .shortnessOfBreath:

@@ -152,7 +152,7 @@ class FriendsViewController: UIViewController {
     }
     
     func checkRequest(_ completion: @escaping (Bool, [String]?) -> Void) {
-        let link = serviceURL + "get_request.php"
+        let link = newServiceURL + "friend/get_request.php"
         guard let url = URL(string: link) else {
             print("Cannot connect to web service.")
             return
@@ -202,7 +202,7 @@ class FriendsViewController: UIViewController {
     }
     
     func getFriendsList(_ completion: @escaping ([String]?) -> Void) {
-        let link = serviceURL + "get_friends.php"
+        let link = newServiceURL + "friend/get_friends.php"
         guard let url = URL(string: link) else {
             print("Cannot connect to web setvice.")
             return
@@ -268,7 +268,7 @@ class FriendsViewController: UIViewController {
 extension FriendsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func getFriendInfo(for id: String, _ completion: @escaping (FriendInfo?) -> Void) {
-        let link = serviceURL + "get_friend_info.php"
+        let link = newServiceURL + "friend/get_friend_info.php"
         guard let url = URL(string: link) else {
             print("Cannot connect to web server")
             return
